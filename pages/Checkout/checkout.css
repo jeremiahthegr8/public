@@ -1,0 +1,122 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Checkout Container */
+.checkout-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Progress Steps */
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    color: #007bff;
+    border-bottom: 2px solid #ccc;
+}
+
+.step.active {
+    border-bottom: 2px solid rgb(29, 240, 10);
+    color: rgb(29, 240, 10);
+}
+
+/* Form Steps */
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+/* Form Elements */
+h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[readonly] {
+    background-color: #f4f4f4;
+    cursor: not-allowed;
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.next-btn {
+    background-color: #007bff;
+    color: white;
+    float: right;
+}
+
+.prev-btn {
+    background-color: red;
+    color: white;
+    float: left;
+}
+
+.submit-btn {
+    background-color: rgb(29, 240, 10);
+    color: white;
+    width: 100%;
+}
+
+/* Payment Details */
+.payment-details {
+    display: none;
+    margin-top: 15px;
+}
+
+.confirmation-details {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,159 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.side-tab {
+  width: 250px;
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.side-tab h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.side-tab a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.side-tab a i {
+  margin-right: 10px;
+}
+
+.side-tab a:hover {
+  background-color: rgb(29, 240, 10);
+}
+
+.go-home {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: rgb(29, 240, 10);
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.go-home:hover {
+  background-color: rgb(29, 240, 10);
+}
+
+#logout-btn {
+  margin-top: 20px;
+  background-color: rgb(29, 240, 10);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #232f3e;
+}
+
+.filter-container {
+  margin-bottom: 20px;
+}
+
+#order-filter {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.order-item {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #ffc107;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.order-status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.order-status.pending {
+  color: #ffc107;
+}
+
+.order-status.shipped {
+  color: #007bff;
+}
+
+.order-status.delivered {
+  color: #28a745;
+}
+
+.order-status.canceled {
+  color: #dc3545;
+}
+
+.order-items ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding: 0;
+}
+
+.order-item p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+.track-order-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.track-order-btn:hover {
+  background-color: #0056b3;
+}

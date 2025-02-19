@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./Login.css" />
+    <script type="module" src="./Login.js"></script>
+  </head>
+  <body>
+    <a href="../../index.html" class="home-icon">
+      <img src="../../assets/icons/home.png" alt="Home" />
+    </a>
+
+    <div class="register">
+      <img src="./nickeback.webp" alt="register image" class="register__img" />
+
+      <form class="register__form" onsubmit="event.preventDefault(); signIn();">
+        <h1 class="register__title">Login</h1>
+
+        <div class="register__content">
+          <div class="register__box">
+            <i class="bx bx-user register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="email"
+                required
+                class="register__input"
+                placeholder=""
+                id="email"
+              />
+              <label for="email" class="register__label">Email</label>
+            </div>
+          </div>
+
+          <div class="register__box">
+            <i class="ri-lock-2-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="password"
+                required
+                class="register__input"
+                id="register-pass"
+                placeholder=""
+              />
+              <label for="register-pass" class="register__label"
+                >Password</label
+              >
+              <i class="ri-eye-off-line register__eye" id="register-eye"></i>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="register__button">Login</button>
+
+        <!-- Social Sign-Up Options -->
+        <div class="social-login">
+          <p>Or Login with:</p>
+          <div class="social-icons">
+            <a href="#" id="google-signup"
+              ><img src="../../assets/icons/google.png" alt="Google"
+            /></a>
+            <a href="#" id="twitter-signup"
+              ><img src="../../assets/icons/x.png" alt="Twitter"
+            /></a>
+            <a href="#" id="facebook-signup"
+              ><img src="../../assets/icons/facebook.png" alt="Facebook"
+            /></a>
+          </div>
+        </div>
+
+        <p class="register__login">
+          Don't have an account? <a href="../SignUp/SignUp.html">SignUp</a>
+        </p>
+      </form>
+    </div>
+  </body>
+</html>

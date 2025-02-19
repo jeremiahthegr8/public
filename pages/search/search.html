@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Items</title>
+    <link rel="stylesheet" href="search.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="../../index.html">Home</a>
+      </div>
+      <div class="pageheader">
+        <p>Find the best products at the best prices</p>
+      </div>
+      <div class="user-menu">
+        <a href="../account/account.html" class="sixty-nine account-link"
+          ><i class="fas fa-user"></i> Profile</a
+        >
+        <div class="seventy-one">
+          <a href="../wishlist/wishlist.html" class="sixty-nine"
+            ><i class="fas fa-heart"></i> Wishlist</a
+          >
+          <a href="../cart/mycart.html" class="sixty-nine"
+            ><i class="fas fa-shopping-cart"></i> Cart</a
+          >
+        </div>
+        <a href="../SignUp/SignUp.html" class="seventy signup-link">Signup</a>
+        <a href="../Login/Login.html" class="seventy login-link">Login</a>
+        <a href="#" class="seventy logout-btn" style="display: none">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="maincontainer">
+    <div class="search-container">
+      <h1>Search for Items</h1>
+      <form id="searchForm" autocomplete="off">
+        <!-- Search Bar -->
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search items..."
+          aria-label="Search items"
+        />
+
+        <!-- Suggestions Container -->
+        <div id="suggestionsContainer"></div>
+
+        <!-- Category Filter -->
+        <select id="categorySelect" aria-label="Select category">
+          <option value="">All Categories</option>
+        </select>
+
+        <!-- Subcategory Filter -->
+        <select id="subcategorySelect" aria-label="Select subcategory">
+          <option value="">All Subcategories</option>
+        </select>
+
+        <!-- Attributes (populated dynamically) -->
+        <div id="attributesContainer"></div>
+
+        <!-- Price Range Filter -->
+        <div class="filter-group">
+          <input
+            type="number"
+            id="minPrice"
+            placeholder="Min Price"
+            min="0"
+            aria-label="Minimum price"
+          />
+          <input
+            type="number"
+            id="maxPrice"
+            placeholder="Max Price"
+            min="0"
+            aria-label="Maximum price"
+          />
+        </div>
+
+        <!-- Condition Filter -->
+        <select id="conditionFilter" aria-label="Select condition">
+          <option value="">Condition</option>
+          <option value="New">New</option>
+          <option value="Used">Used</option>
+          <option value="Refurbished">Refurbished</option>
+        </select>
+
+        <!-- Delivery Filter -->
+        <select id="deliveryFilter" aria-label="Select delivery option">
+          <option value="">Delivery Options</option>
+          <option value="Free">Free Delivery</option>
+          <option value="Express">Express Delivery</option>
+        </select>
+
+        <!-- Minimum Rating -->
+        <input
+          type="number"
+          id="minRating"
+          placeholder="Minimum Rating (1-5)"
+          min="1"
+          max="5"
+          aria-label="Minimum rating"
+        />
+
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" style="display: none">
+      <i class="fas fa-spinner fa-spin"></i> Loading...
+    </div>
+
+    <!-- Search Results -->
+    <div id="resultsContainer"></div>
+    </div>
+    <script type="module" src="search.js"></script>
+  </body>
+</html>

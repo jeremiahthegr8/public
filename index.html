@@ -1,0 +1,175 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MarketPlace</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+<header class="header">
+  <div class="header-container">
+    <div class="logo">
+      <a href="index.html">E-Shop</a>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search products..." id="searchInput" />
+      <button id="searchBtn"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="user-menu">
+      <a href="./pages/account/account.html" class="sixty-nine account-link"><i class="fas fa-user"></i> Profile</a>
+      <div class="seventy-one">
+        <a href="./pages/wishlist/wishlist.html" class="sixty-nine"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="./pages/cart/mycart.html" class="sixty-nine"><i class="fas fa-shopping-cart"></i> Cart</a>
+      </div>
+      <a href="./pages/SignUp/SignUp.html" class="seventy signup-link">Signup</a>
+      <a href="./pages/Login/Login.html" class="seventy login-link">Login</a>
+      <a href="#" class="seventy logout-btn" style="display: none">Logout</a>
+    </div>
+  </div>
+</header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="heroleft">
+          <h2>NEW ARRIVALS</h2>
+          <h1>DENIM JACKETS</h1>
+          <p>
+            MR.MINTZ Collection offers a wide range of products from casual wear
+            to high-end fashion. Our products are made from the finest materials
+            and designed to be both stylish and comfortable.
+          </p>
+          <div>
+            <button
+              onclick="window.location.href='./pages/search/search.html'"
+            >
+              DISCOVER
+            </button>
+            <button onclick="window.location.href='./pages/cart/mycart.html'">
+              ADD TO CART
+            </button>
+          </div>
+        </div>
+        <div class="heroright">
+          <div class="offer-sign">50% OFF</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="featured-products">
+      <h2>Featured Products</h2>
+      <div class="product-grid"></div>
+    </section>
+
+    
+<div id="categories-container"></div>
+
+ 
+
+    <footer class="fortyfive">
+      <div class="fortysix">
+        <div class="fortyseven">
+          <h2 class="fortyeight">SUBSCRIBE TO OUR NEWSLETTER</h2>
+          <p class="fortynine">
+            Get the latest updates on new products and upcoming sales
+          </p>
+          <div class="fifty">
+            <input
+              type="email"
+              class="fiftyone"
+              placeholder="enter your email address"
+            />
+            <button class="fiftytwo">Submit</button>
+          </div>
+        </div>
+        <div class="fiftythree">
+          <div>
+            <h3 class="fiftyfour">SHOP</h3>
+            <ul>
+              <li class="fiftyfive"><a href="#">Electronics</a></li>
+              <li class="fiftyfive"><a href="#">Computers & Laptops</a></li>
+              <li class="fiftyfive"><a href="#">Smartphones & Tablets</a></li>
+              <li class="fiftyfive"><a href="#">Cameras</a></li>
+              <li class="fiftyfive"><a href="#">Video Games & Systems</a></li>
+              <li class="fiftyfive"><a href="#">Home Furniture</a></li>
+              <li class="fiftyfive"><a href="#">Weekly Special</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="fiftyfour">FURTHER INFO.</h3>
+            <ul>
+              <li class="fiftyfive"><a href="#">About</a></li>
+              <li class="fiftyfive"><a href="#">Blog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="fiftyfour">CUSTOMER SERVICE</h3>
+            <ul>
+              <li class="fiftyfive"><a href="#">Search Terms</a></li>
+              <li class="fiftyfive"><a href="#">Advanced Search</a></li>
+              <li class="fiftyfive"><a href="#">Orders And Returns</a></li>
+              <li class="fiftyfive"><a href="#">Contact Us</a></li>
+              <li class="fiftyfive"><a href="#">Theme FAQs</a></li>
+              <li class="fiftyfive"><a href="#">Consultant</a></li>
+              <li class="fiftyfive"><a href="#">Store Locations</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="fiftyfour">ellamart+</h3>
+            <address class="not-italic mb-4">
+              <p class="fiftysix">
+                <i class="fas fa-map-marker-alt"></i> 685 Market Street<br />San
+                Francisco, CA 94105, US
+              </p>
+              <p class="fiftysix">
+                <i class="fas fa-phone-alt"></i> Call us at (415) 555-5555
+              </p>
+              <p class="fiftysix">
+                <i class="fas fa-envelope"></i> example@domain.com
+              </p>
+            </address>
+            <div class="fiftyseven">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-pinterest"></i></a>
+              <a href="#"><i class="fab fa-snapchat"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="fiftyeight">
+          <p>© 2024, Ella Demo. All Rights Reserved. Themes By Halothemes</p>
+          <div class="fiftynine">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/ZHUCXZrD_8n3yvW9Oh7NIhaDreV5g9omXq2r8vmO2Qk.jpg"
+              alt="Visa logo"
+            />
+            <img
+              src="https://storage.googleapis.com/a1aa/image/JBDMLccUT9PhrsbwMUmCDApDx-ct22dBQut5qreuY_8.jpg"
+              alt="American Express logo"
+            />
+            <img
+              src="https://storage.googleapis.com/a1aa/image/L9Yb6YQ83OJOQrWOv6Uee9C2KtVLp4gTWrp-us6lONM.jpg"
+              alt="Apple Pay logo"
+            />
+            <img
+              src="https://storage.googleapis.com/a1aa/image/sDfWHOITQKMRcoPduz-ATS_9EJhJvVD3RH0uQDtaNy0.jpg"
+              alt="Discover logo"
+            />
+            <img
+              src="https://storage.googleapis.com/a1aa/image/IeD7Ozi_XM7Fdmx0wznj4vtefnPN27_zP_E11gDpwB0.jpg"
+              alt="PayPal logo"
+            />
+            <img
+              src="https://storage.googleapis.com/a1aa/image/knRsvBVALZ-Goep1VeDb1Tr2G5n3w5U_kKPv42LOeLM.jpg"
+              alt="Shopify logo"
+            />
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

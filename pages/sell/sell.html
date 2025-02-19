@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sell an Item</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script type="module" src="./sell.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .side-tab {
+        width: 250px;
+        background-color: #232f3e;
+        color: white;
+        padding: 20px;
+      }
+
+      .side-tab h2 {
+        margin-top: 0;
+      }
+
+      .side-tab a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+      .side-tab a i {
+        margin-right: 10px;
+      }
+
+      .side-tab a:hover {
+        background-color: #ff9900;
+      }
+      .go-home {
+        color: white;
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        transition: background 0.3s;
+      }
+
+      .go-home:hover {
+        background-color: #e68a00;
+      }
+
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      .sell-header {
+        background-color: #ff9900;
+        color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 3%;
+      }
+      .sell-form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      .sell-form label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+      .sell-form input,
+      .sell-form textarea,
+      .sell-form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .sell-form button {
+        background-color: #ff9900;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 15px;
+        width: 100%;
+      }
+      .sell-form button:hover {
+        background-color: #e68a00;
+      }
+      .selected {
+        background-color: #ff9900;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="side-tab">
+        <a href="../../index.html" class="go-home">Go Home</a>
+        <h2>Quick Links</h2>
+        <a href="../OrderHistory/Orderhistory.html"
+          ><i class="fa fa-box"></i>My Orders</a
+        >
+        <a href="../wishlist/wishlist.html"
+          ><i class="fa fa-heart"></i>Wishlist</a
+        >
+        <a href="../cart/mycart.html"><i class="fa fa-shopping-cart"></i>Cart</a>
+        <a href="../account/account.html"><i class="fa fa-user"></i>Profile</a>
+        <a href=".."><i class="fa fa-cog"></i>Settings</a>
+        <a href="../Suppourt/Suppourt.html"
+          ><i class="fa fa-question-circle"></i>Support</a
+        >
+        <a href="#"><i class="fa fa-sign-out-alt"></i>Logout</a>
+        <a class="selected" href="../sell/sell.html"
+          ><i class="fa fa-plus"></i>Sell</a
+        >
+      </div>
+      <div class="content">
+        <div class="sell-header">
+          <h1>Sell Your Item</h1>
+          <p>Fill in the details below to list your product.</p>
+        </div>
+        <form class="sell-form">
+          <label for="item-name">Item Name:</label>
+          <input type="text" id="item-name" name="item-name" required />
+
+          <label for="description">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            required
+          ></textarea>
+
+          <label for="price">Price ($):</label>
+          <input type="number" id="price" name="price" step="0.01" required />
+
+          <label for="category">Category:</label>
+          <select id="category" name="category" required>
+            <option value="">Select a category</option>
+            <option value="electronics">Electronics</option>
+            <option value="fashion">Fashion</option>
+            <option value="home">Home & Furniture</option>
+            <option value="sports">Sports & Outdoors</option>
+            <option value="vehicles">Vehicles</option>
+            <option value="books">Books & Media</option>
+            <option value="others">Others</option>
+          </select>
+
+          <div id="subcategory-container" style="display: none">
+            <label for="subcategory">Subcategory:</label>
+            <select id="subcategory" name="subcategory"></select>
+          </div>
+
+          <div id="attributes-container"></div>
+
+          <label for="image">Upload Image:</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            required
+          />
+
+          <button type="submit">Post Item</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
