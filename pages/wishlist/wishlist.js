@@ -1,5 +1,8 @@
 import { auth, db } from "../../database/config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+import {
+  onAuthStateChanged,
+  signOut,
+ } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import {
   collection,
   getDocs,
@@ -136,3 +139,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// Listen for logout button click
+function logout() {
+  signOut(auth)
+    .then(() => {
+      window.location.href = "../../index.html";
+    })
+    .catch((error) => {
+      console.error("Error signing out:", error);
+    });
+}  document.getElementById("logout-btn").addEventListener("click", logout);

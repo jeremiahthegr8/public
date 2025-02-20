@@ -20,6 +20,7 @@ body {
   margin: 1rem auto;
   padding: 1rem;
   flex: 3;
+  margin-left: 270px; /* Add margin to the left to avoid overlap with the fixed sidebar */
 }
 
 /* Wishlist Header */
@@ -109,6 +110,7 @@ body {
 .wishlist-item-actions button:hover {
   background-color: #ff8a65;
 }
+
 /* Side-Tab Navigation */
 .side-tab {
   width: 250px;
@@ -116,6 +118,11 @@ body {
   color: white;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Make the sidebar fixed */
+  top: 0; /* Align to the top of the viewport */
+  left: 0; /* Align to the left of the viewport */
+  height: 100vh; /* Full height of the viewport */
+  overflow: hidden; /* Prevent scrolling within the sidebar */
 }
 
 .side-tab h2 {
@@ -166,6 +173,7 @@ body {
   text-align: center;
   cursor: pointer;
 }
+
 .wishd {
   background-color: rgb(29, 240, 10);
   color: white;
@@ -177,4 +185,24 @@ body {
   text-decoration: none;
   display: block;
   transition: background 0.3s;
+}
+
+@media (max-width: 768px) {
+  .wishlist-section {
+    grid-template-columns: 1fr;
+  }
+
+  .side-tab {
+    width: 100%;
+    height: auto;
+    position: static;
+  }
+
+  body {
+    flex-direction: column;
+  }
+
+  .container {
+    margin-left: 0; /* Remove left margin for smaller screens */
+  }
 }

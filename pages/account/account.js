@@ -120,13 +120,15 @@ function getUpdatedValue(inputId, oldValue) {
   return input ? input.value.trim() || oldValue : oldValue; // Avoid accessing `.trim()` on `null`
 }
 
-// Logout Function
+// Listen for logout button click
 function logout() {
   signOut(auth)
     .then(() => {
-      window.location.href = "../../index.html"; // Redirect after logout
+      window.location.href = "../../index.html";
     })
-    .catch((error) => console.error("Error logging out:", error));
+    .catch((error) => {
+      console.error("Error signing out:", error);
+    });
 }
 
 // Attach event listeners after the DOM is loaded
@@ -140,5 +142,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("cancel-edit-btn")
     .addEventListener("click", () => toggleEditMode(false));
-  document.querySelector(".logout-button").addEventListener("click", logout);
+  document.getElementById("logout-btn").addEventListener("click", logout);
 });
+
+// event listener for orders, security, and settings, and pament methods
+document.getElementById("orders").addEventListener("click", () => {
+  window.location.href = "../OrderHistory/Orderhistory.html";
+});
+document.getElementById("security").addEventListener("click", () => {
+  window.location.href = "../securitysettings/securitysettings.html";
+});
+document.getElementById("payment").addEventListener("click", () => {
+  window.location.href = "../payment/payment.html";
+});
+

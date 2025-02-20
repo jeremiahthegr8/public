@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security & Settings</title>
+  <link rel="stylesheet" href="securitysettings.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+        <a href="../account/account.html" class="go-home">Go Back</a>
+      <h1>Security & Settings</h1>
+      <p>Manage your account security and preferences.</p>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Change Password Section -->
+      <section class="card">
+        <h2>Change Password</h2>
+        <p>Request a password reset link to your email.</p>
+        <form id="request-password-reset">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+          <button type="submit">Send Reset Link</button>
+        </form>
+      </section>
+
+      <!-- Two-Factor Authentication Section -->
+      <section class="card">
+        <h2>Two-Factor Authentication</h2>
+        <p>Add an extra layer of security to your account.</p>
+        <div id="2fa-status">
+          <p>2FA is currently <span id="2fa-state">disabled</span>.</p>
+          <button id="enable-2fa">Enable 2FA</button>
+          <div id="qr-code-container" class="hidden">
+            <p>Scan this QR code with your authenticator app:</p>
+            <img id="qr-code" src="" alt="QR Code">
+          </div>
+        </div>
+      </section>
+
+      <!-- Notification Preferences Section -->
+      <section class="card">
+        <h2>Notification Preferences</h2>
+        <p>Choose how you want to receive notifications.</p>
+        <form id="notification-preferences">
+          <label>
+            <input type="checkbox" id="email-notifications"> Email Notifications
+          </label>
+          <label>
+            <input type="checkbox" id="sms-notifications"> SMS Notifications
+          </label>
+          <label>
+            <input type="checkbox" id="push-notifications"> Push Notifications
+          </label>
+          <button type="submit">Save Preferences</button>
+        </form>
+      </section>
+
+      <!-- Theme Toggle -->
+      <section class="card">
+        <h2>Theme</h2>
+        <p>Choose your preferred theme.</p>
+        <div class="theme-toggle">
+          <button id="light-theme">Light</button>
+          <button id="dark-theme">Dark</button>
+        </div>
+      </section>
+
+      <!-- Change Email -->
+      <section class="card">
+        <h2>Change Email</h2>
+        <p>Update your email address.</p>
+        <form id="change-email-form">
+          <label for="new-email">New Email</label>
+          <input type="email" id="new-email" placeholder="Enter new email" required>
+          <label for="current-password-email">Current Password</label>
+          <input type="password" id="current-password-email" placeholder="Enter your password" required>
+          <button type="submit">Update Email</button>
+        </form>
+      </section>
+
+      <!-- Language Preference -->
+      <section class="card">
+        <h2>Language Preference</h2>
+        <p>Select your preferred language.</p>
+        <select id="language-preference">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+        </select>
+        <button id="save-language">Save</button>
+      </section>
+
+      <!-- Download Data -->
+      <section class="card">
+        <h2>Download Your Data</h2>
+        <p>Download a copy of your personal data.</p>
+        <button id="download-data">Download Data</button>
+      </section>
+
+      <!-- Session Timeout -->
+      <section class="card">
+        <h2>Session Timeout</h2>
+        <p>Set the duration for automatic logout after inactivity.</p>
+        <select id="session-timeout">
+          <option value="5">5 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="60">60 minutes</option>
+        </select>
+        <button id="save-timeout">Save</button>
+      </section>
+
+      <!-- Delete Account Section -->
+      <section class="card">
+        <h2>Delete Account</h2>
+        <p>Permanently delete your account and all associated data.</p>
+        <form id="delete-account-form">
+          <label for="delete-account-password">Enter your password to confirm:</label>
+          <input type="password" id="delete-account-password" placeholder="Enter your password" required>
+          <button type="submit" class="danger">Delete Account</button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="securitysettings.js"></script>
+</body>
+</html>

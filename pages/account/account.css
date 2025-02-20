@@ -19,6 +19,11 @@ body {
   color: white;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Make the sidebar fixed */
+  top: 0; /* Align to the top of the viewport */
+  left: 0; /* Align to the left of the viewport */
+  height: 100vh; /* Full height of the viewport */
+  overflow: hidden; /* Prevent scrolling within the sidebar */
 }
 
 .side-tab h2 {
@@ -69,11 +74,13 @@ body {
   text-align: center;
   cursor: pointer;
 }
+
 .container {
   flex: 1;
   max-width: 1200px;
   margin: 2rem auto;
   padding: 1rem;
+  margin-left: 270px; /* Add margin to the left to avoid overlap with the fixed sidebar */
 }
 
 .profile-header {
@@ -192,7 +199,12 @@ body {
   body {
     flex-direction: column;
   }
+
+  .container {
+    margin-left: 0; /* Remove left margin for smaller screens */
+  }
 }
+
 /* Profile Section */
 .profile-info {
   background-color: #fff;
@@ -246,6 +258,7 @@ body {
 .profile-info button:hover {
   background-color: #e68a00;
 }
+
 /* Edit Input Fields */
 .edit-input {
   width: 100%;
