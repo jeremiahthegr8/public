@@ -8,170 +8,31 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-      }
-
-      body {
-        background-color: #ffffff;
-        color: #232f3e;
-        display: flex;
-        flex-direction: row;
-        min-height: 100vh;
-      }
-
-      .container {
-        max-width: 1200px;
-        padding: 1rem;
-        flex: 3;
-      }
-
-      .support-header {
-        background-color: #ff9900;
-        color: #fff;
-        padding: 1rem;
-        border-radius: 8px;
-        text-align: center;
-        position: relative;
-      }
-
-      .support-header h1 {
-        font-size: 2rem;
-      }
-
-      .support-header p {
-        font-size: 1rem;
-      }
-
-      .support-header a {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        color: #fff;
-        text-decoration: none;
-        font-size: 1rem;
-        background-color: #232f3e;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-      }
-
-      .support-header a:hover {
-        background-color: #555;
-      }
-
-      .support-section {
-        margin-top: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      .support-card {
-        background-color: #f4f4f4;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      .support-card h3 {
-        color: #232f3e;
-        margin-bottom: 0.5rem;
-      }
-
-      .support-card p {
-        color: #555;
-        font-size: 0.9rem;
-        margin: 0.5rem 0;
-      }
-
-      .support-card a {
-        color: #ff9900;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.3s ease;
-      }
-
-      .support-card a:hover {
-        color: #232f3e;
-      }
-
-      @media (max-width: 768px) {
-        .support-section {
-          flex-direction: column;
-        }
-      }
-
-      .side-tab {
-        width: 250px;
-        background-color: #232f3e;
-        color: white;
-        padding: 20px;
-      }
-
-      .side-tab h2 {
-        margin-top: 0;
-      }
-
-      .side-tab a {
-        color: white;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 5px;
-        transition: background 0.3s;
-      }
-
-      .side-tab a i {
-        margin-right: 10px;
-      }
-
-      .side-tab a:hover {
-        background-color: #ff9900;
-      }
-      .go-home {
-        color: white;
-        text-align: center;
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: none;
-        display: block;
-        transition: background 0.3s;
-      }
-
-      .go-home:hover {
-        background-color: #e68a00;
-      }
-      .selected {
-        background-color: #ff9900;
-      }
-    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./Suppourt.css" />
   </head>
   <body>
     <div class="side-tab">
       <a href="../../../index.html" class="go-home">Go Home</a>
       <h2>Quick Links</h2>
-      <a href="../OrderHistory/Orderhistory.html"
-        ><i class="fa fa-box"></i>My Orders</a
-      >
+            <a href="../account/account.html"><i class="fa fa-user"></i>Profile</a>
+
+      
       <a href="../wishlist/wishlist.html"
         ><i class="fa fa-heart"></i>Wishlist</a
       >
       <a href="../cart/mycart.html"><i class="fa fa-shopping-cart"></i>Cart</a>
-      <a href="../account/account.html"><i class="fa fa-user"></i>Profile</a>
+      <a href="../OrderHistory/Orderhistory.html"
+        ><i class="fa fa-box"></i>My Orders</a
+      >
       <a href=".."><i class="fa fa-cog"></i>Settings</a>
       <a class="selected" href="../Suppourt/Suppourt.html"
         ><i class="fa fa-question-circle"></i>Support</a
       >
+      <a href="../sell/sell.html"><i class="fa fa-plus"></i>Sell</a>
       <a href="#"><i class="fa fa-sign-out-alt"></i>Logout</a>
     </div>
 

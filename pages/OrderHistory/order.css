@@ -157,3 +157,7 @@ h1 {
 .track-order-btn:hover {
   background-color: #0056b3;
 }
+.selected {
+  background-color: rgb(29, 240, 10);
+  color: white;
+}

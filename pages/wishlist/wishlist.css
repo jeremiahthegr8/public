@@ -24,7 +24,7 @@ body {
 
 /* Wishlist Header */
 .wishlist-header {
-  background-color: #ff9900;
+  background-color: rgb(29, 240, 10);
   color: #fff;
   padding: 1.5rem;
   border-radius: 8px;
@@ -167,7 +167,7 @@ body {
   cursor: pointer;
 }
 .wishd {
-  background-color: #ff9900;
+  background-color: rgb(29, 240, 10);
   color: white;
   text-align: center;
   padding: 10px;

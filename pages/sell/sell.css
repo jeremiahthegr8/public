@@ -1,0 +1,105 @@
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .side-tab {
+        width: 250px;
+        background-color: #007bff;
+        color: white;
+        padding: 20px;
+      }
+
+      .side-tab h2 {
+        margin-top: 0;
+      }
+
+      .side-tab a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+      .side-tab a i {
+        margin-right: 10px;
+      }
+
+      .side-tab a:hover {
+        background-color: rgb(29, 240, 10);
+      }
+      .go-home {
+        color: white;
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        transition: background 0.3s;
+      }
+
+      .go-home:hover {
+        background-color: #e68a00;
+      }
+
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      .sell-header {
+        background-color: rgb(29, 240, 10);
+        color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 3%;
+      }
+      .sell-form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      .sell-form label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+      }
+      .sell-form input,
+      .sell-form textarea,
+      .sell-form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .sell-form button {
+        background-color: rgb(29, 240, 10);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 15px;
+        width: 100%;
+      }
+      .sell-form button:hover {
+        background-color: #e68a00;
+      }
+      .selected {
+        background-color: rgb(29, 240, 10);
+      }

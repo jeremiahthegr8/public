@@ -103,36 +103,44 @@ function renderCartItem(itemId, product, quantity) {
 
 // Function: Load and render the current user's cart items
 async function loadCartItems(user) {
-    try {
-        const cartRef = collection(db, "users", user.uid, "cart");
-        const cartSnapshot = await getDocs(cartRef);
-        cartItemsContainer.innerHTML = ""; // Clear any previous items
+  try {
+    const cartRef = collection(db, "users", user.uid, "cart");
+    const cartSnapshot = await getDocs(cartRef);
+    cartItemsContainer.innerHTML = ""; // Clear any previous items
 
-        if (cartSnapshot.empty) {
-            cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
-            return;
-        }
-
-        // For each cart item, fetch the corresponding product details
-        for (const cartDoc of cartSnapshot.docs) {
-            const cartData = cartDoc.data();
-            const itemId = cartData.itemId;
-            const quantity = cartData.quantity;
-
-            // Fetch product details from the "items" collection
-            const productDocRef = doc(db, "items", itemId);
-            const productDoc = await getDoc(productDocRef);
-            if (productDoc.exists()) {
-                const productData = productDoc.data();
-                const cartItemElement = renderCartItem(itemId, productData, quantity);
-                cartItemsContainer.appendChild(cartItemElement);
-            }
-        }
-    } catch (error) {
-        console.error("Error loading cart items:", error);
-        cartItemsContainer.innerHTML =
-            "<p>Error loading cart items. Please try again later.</p>";
+    if (cartSnapshot.empty) {
+      cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+      return;
     }
+
+    // For each cart item, fetch the corresponding product details
+    for (const cartDoc of cartSnapshot.docs) {
+      const cartData = cartDoc.data();
+      const itemId = cartData.itemId;
+      const quantity = cartData.quantity;
+
+      // Ensure itemId and quantity are defined
+      if (!itemId || !quantity) {
+        console.error("Invalid cart item data:", cartData);
+        continue;
+      }
+
+      // Fetch product details from the "items" collection
+      const productDocRef = doc(db, "items", itemId);
+      const productDoc = await getDoc(productDocRef);
+      if (productDoc.exists()) {
+        const productData = productDoc.data();
+        const cartItemElement = renderCartItem(itemId, productData, quantity);
+        cartItemsContainer.appendChild(cartItemElement);
+      } else {
+        console.error("Product not found for itemId:", itemId);
+      }
+    }
+  } catch (error) {
+    console.error("Error loading cart items:", error);
+    cartItemsContainer.innerHTML =
+      "<p>Error loading cart items. Please try again later.</p>";
+  }
 }
 
 // Listen for authentication changes and load the cart when a user is logged in

@@ -14,13 +14,6 @@ import {
   getFirestore,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-firebase
-  .auth()
-  .setPersistence(firebase.auth.Auth.Persistence.NONE)
-  .then(() => {
-    console.log("Auth persistence disabled");
-  });
-
 
 // Fetch and display featured products
 async function fetchFeaturedProducts() {

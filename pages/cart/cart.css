@@ -73,7 +73,7 @@ body {
 }
 
 .cart-header {
-  background-color: #ff9900;
+  background-color: rgb(29, 240, 10);
   color: #fff;
   padding: 1rem;
   border-radius: 8px;
@@ -115,7 +115,7 @@ body {
 }
 
 .cart-item-actions button {
-  background-color: #ff9900;
+  background-color: rgb(29, 240, 10);
   color: white;
   border: none;
   padding: 5px 10px;
@@ -134,7 +134,7 @@ body {
 }
 
 .checkout button {
-  background-color: #ff9900;
+  background-color: rgb(29, 240, 10);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -146,6 +146,8 @@ body {
 .checkout button:hover {
   background-color: #e68a00;
 }
+
 .selected {
-  background-color: #ff9900;
+  background-color: rgb(29, 240, 10);
+  color: white;
 }
