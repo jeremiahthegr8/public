@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seller Registration | J-Commerce</title>
+  <link rel="stylesheet" href="./registerseller.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="registration-container">
+    <h1>Register as a Seller</h1>
+    <form id="seller-registration-form">
+      <div class="form-group">
+        <label for="business-name">Business Name:</label>
+        <input type="text" id="business-name" placeholder="Enter your business name" required>
+      </div>
+      <div class="form-group">
+        <label for="business-email">Business Email:</label>
+        <input type="email" id="business-email" placeholder="Enter your business email" required>
+      </div>
+      <div class="form-group">
+        <label for="business-phone">Business Phone:</label>
+        <input type="tel" id="business-phone" placeholder="Enter your contact number">
+      </div>
+      <div class="form-group">
+        <label for="business-address">Business Address:</label>
+        <input type="text" id="business-address" placeholder="Enter your business address">
+      </div>
+      <div class="form-group">
+        <label for="profile-photo">Profile/Logo Image URL:</label>
+        <input type="text" id="profile-photo" placeholder="Enter image URL (optional)">
+      </div>
+      <div class="form-group">
+        <label for="return-policy">Return Policy:</label>
+        <select id="return-policy" required>
+          <option value="30-day">30 Day Return Policy</option>
+          <option value="no-return">No Return Policy</option>
+          <option value="custom">Custom Return Policy</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="shipping-policy">Shipping Policy:</label>
+        <input type="text" id="shipping-policy" placeholder="Enter your shipping policy" required>
+      </div>
+      <div class="form-group">
+        <label>Preferred Payment Method:</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="payment-option" value="cash" required>
+            Cash on Delivery
+          </label>
+          <label>
+            <input type="radio" name="payment-option" value="paymentFirst" required>
+            Payment First
+          </label>
+        </div>
+      </div>
+      <!-- New Social Links Fields -->
+      <div class="form-group">
+        <label for="facebook">Facebook URL:</label>
+        <input type="text" id="facebook" placeholder="Enter your Facebook profile URL">
+      </div>
+      <div class="form-group">
+        <label for="whatsapp">WhatsApp Number/Link:</label>
+        <input type="text" id="whatsapp" placeholder="Enter your WhatsApp contact/link">
+      </div>
+      <div class="form-group">
+        <label for="x">X (formerly Twitter) URL:</label>
+        <input type="text" id="x" placeholder="Enter your X profile URL">
+      </div>
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" id="terms-agreement" required>
+          I agree to the Seller Terms and Conditions.
+        </label>
+      </div>
+      <button type="submit">Register as Seller</button>
+    </form>
+  </div>
+  <script type="module" src="./registerseller.js"></script>
+</body>
+</html>

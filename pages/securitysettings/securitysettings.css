@@ -1,4 +1,3 @@
-
 /* General Styles */
 body {
   font-family: 'Roboto', sans-serif;
@@ -161,4 +160,74 @@ button.danger:hover {
 
 .go-home:hover {
   background-color: rgb(29, 240, 10);
+}
+
+.side-tab {
+  width: 210px;
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Make the sidebar fixed */
+  top: 0; /* Align to the top of the viewport */
+  left: 0; /* Align to the left of the viewport */
+  height: 100vh; /* Full height of the viewport */
+  overflow: hidden; /* Prevent scrolling within the sidebar */
+}
+
+.side-tab h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.side-tab a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.side-tab a i {
+  margin-right: 10px;
+}
+
+.side-tab a:hover {
+  background-color: rgb(29, 240, 10);
+}
+
+.go-home {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: rgb(29, 240, 10);
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.go-home:hover {
+  background-color: rgb(29, 240, 10);
+}
+
+#logout-btn {
+  margin-top: 20px;
+  background-color: rgb(29, 240, 10);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.container {
+  flex: 1;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  margin-left: 270px; /* Add margin to the left to avoid overlap with the fixed sidebar */
 }

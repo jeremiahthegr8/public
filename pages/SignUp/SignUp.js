@@ -3,21 +3,53 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  sendEmailVerification,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import {
   collection,
   doc,
   setDoc,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-// Validate email
+// Utility functions
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Validate password strength
 function isValidPassword(password) {
   return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password);
+}
+
+// Function to get user's IP address and geolocation
+async function getUserIPAndLocation() {
+  try {
+    const response = await fetch("https://ipapi.co/json/");
+    const data = await response.json();
+    return {
+      ip: data.ip,
+      city: data.city,
+      region: data.region,
+      country: data.country_name,
+    };
+  } catch (error) {
+    console.error("Error fetching IP and location:", error);
+    return {
+      ip: "Unknown",
+      city: "Unknown",
+      region: "Unknown",
+      country: "Unknown",
+    };
+  }
+}
+
+// Function to get device and browser information
+function getDeviceAndBrowserInfo() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+  };
 }
 
 // Handle user registration
@@ -35,8 +67,8 @@ document
     const address = document.getElementById("address").value.trim();
     const country = document.getElementById("country").value.trim();
     const city = document.getElementById("city").value.trim();
+    const policyAgreement = document.getElementById("policy-agreement").checked;
 
-    // Validate inputs
     if (
       !email ||
       !password ||
@@ -56,12 +88,16 @@ document
     }
     if (!isValidPassword(password)) {
       alert(
-        "Password must be at least 6 characters long and include at least one letter and one number.",
+        "Password must be at least 6 characters long and include at least one letter and one number."
       );
       return;
     }
     if (password !== confirmPass) {
       alert("Passwords do not match!");
+      return;
+    }
+    if (!policyAgreement) {
+      alert("You must agree to the Terms and Conditions and Privacy Policy.");
       return;
     }
 
@@ -70,11 +106,33 @@ document
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
       const user = userCredential.user;
 
-      // Create a document in "users/{userId}"
+      // Set up actionCodeSettings to point to our unified action page for email verification.
+      const actionCodeSettings = {
+        url: "https://ecommerce-d50ed.web.app/pages/action/action.html?mode=verifyEmail",
+        handleCodeInApp: true,
+      };
+
+      // Send email verification
+      await sendEmailVerification(user, actionCodeSettings);
+      alert(
+        "A verification email has been sent. Please check your inbox and click the link to verify your email."
+      );
+
+      // Get user's IP and location
+      const {
+        ip,
+        city: userCity,
+        region,
+        country: userCountry,
+      } = await getUserIPAndLocation();
+      // Get device and browser info
+      const deviceInfo = getDeviceAndBrowserInfo();
+
+      // Save user data in Firestore
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, {
         email: user.email,
@@ -84,36 +142,63 @@ document
         address,
         country,
         city,
-        createdAt: new Date(),
+        emailVerified: false, // will update after verification
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        loginHistory: [], // Initialize login history
+        consentAndPolicy: {
+          accepted: true,
+          timestamp: new Date().toISOString(),
+        },
+        securityFlags: {
+          suspiciousActivity: false,
+          twoFactorEnabled: false,
+        },
+        deviceInfo,
+        ipAddress: ip,
+        geolocation: {
+          city: userCity,
+          region,
+          country: userCountry,
+        },
       });
 
-      // Create subcollections inside "users/{userId}"
+      // Create subcollections
       await setDoc(doc(collection(userRef, "cart")), { items: [] });
       await setDoc(doc(collection(userRef, "wishlist")), { items: [] });
       await setDoc(doc(collection(userRef, "orders")), { orders: [] });
       await setDoc(doc(collection(userRef, "settings")), { preferences: {} });
 
-      alert("Account created successfully!");
-      window.location.href = "../../index.html"; // Redirect to home page
+      // Sign out the user so that they must click the verification link.
+      await auth.signOut();
+
+      // Redirect to a page informing the user to check their email.
+      window.location.href = "../../index.html";
     } catch (error) {
       console.error("Error signing up:", error);
       alert(error.message);
     }
   });
 
-//Google Sign-up
+// Google Sign-up (similar logic applies; omitted here for brevity)
 document.getElementById("google-signup").addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Reference to user document in Firestore
+    const {
+      ip,
+      city: userCity,
+      region,
+      country: userCountry,
+    } = await getUserIPAndLocation();
+    const deviceInfo = getDeviceAndBrowserInfo();
+
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      // Ask user for missing details
       const fullName = prompt("Enter your full name:", user.displayName || "");
       const phone = prompt("Enter your phone number:", user.phoneNumber || "");
       const age = prompt("Enter your age:", "");
@@ -121,7 +206,6 @@ document.getElementById("google-signup").addEventListener("click", async () => {
       const city = prompt("Enter your city:", "");
       const address = prompt("Enter your full address:", "");
 
-      // Save user profile data in Firestore
       await setDoc(userRef, {
         email: user.email,
         fullName,
@@ -131,10 +215,27 @@ document.getElementById("google-signup").addEventListener("click", async () => {
         city,
         address,
         profilePic: user.photoURL || "",
-        createdAt: new Date(),
+        emailVerified: true, // Google sign-ups are auto verified
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        loginHistory: [],
+        consentAndPolicy: {
+          accepted: true,
+          timestamp: new Date().toISOString(),
+        },
+        securityFlags: {
+          suspiciousActivity: false,
+          twoFactorEnabled: false,
+        },
+        deviceInfo,
+        ipAddress: ip,
+        geolocation: {
+          city: userCity,
+          region,
+          country: userCountry,
+        },
       });
 
-      // Create subcollections inside "users/{userId}"
       await setDoc(doc(collection(userRef, "cart")), { items: [] });
       await setDoc(doc(collection(userRef, "wishlist")), { items: [] });
       await setDoc(doc(collection(userRef, "orders")), { orders: [] });
@@ -142,7 +243,7 @@ document.getElementById("google-signup").addEventListener("click", async () => {
     }
 
     alert("Signed up with Google!");
-    window.location.href = "../../index.html"; // Redirect to home page
+    window.location.href = "../../index.html";
   } catch (error) {
     console.error("Google sign-up error:", error);
     alert(error.message);

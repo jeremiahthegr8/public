@@ -17,28 +17,22 @@
   </head>
   <body>
     <div class="container">
-      <div class="side-tab">
-        <a href="../../index.html" class="go-home">Go Home</a>
-        <h2>Quick Links</h2>
-                <a href="../account/account.html"><i class="fa fa-user"></i>Profile</a>
-
-        
-        <a href="../wishlist/wishlist.html"
-          ><i class="fa fa-heart"></i>Wishlist</a
-        >
-        <a href="../cart/mycart.html"><i class="fa fa-shopping-cart"></i>Cart</a>
-        <a href="../OrderHistory/Orderhistory.html"
-          ><i class="fa fa-box"></i>My Orders</a
-        >
-        <a href=".."><i class="fa fa-cog"></i>Settings</a>
-        <a href="../Suppourt/Suppourt.html"
-          ><i class="fa fa-question-circle"></i>Support</a
-        >
-         <a class="selected" href="../sell/sell.html"
-          ><i class="fa fa-plus"></i>Sell</a
-        >
-      <a href="#" id="logout-btn"><i class="fa fa-sign-out-alt"></i>Logout</a>       
-      </div>
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <h2>Seller Panel</h2>
+                      <a href="../account/account.html" id="go-back-link">Go Back</a>
+        <nav>
+          <ul>
+            <li><a href="../seller/seller.html" id="dashboard-link" class="active">Dashboard</a></li>
+            <li><a href="../sell/sell.html" id="sell-item-link">Sell Item</a></li>
+            <li><a href="../reqorders/requestedorders.html" id="requested-orders-link">Orders</a></li>
+            <li><a href="../ratingsandreview/ratingsandreview.html" id="ratings-complaints-link">Ratings & Complaints</a></li>
+            <li><a href="../messages/messages.html" id="messages-link">Messages</a></li>
+            <li><a href="#" id="logout-btn">Logout</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <!-- Main Dashboard Content -->
       <div class="content">
         <div class="sell-header">
           <h1>Sell Your Item</h1>
@@ -49,15 +43,14 @@
           <input type="text" id="item-name" name="item-name" required />
 
           <label for="description">Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            rows="4"
-            required
-          ></textarea>
+          <textarea id="description" name="description" rows="4" required></textarea>
 
           <label for="price">Price ($):</label>
           <input type="number" id="price" name="price" step="0.01" required />
+
+          <!-- New Quantity Field -->
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" name="quantity" required />
 
           <label for="category">Category:</label>
           <select id="category" name="category" required>
@@ -79,13 +72,7 @@
           <div id="attributes-container"></div>
 
           <label for="image">Upload Image:</label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            required
-          />
+          <input type="file" id="image" name="image" accept="image/*" required />
 
           <button type="submit">Post Item</button>
         </form>

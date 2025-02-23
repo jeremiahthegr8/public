@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages | J-Commerce</title>
+  <link rel="stylesheet" href="./messageseller.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <h2>Seller Panel</h2>
+                      <a href="../account/account.html" id="go-back-link">Go Back</a>
+      <nav>
+        <ul>
+          <li><a href="../seller/seller.html" id="dashboard-link">Dashboard</a></li>
+          <li><a href="../sell/sell.html" id="sell-item-link">Sell Item</a></li>
+          <li><a href="../reqorders/requestedorders.html" id="requested-orders-link">Orders</a></li>
+          <li><a href="../ratingsandreview/ratingsandreview.html" id="ratings-complaints-link">Ratings & Complaints</a></li>
+          <li><a href="../messageseller/messageseller.html" id="messages-link" class="active">Messages</a></li>
+          <li><a href="#" id="logout-btn">Logout</a></li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content: Chat List -->
+    <main class="content">
+      <header class="content-header">
+        <h1>Messages</h1>
+        <p>Welcome, <span id="seller-name">Seller</span></p>
+        <p>Your conversations with buyers</p>
+      </header>
+      <section class="chat-list-section">
+        <div id="chat-list">
+          <p>No chats available.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <!-- Include Firebase and your messages.js script -->
+  <script type="module" src="messageseller.js"></script>
+</body>
+</html>

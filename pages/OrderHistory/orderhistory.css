@@ -1,0 +1,220 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.order-history-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab.active {
+  background-color: #0056b3;
+}
+
+.tab:hover {
+  background-color: #0056b3;
+}
+
+#orders-list {
+  margin-top: 20px;
+}
+
+.order-entry {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.order-entry p {
+  margin: 5px 0;
+}
+
+.order-entry strong {
+  color: #333;
+}
+
+.order-entry .order-status {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.order-entry .order-status.Delivered {
+  color: #28a745;
+}
+
+.order-entry .order-status.Cancelled {
+  color: #dc3545;
+}
+
+.order-actions {
+  margin-top: 10px;
+}
+
+.order-actions button {
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.order-actions button.cancel-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.order-actions button.return-btn {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.order-actions button:hover {
+  opacity: 0.9;
+}
+/* Tabs Styles */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab.active {
+  background-color: #0056b3;
+}
+
+.tab:hover {
+  background-color: #0056b3;
+}
+
+/* Order Status Colors */
+.order-status.Pending {
+  color: #007bff;
+}
+
+.order-status.Confirmed {
+  color: #28a745;
+}
+
+.order-status.Delivered {
+  color: #6c757d;
+}
+
+.order-status.Cancelled {
+  color: #dc3545;
+}
+
+.order-status.ReturnRequested {
+  color: #ffc107;
+}
+
+.side-tab {
+  width: 210px;
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Make the sidebar fixed */
+  top: 0; /* Align to the top of the viewport */
+  left: 0; /* Align to the left of the viewport */
+  height: 100vh; /* Full height of the viewport */
+  overflow: hidden; /* Prevent scrolling within the sidebar */
+}
+
+.side-tab h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.side-tab a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.side-tab a i {
+  margin-right: 10px;
+}
+
+.side-tab a:hover {
+  background-color: rgb(29, 240, 10);
+}
+
+.go-home {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: rgb(29, 240, 10);
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.go-home:hover {
+  background-color: rgb(29, 240, 10);
+}
+
+#logout-btn {
+  margin-top: 20px;
+  background-color: rgb(29, 240, 10);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.container {
+  flex: 1;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  margin-left: 270px; /* Add margin to the left to avoid overlap with the fixed sidebar */
+}

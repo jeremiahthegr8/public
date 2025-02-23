@@ -1,50 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Orders Page</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./order.css" />
-    <script type="module" src="./order.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <!-- Sidebar -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order History</title>
+  <link rel="stylesheet" href="orderhistory.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
+  <!-- Firebase SDKs -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js"></script>
+  <!-- Your Firebase configuration -->
+  <script type="module" src="./orderhistory.js"></script>
+</head>
+<body>
+<div class="container">
       <div class="side-tab">
         <a href="../../index.html" class="go-home">Go Home</a>
         <h2>Quick Links</h2>
-        <a href="../account/account.html"><i class="fa fa-user"></i> Profile</a>
-        <a href="../wishlist/wishlist.html"><i class="fa fa-heart"></i> Wishlist</a>
-        <a href="../cart/mycart.html"><i class="fa fa-shopping-cart"></i> Cart</a>
-        <a class="selected" href="../OrderHistory/Orderhistory.html"><i class="fa fa-box"></i> My Orders</a>
-        <a href=".."><i class="fa fa-cog"></i> Settings</a>
-        <a href="../Suppourt/Suppourt.html"><i class="fa fa-question-circle"></i> Support</a>
-          <a href="../sell/sell.html">
-        <i class="fa fa-plus"></i>Sell
-      </a>
-        <a href="#" id="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</a>
+                <a href="../account/account.html"><i class="fa fa-user"></i>Profile</a>
+
+        <a href="../wishlist/wishlist.html">
+          <i class="fa fa-heart"></i>Wishlist</a
+        >
+        <a class="selected" href="../cart/mycart.html">
+          <i class="fa fa-shopping-cart"></i>Cart</a
+        >
+         <a href="../OrderHistory/Orderhistory.html">
+          <i class="fa fa-box"></i>My Orders</a
+        >
+      <a href="../securitysettings/securitysettings.html"><i class="fa fa-cog"></i>Settings</a>
+        <a href="../Suppourt/Suppourt.html">
+          <i class="fa fa-question-circle"></i>Support</a
+        >
+            <a href="../messageuser/messageuser.html"
+        ><i class="fa fa-envelope"></i>Messages</a
+      >
+                <a href="../seller/seller.html"><i class="fa fa-plus"></i>Sell</a>
+
+      <a href="#" id="logout-btn"><i class="fa fa-sign-out-alt"></i>Logout</a>
       </div>
 
-      <!-- Main Content -->
-      <div class="content">
-        <h1>Order History</h1>
-        <!-- Filter Dropdown -->
-        <div class="filter-container">
-          <label for="order-filter">Filter by Status:</label>
-          <select id="order-filter">
-            <option value="all">All Orders</option>
-            <option value="Pending">Pending</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Canceled">Canceled</option>
-          </select>
-        </div>
-
-        <!-- Orders will be injected here -->
-        <div id="orders-container"></div>
-      </div>
-    </div>
-  </body>
+<div class="content">
+  <div class="order-history-container">
+  <h1>Order History</h1>
+  <!-- Tabs for Order Status -->
+  <div class="tabs">
+    <button class="tab active" data-status="All">All</button>
+    <button class="tab" data-status="Pending">Pending</button>
+    <button class="tab" data-status="Confirmed">Confirmed</button>
+    <button class="tab" data-status="Delivered">Delivered</button>
+    <button class="tab" data-status="Cancelled">Cancelled</button>
+    <button class="tab" data-status="ReturnRequested">Return Requested</button>
+  </div>
+  <!-- Orders List -->
+  <div id="orders-list">
+    <!-- Orders will be dynamically inserted here -->
+  </div>
+</div>
+</div>
+</body>
 </html>

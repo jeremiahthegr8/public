@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="./test.css" />
+    <script type="module" src="./test.js"></script>
+  </head>
+  <body>
+    <a href="../../index.html" class="home-icon">
+      <img src="../../assets/icons/home.png" alt="Home" />
+    </a>
+
+    <div class="register">
+      <form class="register__form">
+        <h1 class="register__title">Sign Up</h1>
+
+        <div class="register__content">
+          <!-- Email -->
+          <div class="register__box">
+            <i class="bx bx-user register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="email"
+                required
+                class="register__input"
+                id="email"
+                placeholder=""
+              />
+              <label for="email" class="register__label">Email</label>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="register__box">
+            <i class="ri-lock-2-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="password"
+                required
+                class="register__input"
+                id="register-pass"
+                placeholder=""
+              />
+              <label for="register-pass" class="register__label">Password</label>
+              <i class="ri-eye-off-line register__eye" id="register-eye"></i>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="register__box">
+            <i class="ri-lock-2-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="password"
+                required
+                class="register__input"
+                id="confirm-pass"
+                placeholder=""
+              />
+              <label for="confirm-pass" class="register__label"
+                >Confirm Password</label
+              >
+              <i class="ri-eye-off-line register__eye" id="confirm-eye"></i>
+            </div>
+          </div>
+
+          <!-- Full Name -->
+          <div class="register__box">
+            <i class="ri-user-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="text"
+                required
+                class="register__input"
+                id="full-name"
+                placeholder=""
+              />
+              <label for="full-name" class="register__label">Full Name</label>
+            </div>
+          </div>
+
+          <!-- Age -->
+          <div class="register__box">
+            <i class="ri-calendar-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="number"
+                required
+                class="register__input"
+                id="age"
+                placeholder=""
+                min="13"
+              />
+              <label for="age" class="register__label">Age</label>
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="register__box">
+            <i class="ri-phone-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="tel"
+                required
+                class="register__input"
+                id="phone"
+                placeholder=""
+              />
+              <label for="phone" class="register__label">Phone Number</label>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="register__box">
+            <i class="ri-home-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="text"
+                required
+                class="register__input"
+                id="address"
+                placeholder=""
+              />
+              <label for="address" class="register__label">Address</label>
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div class="register__box">
+            <i class="ri-earth-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="text"
+                required
+                class="register__input"
+                id="country"
+                placeholder=""
+              />
+              <label for="country" class="register__label">Country</label>
+            </div>
+          </div>
+
+          <!-- City -->
+          <div class="register__box">
+            <i class="ri-building-line register__icon"></i>
+            <div class="register__box-input">
+              <input
+                type="text"
+                required
+                class="register__input"
+                id="city"
+                placeholder=""
+              />
+              <label for="city" class="register__label">City</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Privacy Policy and terms -->
+        <div class="register__terms">
+          <input type="checkbox" id="policy-agreement" required />
+          <label for="terms"
+            >I agree to the <a href="#">Privacy Policy</a> and <a href="#">Terms of
+            Service</a></label
+          >
+        </div>
+
+        <button type="submit" class="register__button">Register</button>
+
+        <!-- Social Sign-Up Options -->
+        <div class="social-login">
+          <p>Or sign up with:</p>
+          <div class="social-icons">
+            <a href="#" id="google-signup"
+              ><img src="../../assets/icons/google.png" alt="Google"
+            /></a>
+            <a href="#" id="twitter-signup"
+              ><img src="../../assets/icons/x.png" alt="Twitter"
+            /></a>
+            <a href="#" id="facebook-signup"
+              ><img src="../../assets/icons/facebook.png" alt="Facebook"
+            /></a>
+          </div>
+        </div>
+
+        <p class="register__login">
+          Already have an account? <a href="../Login/Login.html">Login</a>
+        </p>
+      </form>
+    </div>
+  </body>
+</html>

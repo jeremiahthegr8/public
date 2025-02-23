@@ -468,10 +468,9 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
 }
 
-.seventytwo .content {
+.content {
   background: rgba(0, 0, 0, 0.6);
   padding: 20px;
   border-radius: 10px;

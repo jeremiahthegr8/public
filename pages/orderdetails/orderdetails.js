@@ -1,158 +1,141 @@
 import { auth, db } from "../../database/config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import {
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  onSnapshot,
   doc,
-  getDoc,
   updateDoc,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-// DOM Elements
-const orderInfoContainer = document.getElementById("order-info");
-const backBtn = document.getElementById("back-btn");
+// Global variable to store orders and current tab filter
+let allOrders = [];
+let currentFilter = "all";
 
-// Get orderId from URL
-const urlParams = new URLSearchParams(window.location.search);
-const orderId = urlParams.get("orderId");
-
-let currentUser = null;
-
-// Listen for authentication state changes
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    await loadOrderDetails(orderId);
+// Listen for authentication state changes and load buyer orders
+onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    loadOrders(user.uid);
   } else {
-    window.location.href = "../../index.html"; // Redirect if not logged in
+    window.location.href = "../../index.html";
   }
 });
 
-// Load Order Details
-async function loadOrderDetails(orderId) {
-  if (!currentUser || !orderId) return;
+// Real-time listener for buyer's orders
+function loadOrders(buyerId) {
+  const ordersRef = collection(db, "orders");
+  // Query orders where buyerId matches (assuming orders have a buyerId field)
+  const q = query(ordersRef, where("buyerId", "==", buyerId), orderBy("createdAt", "desc"), limit(20));
 
-  orderInfoContainer.innerHTML = "<p>Loading order details...</p>";
-  try {
-    const orderRef = doc(db, "users", currentUser.uid, "orders", orderId);
-    const orderSnap = await getDoc(orderRef);
+  onSnapshot(q, (snapshot) => {
+    allOrders = [];
+    snapshot.forEach((docSnap) => {
+      const order = docSnap.data();
+      order.id = docSnap.id;
+      allOrders.push(order);
+    });
+    renderOrders();
+  }, (error) => {
+    console.error("Error loading orders:", error);
+  });
+}
 
-    if (!orderSnap.exists()) {
-      orderInfoContainer.innerHTML = "<p>Order not found.</p>";
-      return;
-    }
+// Render orders based on the current tab filter
+function renderOrders() {
+  const ordersList = document.getElementById("orders-list");
+  ordersList.innerHTML = "";
 
-    const order = orderSnap.data();
-    const orderDate =
-      order.createdAt?.toDate?.().toLocaleString() || "Unknown Date";
+  const filteredOrders = currentFilter === "all" 
+    ? allOrders 
+    : allOrders.filter(order => order.status === currentFilter);
 
-    // Fetch item details for each item in the order
-    const itemsWithDetails = await Promise.all(
-      order.items.map(async (item) => {
-        const itemRef = doc(db, "items", item.itemId);
-        const itemSnap = await getDoc(itemRef);
-        return {
-          ...item,
-          ...itemSnap.data(),
-        };
-      })
-    );
+  if (filteredOrders.length === 0) {
+    ordersList.innerHTML = "<p>No orders found for this category.</p>";
+    return;
+  }
 
-    // Display order details
-    orderInfoContainer.innerHTML = `
-      <div class="order-header">
-        <p><strong>Order ID:</strong> ${orderId}</p>
-        <p><strong>Status:</strong> <span class="order-status ${
-          order.status?.toLowerCase() || "pending"
-        }">${order.status || "Pending"}</span></p>
+  filteredOrders.forEach((order) => {
+    const orderDiv = document.createElement("div");
+    orderDiv.classList.add("order-entry");
+    orderDiv.innerHTML = `
+      <div class="order-details">
+        <p><strong>Order ID:</strong> ${order.id}</p>
+        <p><strong>Seller:</strong> ${order.sellerName || "N/A"}</p>
+        <p><strong>Quantity:</strong> ${order.quantity || 1}</p>
+        <p><strong>Status:</strong> ${order.status}</p>
+        <p><strong>Message:</strong> ${order.message || ""}</p>
       </div>
-      <p><strong>Date:</strong> ${orderDate}</p>
-      <p><strong>Payment Method:</strong> ${order.paymentMethod || "N/A"}</p>
-      <p><strong>Total Amount:</strong> $${
-        order.total?.toFixed(2) || "0.00"
-      }</p>
-      <div class="order-process">
-        <h3>Order Process</h3>
-        <div class="process-steps">
-          <div class="step ${
-            order.status === "Pending" ? "active" : ""
-          }">Pending</div>
-          <div class="step ${
-            order.status === "Shipped" ? "active" : ""
-          }">Shipped</div>
-          <div class="step ${
-            order.status === "In Your Country" ? "active" : ""
-          }">In Your Country</div>
-          <div class="step ${
-            order.status === "Delivered" ? "active" : ""
-          }">Delivered</div>
-        </div>
-      </div>
-      <div class="order-items">
-        <h3>Items Purchased</h3>
-        <ul>
-          ${
-            itemsWithDetails
-              .map(
-                (item) => `
-                <li class="item">
-                  <img src="${
-                    item.imageBase64 || "https://via.placeholder.com/100"
-                  }" alt="${item.itemName}" class="item-image" />
-                  <div class="item-details">
-                    <p><strong>${item.itemName}</strong></p>
-                    <p>Quantity: ${item.quantity}</p>
-                    <p>Price: $${item.price?.toFixed(2) || "0.00"}</p>
-                    <p>Attributes: ${
-                      item.attributes
-                        ? Object.entries(item.attributes)
-                            .map(([key, value]) => `${key}: ${value}`)
-                            .join(", ")
-                        : "N/A"
-                    }</p>
-                  </div>
-                </li>
-              `
-              )
-              .join("") || "<li>No items found.</li>"
-          }
-        </ul>
-      </div>
-      ${
-        order.status === "Pending"
-          ? `<button id="cancel-order-btn" class="cancel-btn">Cancel Order</button>`
-          : ""
-      }
-    `;
-
-    // Add event listener for cancel order button
-    if (order.status === "Pending") {
-      const cancelOrderBtn = document.getElementById("cancel-order-btn");
-      cancelOrderBtn.addEventListener("click", async () => {
-        if (confirm("Are you sure you want to cancel this order?")) {
-          await cancelOrder(orderId);
+      <div class="order-actions">
+        ${
+          (order.status === "Pending" || order.status === "Confirmed")
+            ? `<button class="cancel-btn" data-id="${order.id}">Cancel Order</button>`
+            : order.status === "Delivered"
+            ? `<button class="return-btn" data-id="${order.id}">Request Return</button>`
+            : ""
         }
-      });
-    }
-  } catch (error) {
-    console.error("Error loading order details:", error);
-    orderInfoContainer.innerHTML =
-      "<p>Error loading order details. Please try again.</p>";
-  }
+      </div>
+    `;
+    ordersList.appendChild(orderDiv);
+  });
+  attachActionListeners();
 }
 
-// Cancel Order
-async function cancelOrder(orderId) {
-  try {
-    const orderRef = doc(db, "users", currentUser.uid, "orders", orderId);
-    await updateDoc(orderRef, { status: "Canceled" });
-    alert("Order canceled successfully.");
-    window.location.reload(); // Refresh the page to reflect the updated status
-  } catch (error) {
-    console.error("Error canceling order:", error);
-    alert("Failed to cancel order. Please try again.");
-  }
+// Attach event listeners for cancellation and return requests
+function attachActionListeners() {
+  // Cancel Order action
+  document.querySelectorAll(".cancel-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const orderId = btn.getAttribute("data-id");
+      try {
+        const orderRef = doc(db, "orders", orderId);
+        await updateDoc(orderRef, { status: "Cancelled" });
+        alert(`Order ${orderId} cancelled.`);
+      } catch (error) {
+        console.error("Error cancelling order:", error);
+        alert("Failed to cancel order.");
+      }
+    });
+  });
+
+  // Request Return action
+  document.querySelectorAll(".return-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const orderId = btn.getAttribute("data-id");
+      try {
+        const orderRef = doc(db, "orders", orderId);
+        await updateDoc(orderRef, { status: "Return Requested" });
+        alert(`Return requested for Order ${orderId}.`);
+      } catch (error) {
+        console.error("Error requesting return:", error);
+        alert("Failed to request return.");
+      }
+    });
+  });
 }
 
-// Back to Orders
-backBtn.addEventListener("click", () => {
-  window.location.href = "../OrderHistory/Orderhistory.html";
+// Tab switching functionality
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    // Remove active class from all tabs and set currentFilter based on clicked tab
+    document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+    currentFilter = tab.getAttribute("data-status");
+    renderOrders();
+  });
 });
+
+// Logout handler
+const logoutBtn = document.getElementById("logout-btn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => (window.location.href = "../../index.html"))
+      .catch((error) => console.error("Error signing out:", error));
+  });
+}

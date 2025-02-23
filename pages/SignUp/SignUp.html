@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Animation Register Form</title>
+    <title>Sign Up</title>
     <link rel="stylesheet" href="./SignUp.css" />
     <script type="module" src="./SignUp.js"></script>
   </head>
@@ -13,10 +13,8 @@
     </a>
 
     <div class="register">
-      <img src="./nickeback.webp" alt="register image" class="register__img" />
-
       <form class="register__form">
-        <h1 class="register__title">Register</h1>
+        <h1 class="register__title">Sign Up</h1>
 
         <div class="register__content">
           <!-- Email -->
@@ -27,8 +25,8 @@
                 type="email"
                 required
                 class="register__input"
-                placeholder=""
                 id="email"
+                placeholder=""
               />
               <label for="email" class="register__label">Email</label>
             </div>
@@ -45,9 +43,7 @@
                 id="register-pass"
                 placeholder=""
               />
-              <label for="register-pass" class="register__label"
-                >Password</label
-              >
+              <label for="register-pass" class="register__label">Password</label>
               <i class="ri-eye-off-line register__eye" id="register-eye"></i>
             </div>
           </div>
@@ -160,6 +156,15 @@
               <label for="city" class="register__label">City</label>
             </div>
           </div>
+        </div>
+
+        <!-- Privacy Policy and terms -->
+        <div class="register__terms">
+          <input type="checkbox" id="policy-agreement" required />
+          <label for="terms"
+            >I agree to the <a href="#">Privacy Policy</a> and <a href="#">Terms of
+            Service</a></label
+          >
         </div>
 
         <button type="submit" class="register__button">Register</button>

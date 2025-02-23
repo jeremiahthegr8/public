@@ -2,12 +2,21 @@ import { auth, db } from "../../database/config.js";
 import {
   onAuthStateChanged,
   signOut,
- } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import {
+  doc,
   collection,
   addDoc,
+  getDoc,
+  query,
+  where,
+  getDocs,
+  orderBy,
   serverTimestamp,
+  updateDoc,
+  increment,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
 
 // Ensure user is logged in before allowing them to sell
 onAuthStateChanged(auth, (user) => {
@@ -69,104 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           { name: "Brand", type: "text" },
         ],
-        Phone: [
-          { name: "Screen Size", type: "text" },
-          { name: "Battery Life", type: "text" },
-          { name: "Camera Quality", type: "text" },
-          { name: "Storage (GB)", type: "text" },
-          { name: "RAM (GB)", type: "text" },
-          { name: "Processor", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        TV: [
-          { name: "Screen Size", type: "text" },
-          { name: "Resolution", type: "text" },
-          { name: "Smart TV", type: "select", options: ["Yes", "No"] },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        Tablet: [
-          { name: "Screen Size", type: "text" },
-          { name: "Storage (GB)", type: "text" },
-          { name: "RAM (GB)", type: "text" },
-          { name: "Processor", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        Camera: [
-          { name: "Megapixels", type: "text" },
-          { name: "Zoom", type: "text" },
-          { name: "Lens", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        Accessories: [
-          { name: "Type", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        HardDrives: [
-          { name: "Capacity (GB/TB)", type: "text" },
-          { name: "Type", type: "select", options: ["HDD", "SSD", "External"] },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        Mouse: [
-          { name: "Type", type: "select", options: ["Wired", "Wireless"] },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        Keyboard: [
-          {
-            name: "Type",
-            type: "select",
-            options: ["Mechanical", "Membrane", "Wireless"],
-          },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
-        Gadgets: [
-          { name: "Type", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-          { name: "Brand", type: "text" },
-        ],
       },
     },
     fashion: {
@@ -195,91 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
             options: ["New", "Used", "Refurbished"],
           },
         ],
-        Shoes: [
-          {
-            name: "Size Region",
-            type: "select",
-            options: ["European", "US", "UK", "Japan"],
-          },
-          { name: "Size", type: "text" },
-          { name: "Material", type: "text" },
-          { name: "Brand", type: "text" },
-          {
-            name: "Type",
-            type: "select",
-            options: ["Casual", "Sports", "Formal"],
-          },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-        ],
-        Accessories: [
-          { name: "Type", type: "text" },
-          { name: "Material", type: "text" },
-          { name: "Brand", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-        ],
-        Jewelry: [
-          {
-            name: "Type",
-            type: "select",
-            options: ["Necklace", "Ring", "Earrings", "Bracelet"],
-          },
-          { name: "Material", type: "text" },
-          { name: "Brand", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-        ],
-        Watches: [
-          {
-            name: "Type",
-            type: "select",
-            options: ["Analog", "Digital", "Smartwatch"],
-          },
-          { name: "Material", type: "text" },
-          { name: "Brand", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-        ],
-        Bracelets: [
-          { name: "Type", type: "text" },
-          { name: "Material", type: "text" },
-          { name: "Brand", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-        ],
-        "Bathing Suits": [
-          {
-            name: "Size",
-            type: "select",
-            options: ["Small", "Medium", "Large", "XL", "XXL", "XXXL"],
-          },
-          { name: "Material", type: "text" },
-          { name: "Brand", type: "text" },
-          { name: "Color", type: "text" },
-          {
-            name: "Condition",
-            type: "select",
-            options: ["New", "Used", "Refurbished"],
-          },
-        ],
       },
     },
+    // Add additional categories as needed.
   };
 
   // Handle category selection
@@ -290,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
       attributesContainer.innerHTML = "";
       return;
     }
-
     // Populate subcategories
     subcategorySelect.innerHTML = `<option value="">Select subcategory</option>`;
     categoryData[selectedCategory].subcategories.forEach((sub) => {
@@ -307,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
   subcategorySelect.addEventListener("change", function () {
     const selectedCategory = categorySelect.value;
     const selectedSubcategory = subcategorySelect.value;
-
     if (
       !selectedSubcategory ||
       !categoryData[selectedCategory].attributes[selectedSubcategory]
@@ -315,14 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
       attributesContainer.innerHTML = "";
       return;
     }
-
     // Populate attributes dynamically
     attributesContainer.innerHTML = "";
     categoryData[selectedCategory].attributes[selectedSubcategory].forEach(
       (attr) => {
         const label = document.createElement("label");
         label.textContent = attr.name;
-
         let input;
         if (attr.type === "select") {
           input = document.createElement("select");
@@ -339,10 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
           input.name = attr.name.toLowerCase().replace(/\s+/g, "-");
           input.placeholder = `Enter ${attr.name}`;
         }
-
         attributesContainer.appendChild(label);
         attributesContainer.appendChild(input);
-      },
+      }
     );
   });
 
@@ -353,11 +177,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const itemName = document.getElementById("item-name").value.trim();
     const description = document.getElementById("description").value.trim();
     const price = parseFloat(document.getElementById("price").value);
+    const quantity = parseInt(document.getElementById("quantity").value);
     const category = categorySelect.value;
     const subcategory = subcategorySelect.value;
     const imageFile = document.getElementById("image").files[0];
 
-    // Collect attributes
+    // Collect dynamic attributes
     const attributeInputs =
       attributesContainer.querySelectorAll("input, select");
     const attributes = {};
@@ -367,14 +192,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Validate price
-    if (isNaN(price) || price <= 0) {
-      alert("Please enter a valid positive price");
-      return;
-    }
-
-    if (!imageFile) {
-      alert("Please select an image");
+    // Validate required fields
+    if (
+      !itemName ||
+      !description ||
+      isNaN(price) ||
+      price <= 0 ||
+      isNaN(quantity) ||
+      quantity <= 0 ||
+      !category ||
+      !subcategory ||
+      !imageFile
+    ) {
+      alert("Please fill in all required fields correctly.");
       return;
     }
 
@@ -383,32 +213,44 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.readAsDataURL(imageFile);
     reader.onloadend = async () => {
       const base64Image = reader.result;
-
       try {
-        const userId = auth.currentUser ? auth.currentUser.uid : "guest";
+        const sellerId = auth.currentUser ? auth.currentUser.uid : "guest";
 
-        // Generate tags for search (e.g., from itemName and category)
+        // Generate search-friendly tags from item name, category, and subcategory
         const tags = [
           ...itemName.toLowerCase().split(" "),
           category.toLowerCase(),
           subcategory.toLowerCase(),
         ];
 
-        // Add item to Firestore (Centralized `items` collection)
-        const docRef = await addDoc(collection(db, "items"), {
-          userId,
+        // Construct item data including quantity (inventory)
+        const itemData = {
+          sellerId,
           itemName,
           description,
           price,
           category,
           subcategory,
-          tags, // Search-friendly
+          tags,
           attributes,
           imageBase64: base64Image,
+          status: "active", // active, pending, etc.
+          inventory: quantity, // Number of items available
+          ratings: [],
+          reviews: [],
           createdAt: serverTimestamp(),
+        };
+
+        // Save the item to the "items" collection
+        const docRef = await addDoc(collection(db, "items"), itemData);
+        alert("Item posted successfully! ID: " + docRef.id);
+
+        // Update seller's active listings count by incrementing the activeListings field by 1
+        await updateDoc(doc(db, "sellers", sellerId), {
+          activeListings: increment(1),
         });
 
-        alert("Item posted successfully! ID: " + docRef.id);
+        // Reset the form and clear dynamic sections
         sellForm.reset();
         subcategoryContainer.style.display = "none";
         attributesContainer.innerHTML = "";
@@ -420,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Listen for logout button click
+// Logout Handler
 function logout() {
   signOut(auth)
     .then(() => {
@@ -429,5 +271,5 @@ function logout() {
     .catch((error) => {
       console.error("Error signing out:", error);
     });
-}  document.getElementById("logout-btn").addEventListener("click", logout);
-
+}
+document.getElementById("logout-btn").addEventListener("click", logout);
