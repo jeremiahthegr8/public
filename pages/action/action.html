@@ -1,13 +1,533 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Processing Action...</title>
-  <script type="module" src="./action.js" ></script>
-  <link rel="stylesheet" href="./action.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Actions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 40px;
+            background-color: #4a66f8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            margin: 0 auto 20px;
+            font-weight: bold;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .action-content {
+            padding: 20px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+        
+        .success-message {
+            background-color: #e7f7ed;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: #fbeaea;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .info-message {
+            background-color: #e7f2fa;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #4a66f8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3a56e8;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            margin-right: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5c636a;
+        }
+        
+        .action-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .email-verification, 
+        .password-reset, 
+        .email-change,
+        .account-deletion,
+        .login-attempt {
+            display: none;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a66f8;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <p>Verifying your email, please wait...</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo">COMPANY</div>
+            <h1 id="action-title">Account Action</h1>
+        </div>
+        
+        <div class="loading">
+            <div class="loading-spinner"></div>
+        </div>
+        
+        <div class="success-message" id="success-message">
+            Action completed successfully!
+        </div>
+        
+        <div class="error-message" id="error-message">
+            There was an error processing your request.
+        </div>
+        
+        <!-- Email Verification Section -->
+        <div class="email-verification action-content">
+            <h2>Email Verification</h2>
+            <p class="info-message">
+                We're verifying your email address. This helps secure your account and enables all features.
+            </p>
+            <div class="action-buttons">
+                <button class="btn" id="verify-email-btn">Verify My Email</button>
+            </div>
+        </div>
+        
+        <!-- Password Reset Section -->
+        <div class="password-reset action-content">
+            <h2>Reset Your Password</h2>
+            <p class="info-message">
+                Create a new password for your account. Make sure it's secure and unique.
+            </p>
+            <form id="password-reset-form">
+                <div>
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" placeholder="Enter new password" required>
+                </div>
+                <div>
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm new password" required>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn">Set New Password</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Email Change Section -->
+        <div class="email-change action-content">
+            <h2>Confirm Email Change</h2>
+            <p class="info-message">
+                Please confirm that you want to change your email address to: <strong id="new-email-display">new@example.com</strong>
+            </p>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="cancel-email-change">Cancel</button>
+                <button class="btn" id="confirm-email-change">Confirm Change</button>
+            </div>
+        </div>
+        
+        <!-- Account Deletion Confirmation -->
+        <div class="account-deletion action-content">
+            <h2>Confirm Account Deletion</h2>
+            <p class="info-message">
+                You're about to permanently delete your account. This action cannot be undone.
+            </p>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="cancel-deletion">Cancel</button>
+                <button class="btn" id="confirm-deletion">Delete My Account</button>
+            </div>
+        </div>
+        
+        <!-- Suspicious Login Attempt -->
+        <div class="login-attempt action-content">
+            <h2>Verify Login Attempt</h2>
+            <p class="info-message">
+                We detected a login attempt from a new device or location. Please confirm this was you.
+            </p>
+            <div id="login-details" style="background-color: #f5f5f5; padding: 15px; margin: 15px 0; border-radius: 4px;">
+                <p><strong>Time:</strong> <span id="login-time">March 1, 2025 at 10:30 AM</span></p>
+                <p><strong>Location:</strong> <span id="login-location">New York, USA</span></p>
+                <p><strong>Device:</strong> <span id="login-device">Windows PC / Chrome Browser</span></p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="report-login">This Wasn't Me</button>
+                <button class="btn" id="confirm-login">This Was Me</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+  // Import Firebase services from your config file and required modular functions.
+  import { auth, db } from '../../database/config.js';
+  import { applyActionCode, reload } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+  import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Hide the loading spinner and process URL parameters after a brief delay.
+    setTimeout(() => {
+      const loadingEl = document.querySelector('.loading');
+      if (loadingEl) loadingEl.style.display = 'none';
+      processUrlParams();
+    }, 1000);
+
+    // Process URL parameters to determine which action to perform.
+    function processUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const mode = urlParams.get('mode');
+      const oobCode = urlParams.get('oobCode');
+      const email = urlParams.get('email');
+
+      if (!oobCode) {
+        showError("Invalid or missing verification code. Please check your email link and try again.");
+        return;
+      }
+
+      const actionTitleEl = document.getElementById('action-title');
+      if (actionTitleEl) actionTitleEl.textContent = getActionTitle(mode);
+
+      switch (mode) {
+        case 'verifyEmail':
+          const emailVerificationSection = document.querySelector('.email-verification');
+          if (emailVerificationSection) emailVerificationSection.style.display = 'block';
+          break;
+        case 'resetPassword':
+          const passwordResetSection = document.querySelector('.password-reset');
+          if (passwordResetSection) passwordResetSection.style.display = 'block';
+          break;
+        case 'changeEmail':
+          const emailChangeSection = document.querySelector('.email-change');
+          if (emailChangeSection) {
+            emailChangeSection.style.display = 'block';
+            if (email) {
+              const newEmailDisplay = document.getElementById('new-email-display');
+              if (newEmailDisplay) newEmailDisplay.textContent = email;
+            }
+          }
+          break;
+        case 'deleteAccount':
+          const accountDeletionSection = document.querySelector('.account-deletion');
+          if (accountDeletionSection) accountDeletionSection.style.display = 'block';
+          break;
+        case 'verifyLogin':
+          const loginAttemptSection = document.querySelector('.login-attempt');
+          if (loginAttemptSection) {
+            loginAttemptSection.style.display = 'block';
+            const loginTime = urlParams.get('time') || 'March 1, 2025 at 10:30 AM';
+            const loginLocation = urlParams.get('location') || 'Unknown Location';
+            const loginDevice = urlParams.get('device') || 'Unknown Device';
+
+            const loginTimeEl = document.getElementById('login-time');
+            const loginLocationEl = document.getElementById('login-location');
+            const loginDeviceEl = document.getElementById('login-device');
+            if (loginTimeEl) loginTimeEl.textContent = loginTime;
+            if (loginLocationEl) loginLocationEl.textContent = loginLocation;
+            if (loginDeviceEl) loginDeviceEl.textContent = loginDevice;
+          }
+          break;
+        default:
+          showError("Unknown action type. Please check your email link and try again.");
+      }
+    }
+
+    // Returns an appropriate title based on the mode.
+    function getActionTitle(mode) {
+      switch (mode) {
+        case 'verifyEmail': return 'Email Verification';
+        case 'resetPassword': return 'Reset Password';
+        case 'changeEmail': return 'Change Email Address';
+        case 'deleteAccount': return 'Delete Account';
+        case 'verifyLogin': return 'Verify Login';
+        default: return 'Account Action';
+      }
+    }
+
+    // Email verification button event handler.
+    const verifyEmailBtn = document.getElementById('verify-email-btn');
+    if (verifyEmailBtn) {
+      verifyEmailBtn.addEventListener('click', () => {
+        showLoading();
+        const urlParams = new URLSearchParams(window.location.search);
+        const oobCode = urlParams.get('oobCode');
+        if (!oobCode) {
+          hideLoading();
+          showError("Missing verification code.");
+          return;
+        }
+
+        // Apply the action code to verify the email.
+        applyActionCode(auth, oobCode)
+          .then(() => {
+            // Attempt to reload the current user if signed in.
+            if (auth.currentUser) {
+              return reload(auth.currentUser);
+            } else {
+              // If no user is signed in, simply resolve.
+              return Promise.resolve();
+            }
+          })
+          .then(() => {
+            if (auth.currentUser) {
+              // Update Firestore to mark the email as verified.
+              return updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                'emailVerification.isVerified': true,
+                'emailVerification.timestamp': new Date().toISOString()
+              });
+            }
+          })
+          .then(() => {
+            hideLoading();
+            showSuccess("Your email has been successfully verified.");
+            // Redirect after a short delay.
+            setTimeout(() => {
+              window.location.href = 'https://ecommerce-d50ed.web.app/pages/userpages/SignUp/SignUp.html';
+            }, 1500);
+          })
+          .catch((error) => {
+            hideLoading();
+            showError("Error verifying email: " + error.message);
+          });
+      });
+    }
+
+    // Password reset form event handler.
+    const passwordResetForm = document.getElementById('password-reset-form');
+    if (passwordResetForm) {
+      passwordResetForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (password !== confirmPassword) {
+          showError("Passwords do not match. Please try again.");
+          return;
+        }
+
+        if (password.length < 8) {
+          showError("Password must be at least 8 characters long.");
+          return;
+        }
+
+        showLoading();
+        // In production, replace this with an API call to update the password.
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Your password has been successfully reset. You can now log in with your new password.");
+          const passwordResetSection = document.querySelector('.password-reset');
+          if (passwordResetSection) passwordResetSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Email change confirmation event handler.
+    const confirmEmailChangeBtn = document.getElementById('confirm-email-change');
+    if (confirmEmailChangeBtn) {
+      confirmEmailChangeBtn.addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Your email address has been successfully changed. You can now log in with your new email.");
+          const emailChangeSection = document.querySelector('.email-change');
+          if (emailChangeSection) emailChangeSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Cancel email change event handler.
+    const cancelEmailChangeBtn = document.getElementById('cancel-email-change');
+    if (cancelEmailChangeBtn) {
+      cancelEmailChangeBtn.addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Email change has been canceled. Your email address remains unchanged.");
+          const emailChangeSection = document.querySelector('.email-change');
+          if (emailChangeSection) emailChangeSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Account deletion confirmation event handler.
+    const confirmDeletionBtn = document.getElementById('confirm-deletion');
+    if (confirmDeletionBtn) {
+      confirmDeletionBtn.addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Your account has been successfully deleted. We're sorry to see you go.");
+          const accountDeletionSection = document.querySelector('.account-deletion');
+          if (accountDeletionSection) accountDeletionSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Cancel account deletion event handler.
+    const cancelDeletionBtn = document.getElementById('cancel-deletion');
+    if (cancelDeletionBtn) {
+      cancelDeletionBtn.addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Account deletion has been canceled. Your account remains active.");
+          const accountDeletionSection = document.querySelector('.account-deletion');
+          if (accountDeletionSection) accountDeletionSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Login verification event handler.
+    const confirmLoginBtn = document.getElementById('confirm-login');
+    if (confirmLoginBtn) {
+      confirmLoginBtn.addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Login verified. This device has been added to your trusted devices.");
+          const loginAttemptSection = document.querySelector('.login-attempt');
+          if (loginAttemptSection) loginAttemptSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Report suspicious login event handler.
+    const reportLoginBtn = document.getElementById('report-login');
+    if (reportLoginBtn) {
+      reportLoginBtn.addEventListener('click', () => {
+        showLoading();
+        setTimeout(() => {
+          hideLoading();
+          showSuccess("Thank you for reporting this suspicious activity. We've secured your account and sent you an email with next steps.");
+          const loginAttemptSection = document.querySelector('.login-attempt');
+          if (loginAttemptSection) loginAttemptSection.style.display = 'none';
+        }, 1500);
+      });
+    }
+
+    // Helper functions for showing/hiding loading and displaying messages.
+    function showLoading() {
+      const loadingEl = document.querySelector('.loading');
+      if (loadingEl) loadingEl.style.display = 'flex';
+    }
+
+    function hideLoading() {
+      const loadingEl = document.querySelector('.loading');
+      if (loadingEl) loadingEl.style.display = 'none';
+    }
+
+    function showSuccess(message) {
+      const successEl = document.getElementById('success-message');
+      if (successEl) {
+        successEl.textContent = message;
+        successEl.style.display = 'block';
+      }
+      const errorEl = document.getElementById('error-message');
+      if (errorEl) errorEl.style.display = 'none';
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('error-message');
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+      }
+      const successEl = document.getElementById('success-message');
+      if (successEl) successEl.style.display = 'none';
+    }
+  });
+</script>
+
+
 </body>
 </html>

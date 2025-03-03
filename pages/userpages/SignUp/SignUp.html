@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login / Sign Up</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./SignUp.css" />
+    <script type="module" src="main.js"></script>
+    <script type="module" src="../../../components/overlay.js"></script>
+  </head>
+  <body>
+    <div class="container" id="container">
+      <!-- Sign Up Form -->
+      <div class="form-container sign-up-container">
+        <form class="SignUpForm">
+          <h1 class="createacc">Create Account</h1>
+          <input type="text" placeholder="Name" id="FullName" required />
+          <input type="email" placeholder="Email" id="SignUpEmail" required />
+          <input
+            type="password"
+            placeholder="Password"
+            id="SignUpPassword"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            id="ConfirmPassword"
+            required
+          />
+          <input
+            type="date"
+            placeholder="Date of Birth"
+            id="DateOfBirth"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Phone Number"
+            id="PhoneNumber"
+            required
+          />
+          <input type="text" placeholder="Address" id="Address" required />
+          <input type="text" placeholder="City" id="City" required />
+          <input type="text" placeholder="Country" id="Country" required />
+          <div class="error-message" id="error-message"></div>
+          <div class="agreement-container">
+            <input
+              type="checkbox"
+              id="Agreementbox"
+              title="Agreement"
+              required
+            />
+            <label class="iagree" for="Agreement"
+              >I agree to the terms and conditions</label
+            >
+          </div>
+          <button type="submit" id="signUpMainButton">Sign Up</button>
+          <p>
+            Already have an account?
+            <a href="#" id="signInButtonSmall">Sign In</a>
+          </p>
+          <div class="social-container">
+            <a href="#" class="social Google" id="GoogleSignUp">
+              <i class="fab fa-google"></i>
+            </a>
+            <a href="#" class="social" id="FacebookSignUp">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social Twitter" id="TwitterSignUp">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Login Form -->
+      <div class="form-container sign-in-container">
+        <form action="#" class="SignInForm">
+          <h1>Sign In</h1>
+          <input type="email" placeholder="Email" required />
+          <input type="password" placeholder="Password" required />
+          <button type="submit" id="signInMainButton">Sign In</button>
+          <div class="social-container">
+            <a href="#" class="social Google" id="GoogleSignIn">
+              <i class="fab fa-google"></i>
+            </a>
+            <a href="#" class="social" id="FacebookSignIn">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social Twitter" id="TwitterSignIn">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </div>
+          <p>
+            Don't have an account?
+            <a href="#" id="signUpButtonSmall">Sign Up</a>
+          </p>
+        </form>
+      </div>
+
+      <!-- Overlay Container -->
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-right">
+            <h1>Welcome Back!</h1>
+            <p>
+              To keep connected with us, please login with your personal info.
+            </p>
+            <button class="ghost" id="signUpButton">Sign Up</button>
+          </div>
+          <div class="overlay-panel overlay-left">
+            <h1>Hello, Friend!</h1>
+            <p>Enter your personal details and start your journey with us.</p>
+            <button class="ghost" id="signInButton">Sign In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

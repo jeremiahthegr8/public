@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rate Product</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <link rel="stylesheet" href="./rateproduct.css" />
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+    <script type="module" src="./rateproduct.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="header">
+          <!-- Back Arrow -->
+          <div class="back-arrow">
+            <a href="../OrderHistory/Orderhistory.html">
+              <i class="fas fa-arrow-left"></i> Go Back
+            </a>
+          </div>
+          <h1 class="page-title">Rate Your Purchase</h1>
+        </div>
+
+        <div class="rating-card">
+          <div class="product-info">
+            <img
+              src="../../../assets/images/air-jordan-shoe-nike-sneakers-adidas-yeezy-jordan-9d493e6896549a636419ee58d67ba6c0.png"
+              alt="Product Image"
+              class="product-image"
+            />
+            <div class="product-details">
+              <h2>Wireless Noise Cancelling Headphones</h2>
+              <p>Order #87562431 • Delivered Feb 24, 2025</p>
+              <p>Sold by: AudioTech Electronics</p>
+            </div>
+          </div>
+
+          <div class="star-rating">
+            <h3>How would you rate this product?</h3>
+            <div class="stars">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+          </div>
+
+          <div class="review-form">
+            <h3>Share your experience with this product</h3>
+            <textarea
+              placeholder="What did you like or dislike? How was the quality? Was it as described?"
+            ></textarea>
+          </div>
+
+          <div class="issue-selection">
+            <h3>What issue did you experience?</h3>
+            <select>
+              <option value="">Select an issue</option>
+              <option value="damaged">Product arrived damaged</option>
+              <option value="defective">Product is defective</option>
+              <option value="different">
+                Product is different from description
+              </option>
+              <option value="fake">Counterfeit/fake product</option>
+              <option value="missing">Missing parts or accessories</option>
+              <option value="scam">Seller scam</option>
+              <option value="other">Other issue</option>
+            </select>
+          </div>
+
+          <div class="submit-section">
+            <button class="report-button"><i>⚠</i> Report Product</button>
+            <button class="submit-button">Submit Rating</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-card">
+          <div class="sidebar-title">
+            <span>Your Recent Reviews</span>
+            <a href="../myratinghistory/myratinghistory.html" class="view-all"
+              >View All</a
+            >
+          </div>
+          <div class="previous-reviews">
+            <div class="review-item">
+              <div class="review-product">Smart Watch Pro X5</div>
+              <div class="review-rating">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star">★</span>
+              </div>
+              <div class="review-date">Reviewed on Feb 15, 2025</div>
+            </div>
+            <div class="review-item">
+              <div class="review-product">Ultra HD 4K Monitor 27"</div>
+              <div class="review-rating">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+              </div>
+              <div class="review-date">Reviewed on Feb 7, 2025</div>
+            </div>
+            <div class="review-item">
+              <div class="review-product">Portable Bluetooth Speaker</div>
+              <div class="review-rating">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+              </div>
+              <div class="review-date">Reviewed on Jan 28, 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">
+            <span>Tips for Helpful Reviews</span>
+          </div>
+          <div class="rating-tips">
+            <div class="tip-item">
+              <span class="tip-icon">✓</span>
+              <span class="tip-text"
+                >Be specific about what you liked or disliked</span
+              >
+            </div>
+            <div class="tip-item">
+              <span class="tip-icon">✓</span>
+              <span class="tip-text"
+                >Share how you used the product and for how long</span
+              >
+            </div>
+            <div class="tip-item">
+              <span class="tip-icon">✓</span>
+              <span class="tip-text"
+                >Include photos if possible to show product quality</span
+              >
+            </div>
+            <div class="tip-item">
+              <span class="tip-icon">✓</span>
+              <span class="tip-text"
+                >Mention if the product met your expectations</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="report-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Report This Product</h3>
+          <button class="close-modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="report-options">
+            <div class="report-option">
+              <h4>Counterfeit Product</h4>
+              <p>Item appears to be fake or unauthorized copy</p>
+            </div>
+            <div class="report-option">
+              <h4>Safety Hazard</h4>
+              <p>Product poses safety or health risks</p>
+            </div>
+            <div class="report-option">
+              <h4>Misleading Description</h4>
+              <p>Product differs significantly from listing</p>
+            </div>
+            <div class="report-option">
+              <h4>Prohibited Item</h4>
+              <p>Product that shouldn't be sold on platform</p>
+            </div>
+            <div class="report-option">
+              <h4>Seller Misconduct</h4>
+              <p>Issues with the seller's behavior</p>
+            </div>
+            <div class="report-option">
+              <h4>Other Issue</h4>
+              <p>Problem not listed above</p>
+            </div>
+          </div>
+          <div class="report-details">
+            <h3>Additional Details</h3>
+            <textarea
+              placeholder="Please provide more information about the issue..."
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="submit-report">Submit Report</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

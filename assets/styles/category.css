@@ -1,0 +1,34 @@
+/* categories.css */
+.categories {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #f3f4f6 50%, #e2e8f0 50%);
+  position: relative;
+  overflow: hidden;
+}
+
+.categories::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e2e8f0 50%, #f3f4f6 50%);
+  z-index: -1;
+  transform: skewY(-3deg);
+  transform-origin: top left;
+}
+
+.categories h2 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 2rem;
+  text-align: center;
+  animation: slideInFromLeft 1s ease-in-out;
+}
+
+.categories .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}

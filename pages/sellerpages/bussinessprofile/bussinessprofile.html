@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seller Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./bussinessprofile.css" />
+    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../../components/usersidebar.js" defer></script>
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <div class="logo">
+        <span>Seller Dashboard</span>
+      </div>
+      <div class="navigation">
+        <a href="../../userpages/account/account.html" class="nav-link">
+          <i class="fas fa-home"></i> <span>Go Back</span>
+        </a>
+        <a
+          href="../bussinessprofile/bussinessprofile.html"
+          class="nav-link active"
+        >
+          <i class="fas fa-user"></i> <span>Business Profile</span>
+        </a>
+        <a href="../listings/listings.html" class="nav-link">
+          <i class="fas fa-list"></i> <span>Your Listings</span>
+        </a>
+        <a href="../addnewlisting/addnewlisting.html" class="nav-link">
+          <i class="fas fa-plus-circle"></i> <span>Add New Listings</span>
+        </a>
+        <a href="../requestedorders/requestedorders.html" class="nav-link">
+          <i class="fas fa-shopping-bag"></i> <span>Orders</span>
+        </a>
+        <a href="../recievedratings/recievedratings.html" class="nav-link">
+          <i class="fas fa-star"></i> <span>Ratings & Complaints</span>
+        </a>
+        <a
+          href="../messagepageforseller/messagepageforseller.html"
+          class="nav-link"
+        >
+          <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a>
+        <!-- Additional Recommended Links -->
+        <a href="../analytics/analytics.html" class="nav-link">
+          <i class="fas fa-chart-line"></i> <span>Analytics</span>
+        </a>
+        <a href="../sellersettings/sellersettings.html" class="nav-link">
+          <i class="fas fa-cog"></i> <span>Settings</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" class="nav-link">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="hamburger-menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="user-welcome">
+          <h2>Welcome back, <span id="seller-name">Not Set</span></h2>
+        </div>
+        <div class="user-actions">
+          <a href="#" class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="badge"></span>
+          </a>
+          <div class="user-avatar">
+            <img
+              src="../../../assets/images/new/defaultpfp.png"
+              alt="Seller Avatar"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="content-container">
+        <!-- Seller Profile Card -->
+        <div class="card profile-card">
+          <div class="card-header">
+            <h3>Seller Profile</h3>
+            <button id="edit-profile-btn" class="btn btn-outline">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="profile-grid">
+              <div class="profile-item">
+                <label>Business Name</label>
+                <span id="business-name">Not Set</span>
+              </div>
+              <div class="profile-item">
+                <label>Specialization</label>
+                <span id="seller-specialization">
+                  Not Set
+                </span>
+              </div>
+              <div class="profile-item">
+                <label>Rating</label>
+                <span id="seller-rating">Not Set</span>
+              </div>
+              <div class="profile-item">
+                <label>Contact Information</label>
+                <span id="seller-email">Not Set</span>
+                <span id="seller-phone">Not Set</span>
+              </div>
+              <div class="profile-item">
+                <label>Social Media</label>
+                <div class="social-links">
+                  <a href="#" class="social-link">
+                    <i class="fab fa-x"></i> X
+                  </a>
+                  <a href="#" class="social-link">
+                    <i class="fab fa-instagram"></i> Instagram
+                  </a>
+                  <a href="#" class="social-link">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer hidden" id="edit-actions">
+              <button id="save-changes-btn" class="btn btn-primary">
+                Save Changes
+              </button>
+              <button id="cancel-edit-btn" class="btn btn-secondary">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seller Stats Card -->
+        <div class="card stats-card">
+          <div class="card-header">
+            <h3>Seller Stats</h3>
+          </div>
+          <div class="card-body">
+            <div class="stats-grid">
+              <div class="stats-item">
+                <label>Total Revenue</label>
+                <span id="total-revenue">Not Set</span>
+              </div>
+              <div class="stats-item">
+                <label>Total Sales</label>
+                <span id="total-sales">Not Set</span>
+              </div>
+              <div class="stats-item">
+                <label>Active Listings</label>
+                <span id="active-listings">Not Set</span>
+              </div>
+              <div class="stats-item">
+                <label>Member Since</label>
+                <span id="member-since">Not Set</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Policies Card -->
+        <div class="card policies-card">
+          <div class="card-header">
+            <h3>Policies</h3>
+          </div>
+          <div class="card-body">
+            <div class="policies-grid">
+              <div class="policies-item">
+                <label>Returns</label>
+                <span id="return-policy">Not Set</span>
+              </div>
+              <div class="policies-item">
+                <label>Shipping</label>
+                <span id="shipping-policy">Not Set</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Card -->
+        <div class="card recent-activity-card">
+          <div class="card-header">
+            <h3>Recent Activity</h3>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          <div class="card-body">
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="activity-content">
+                  <p>
+                    New order received for <strong>Handmade Necklace</strong>
+                  </p>
+                  <span class="activity-time">2 hours ago</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="activity-content">
+                  <p>
+                    You received a 5-star rating for
+                    <strong>Wooden Clock</strong>
+                  </p>
+                  <span class="activity-time">1 day ago</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-comment"></i>
+                </div>
+                <div class="activity-content">
+                  <p>New message from <strong>Customer123</strong></p>
+                  <span class="activity-time">3 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase Scripts & Main JS -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="./bussinessprofile.js"></script>
+  </body>
+</html>

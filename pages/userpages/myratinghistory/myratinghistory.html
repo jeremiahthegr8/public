@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Ratings & Reviews</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./myratinghistory.css" />
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+    <script type="module" src="./myratinghistory.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="gobackarrow">
+          <a href="../rateproduct/rateproduct.html" class="nav-link">
+            <i class="fas fa-arrow-left"></i>GO HOME</a
+          >
+        </div>
+        <h1 class="page-title">My Ratings & Reviews</h1>
+      </div>
+
+      <div class="filter-section">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search your reviews" />
+        </div>
+
+        <div class="filter-controls">
+          <button class="filter-button" id="filter-toggle">
+            <span>Filter</span>
+            <span>▾</span>
+          </button>
+
+          <button class="sort-button">
+            <span>Sort by: Recent</span>
+            <span>▾</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="tab-controls">
+        <div class="tab active">All <span class="tab-count">12</span></div>
+        <div class="tab">5★ <span class="tab-count">5</span></div>
+        <div class="tab">4★ <span class="tab-count">3</span></div>
+        <div class="tab">3★ <span class="tab-count">2</span></div>
+        <div class="tab">2★ <span class="tab-count">1</span></div>
+        <div class="tab">1★ <span class="tab-count">1</span></div>
+      </div>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <img
+            src="../../../assets/images/fc-barcelona-t-shirt-la-liga-kit-jersey-barcelona-58d3331a7966b2bdc03313e2958e521f.png"
+            alt="Headphones"
+            class="product-image"
+          />
+          <div class="review-details">
+            <h3 class="product-name">Wireless Noise Cancelling Headphones</h3>
+            <p class="purchase-info">Purchased on Feb 20, 2025</p>
+            <div class="star-rating">
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+            </div>
+            <p class="review-text">
+              These headphones exceeded my expectations! The noise cancellation
+              is incredible - I can't hear anything around me when I'm working.
+              Battery life is about 22 hours which is perfect for my week. Sound
+              quality is excellent with deep bass and clear highs.
+            </p>
+            <p class="review-date">Reviewed on Feb 25, 2025</p>
+          </div>
+          <div class="review-actions">
+            <button class="action-button">Edit</button>
+            <button class="action-button">Delete</button>
+            <div class="helpfulness">
+              👍 <span>12 people found this helpful</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <img
+            src="../../../assets/images/hoodie-t-shirt-supreme-bluza-t-shirt-9e02e46feebfa8030fb0fcfc449a7102.png"
+            alt="Smart Watch"
+            class="product-image"
+          />
+          <div class="review-details">
+            <h3 class="product-name">Smart Watch Pro X5</h3>
+            <p class="purchase-info">Purchased on Feb 10, 2025</p>
+            <div class="star-rating">
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star">★</span>
+            </div>
+            <p class="review-text">
+              Good smartwatch with accurate fitness tracking. The battery could
+              last longer, but it gets me through the day. Heart rate monitor
+              seems quite accurate compared to my old device. Screen is bright
+              and responsive.
+            </p>
+            <p class="review-date">Reviewed on Feb 15, 2025</p>
+          </div>
+          <div class="review-actions">
+            <button class="action-button">Edit</button>
+            <button class="action-button">Delete</button>
+            <div class="helpfulness">
+              👍 <span>5 people found this helpful</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <img
+            src="../../../assets/images/real-madrid-c-f-third-jersey-uefa-champions-league-kit-camisa-966c615b6a287a9f86c1022359b2c99c.png"
+            alt="Monitor"
+            class="product-image"
+          />
+          <div class="review-details">
+            <h3 class="product-name">Ultra HD 4K Monitor 27"</h3>
+            <p class="purchase-info">Purchased on Jan 28, 2025</p>
+            <div class="star-rating">
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+            </div>
+            <p class="review-text">
+              This monitor has transformed my work setup. Colors are vivid and
+              text is incredibly sharp. The 4K resolution makes a huge
+              difference for design work and video editing. Stand is sturdy and
+              height adjustment is smooth. No dead pixels and minimal backlight
+              bleed.
+            </p>
+            <p class="review-date">Reviewed on Feb 7, 2025</p>
+          </div>
+          <div class="review-actions">
+            <button class="action-button">Edit</button>
+            <button class="action-button">Delete</button>
+            <div class="helpfulness">
+              👍 <span>8 people found this helpful</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <img
+            src="../../../assets/images/air-jordan-shoe-nike-sneakers-adidas-yeezy-jordan-9d493e6896549a636419ee58d67ba6c0.png"
+            alt="Bluetooth Speaker"
+            class="product-image"
+          />
+          <div class="review-details">
+            <h3 class="product-name">Portable Bluetooth Speaker</h3>
+            <p class="purchase-info">Purchased on Jan 15, 2025</p>
+            <div class="star-rating">
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+            </div>
+            <p class="review-text">
+              Disappointed with this speaker. While it's conveniently portable,
+              the sound quality is poor with distortion at higher volumes.
+              Battery life is only about 4 hours instead of the advertised 8.
+              The Bluetooth connection keeps dropping when I move more than 15
+              feet away.
+            </p>
+            <p class="review-date">Reviewed on Jan 28, 2025</p>
+          </div>
+          <div class="review-actions">
+            <button class="action-button">Edit</button>
+            <button class="action-button">Delete</button>
+            <div class="helpfulness">
+              👍 <span>3 people found this helpful</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <img
+            src="../../../assets/images/boot.png"
+            alt="Coffee Maker"
+            class="product-image"
+          />
+          <div class="review-details">
+            <h3 class="product-name">Programmable Coffee Maker</h3>
+            <p class="purchase-info">Purchased on Jan 5, 2025</p>
+            <div class="star-rating">
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+            </div>
+            <p class="review-text">
+              Decent coffee maker that gets the job done. The programmable
+              feature works well - nice to wake up to fresh coffee. The carafe
+              doesn't keep coffee hot for very long though, and the machine is a
+              bit noisy. Filter holder is awkward to clean.
+            </p>
+            <p class="review-date">Reviewed on Jan 12, 2025</p>
+          </div>
+          <div class="review-actions">
+            <button class="action-button">Edit</button>
+            <button class="action-button">Delete</button>
+            <div class="helpfulness">
+              👍 <span>1 person found this helpful</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <img
+            src="../../../assets/images/los-angeles-lakers-sports-fan-jersey-swingman-nike-all-star-jersey-c12566e777f761479878e3c1417ff3bc.png"
+            alt="Wireless Charger"
+            class="product-image"
+          />
+          <div class="review-details">
+            <h3 class="product-name">Fast Wireless Charging Pad</h3>
+            <p class="purchase-info">Purchased on Dec 20, 2024</p>
+            <div class="star-rating">
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+              <span class="star active">★</span>
+            </div>
+            <p class="review-text">
+              Perfect wireless charger! Charges my phone quickly and the design
+              looks sleek on my desk. The non-slip surface keeps my phone in
+              place. LED indicator is subtle enough for nighttime use. Great
+              value for money.
+            </p>
+            <p class="review-date">Reviewed on Dec 28, 2024</p>
+          </div>
+          <div class="review-actions">
+            <button class="action-button">Edit</button>
+            <button class="action-button">Delete</button>
+            <div class="helpfulness">
+              👍 <span>4 people found this helpful</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="page-button prev">Previous</button>
+        <button class="page-button active">1</button>
+        <button class="page-button">2</button>
+        <button class="page-button">3</button>
+        <button class="page-button next">Next</button>
+      </div>
+
+      <!-- Empty state (hidden by default) -->
+      <div class="empty-state hidden">
+        <div class="empty-icon">📝</div>
+        <h3 class="empty-title">No Reviews Yet</h3>
+        <p class="empty-text">
+          You haven't written any reviews yet. Start sharing your opinions about
+          products you've purchased to help other shoppers.
+        </p>
+        <button class="browse-button">Browse Purchase History</button>
+      </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="filter-modal" id="filter-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Filter Reviews</h3>
+          <button class="close-modal" id="close-filter">×</button>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group-title">Rating</h4>
+          <div class="filter-options">
+            <div class="rating-option">
+              <input type="checkbox" class="filter-checkbox" id="rating-5" />
+              <div class="rating-stars">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+              </div>
+              <span class="rating-label">(5)</span>
+            </div>
+
+            <div class="rating-option">
+              <input type="checkbox" class="filter-checkbox" id="rating-4" />
+              <div class="rating-stars">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star">★</span>
+              </div>
+              <span class="rating-label">(3)</span>
+            </div>
+
+            <div class="rating-option">
+              <input type="checkbox" class="filter-checkbox" id="rating-3" />
+              <div class="rating-stars">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+              </div>
+              <span class="rating-label">(2)</span>
+            </div>
+
+            <div class="rating-option">
+              <input type="checkbox" class="filter-checkbox" id="rating-2" />
+              <div class="rating-stars">
+                <span class="star active">★</span>
+                <span class="star active">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+              </div>
+              <span class="rating-label">(1)</span>
+            </div>
+
+            <div class="rating-option">
+              <input type="checkbox" class="filter-checkbox" id="rating-1" />
+              <div class="rating-stars">
+                <span class="star active">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+              </div>
+              <span class="rating-label">(1)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group-title">Category</h4>
+          <div class="filter-options">
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                class="filter-checkbox"
+                id="cat-electronics"
+              />
+              <label for="cat-electronics" class="filter-label"
+                >Electronics (4)</label
+              >
+            </div>
+
+            <div class="filter-option">
+              <input type="checkbox" class="filter-checkbox" id="cat-home" />
+              <label for="cat-home" class="filter-label"
+                >Home & Kitchen (1)</label
+              >
+            </div>
+
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                class="filter-checkbox"
+                id="cat-accessories"
+              />
+              <label for="cat-accessories" class="filter-label"
+                >Accessories (1)</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group-title">Review Date</h4>
+          <div class="date-inputs">
+            <input type="date" class="date-input" placeholder="From" />
+            <input type="date" class="date-input" placeholder="To" />
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group-title">Review Type</h4>
+          <div class="filter-options">
+            <div class="filter-option">
+              <input type="checkbox" class="filter-checkbox" id="type-text" />
+              <label for="type-text" class="filter-label"
+                >With text review (6)</label
+              >
+            </div>
+
+            <div class="filter-option">
+              <input type="checkbox" class="filter-checkbox" id="type-photos" />
+              <label for="type-photos" class="filter-label"
+                >With photos (0)</label
+              >
+            </div>
+
+            <div class="filter-option">
+              <input
+                type="checkbox"
+                class="filter-checkbox"
+                id="type-helpful"
+              />
+              <label for="type-helpful" class="filter-label"
+                >Marked helpful (5)</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="reset-filters">Reset All</button>
+          <button class="apply-filters">Apply Filters</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

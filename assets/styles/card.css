@@ -1,0 +1,71 @@
+/* card.css */
+.card {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  animation: fadeInUp 1s ease-in-out;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+.card .content {
+  padding: 1rem;
+}
+
+.card .content h3 {
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.card .content p {
+  color: #718096;
+  margin-bottom: 1rem;
+}
+
+.card .content .buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.card .content .buttons a {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.card .content .buttons .add-to-cart {
+  background-color: #3182ce;
+}
+
+.card .content .buttons .add-to-cart:hover {
+  background-color: #2b6cb0;
+}
+
+.card .content .buttons .add-to-wishlist {
+  background-color: #4a5568;
+}
+
+.card .content .buttons .add-to-wishlist:hover {
+  background-color: #2d3748;
+}
+
+
+
+

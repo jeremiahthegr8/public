@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discover Products</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="./shop.css" rel="stylesheet" />
+    <link href="../../../assets/styles/animation.css" rel="stylesheet" />
+    <link href="../../../assets/styles/header.css" rel="stylesheet" />
+    <script type="module" src="./shop.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-container">
+        <div class="logo">
+          <a href="../../../index.html">E-Shop</a>
+        </div>
+        <div class="search-bar">
+          <input
+            type="text"
+            placeholder="Search products..."
+            id="searchInput"
+          />
+          <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="user-menu">
+          <a href="../account/account.html" class="sixty-nine account-link"
+            ><i class="fas fa-user"></i> Profile</a
+          >
+          <div class="seventy-one">
+            <a href="../wishlist/wishlist.html" class="sixty-nine"
+              ><i class="fas fa-heart"></i> Wishlist</a
+            >
+            <a href="../mycart/mycart.html" class="sixty-nine"
+              ><i class="fas fa-shopping-cart"></i> Cart</a
+            >
+          </div>
+          <a href="../SignUp/SignUp.html" class="seventy signup-link"
+            >Sign In</a
+          >
+          <a href="#" class="seventy logout-btn" style="display: none"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="flex">
+        <!-- Sidebar for Filters -->
+        <div class="sidebar">
+          <h2>Filters</h2>
+          <div>
+            <h3>Category</h3>
+            <ul>
+              <li>
+                <input
+                  id="electronics"
+                  name="category"
+                  type="checkbox"
+                  value="electronics"
+                />
+                <label for="electronics"> Electronics </label>
+              </li>
+              <li>
+                <input
+                  id="fashion"
+                  name="category"
+                  type="checkbox"
+                  value="fashion"
+                />
+                <label for="fashion"> Fashion </label>
+              </li>
+              <li>
+                <input id="home" name="category" type="checkbox" value="home" />
+                <label for="home"> Home </label>
+              </li>
+              <li>
+                <input
+                  id="beauty"
+                  name="category"
+                  type="checkbox"
+                  value="beauty"
+                />
+                <label for="beauty"> Beauty </label>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3>Price Range</h3>
+            <input max="1000" min="0" type="range" value="500" />
+          </div>
+          <div>
+            <h3>Rating</h3>
+            <ul>
+              <li>
+                <input
+                  id="4stars"
+                  name="rating"
+                  type="checkbox"
+                  value="4stars"
+                />
+                <label for="4stars"> 4 stars &amp; up </label>
+              </li>
+              <li>
+                <input
+                  id="3stars"
+                  name="rating"
+                  type="checkbox"
+                  value="3stars"
+                />
+                <label for="3stars"> 3 stars &amp; up </label>
+              </li>
+              <li>
+                <input
+                  id="2stars"
+                  name="rating"
+                  type="checkbox"
+                  value="2stars"
+                />
+                <label for="2stars"> 2 stars &amp; up </label>
+              </li>
+              <li>
+                <input id="1star" name="rating" type="checkbox" value="1star" />
+                <label for="1star"> 1 star &amp; up </label>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3>Brand</h3>
+            <ul>
+              <li>
+                <input
+                  id="brand1"
+                  name="brand"
+                  type="checkbox"
+                  value="brand1"
+                />
+                <label for="brand1"> Brand 1 </label>
+              </li>
+              <li>
+                <input
+                  id="brand2"
+                  name="brand"
+                  type="checkbox"
+                  value="brand2"
+                />
+                <label for="brand2"> Brand 2 </label>
+              </li>
+              <li>
+                <input
+                  id="brand3"
+                  name="brand"
+                  type="checkbox"
+                  value="brand3"
+                />
+                <label for="brand3"> Brand 3 </label>
+              </li>
+              <li>
+                <input
+                  id="brand4"
+                  name="brand"
+                  type="checkbox"
+                  value="brand4"
+                />
+                <label for="brand4"> Brand 4 </label>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3>Availability</h3>
+            <ul>
+              <li>
+                <input
+                  id="inStock"
+                  name="availability"
+                  type="checkbox"
+                  value="inStock"
+                />
+                <label for="inStock"> In Stock </label>
+              </li>
+              <li>
+                <input
+                  id="outOfStock"
+                  name="availability"
+                  type="checkbox"
+                  value="outOfStock"
+                />
+                <label for="outOfStock"> Out of Stock </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+          <div class="grid">
+            <!-- Product Item -->
+            <div class="product-item">
+              <img
+                alt="Image of a high-quality electronic gadget with sleek design"
+                height="300"
+                src="https://storage.googleapis.com/a1aa/image/2wac3n1m5fll7TH1Jcns9MTYa2Lae9Z-a1U7i0P8O2o.jpg"
+                width="300"
+              />
+              <h3>Product Title 1</h3>
+              <p>
+                Short description of the product goes here. It highlights the
+                key features and benefits.
+              </p>
+              <p class="price">$199.99</p>
+              <p class="stock">In Stock: 20</p>
+              <div class="rating">
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star-half-alt"> </i>
+                <span class="count"> (120) </span>
+              </div>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+            <!-- Repeat for each product item -->
+            <div class="product-item">
+              <img
+                alt="Image of a stylish fashion item with vibrant colors"
+                height="300"
+                src="https://storage.googleapis.com/a1aa/image/SztJzzYyR_rceHfgQQ-PmqofkureoAwntULngu845Yo.jpg"
+                width="300"
+              />
+              <h3>Product Title 2</h3>
+              <p>
+                Short description of the product goes here. It highlights the
+                key features and benefits.
+              </p>
+              <p class="price">$49.99</p>
+              <p class="stock">In Stock: 50</p>
+              <div class="rating">
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star-half-alt"> </i>
+                <span class="count"> (80) </span>
+              </div>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+            <div class="product-item">
+              <img
+                alt="Image of a modern home appliance with advanced features"
+                height="300"
+                src="https://storage.googleapis.com/a1aa/image/_AwgBFGUwtKbnGcE-EfoNHCAe0Rcs9DZDEABg1aNItM.jpg"
+                width="300"
+              />
+              <h3>Product Title 3</h3>
+              <p>
+                Short description of the product goes here. It highlights the
+                key features and benefits.
+              </p>
+              <p class="price">$299.99</p>
+              <p class="stock">In Stock: 10</p>
+              <div class="rating">
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <span class="count"> (200) </span>
+              </div>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+            <div class="product-item">
+              <img
+                alt="Image of a beauty product with elegant packaging"
+                height="300"
+                src="https://storage.googleapis.com/a1aa/image/I21wQ5aQmdzpjW4dTJcffffzKMkUXjn2OegVXe_L8TY.jpg"
+                width="300"
+              />
+              <h3>Product Title 4</h3>
+              <p>
+                Short description of the product goes here. It highlights the
+                key features and benefits.
+              </p>
+              <p class="price">$19.99</p>
+              <p class="stock">In Stock: 100</p>
+              <div class="rating">
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star"> </i>
+                <i class="fas fa-star-half-alt"> </i>
+                <i class="fas fa-star"> </i>
+                <span class="count"> (50) </span>
+              </div>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

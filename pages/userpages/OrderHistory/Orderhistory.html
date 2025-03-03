@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order History</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./Orderhistory.css" />
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
+    <script type="module" src="./Orderhistory.js" defer></script>
+    <script src="../../../components/usersidebar.js" defer></script>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <div class="logo">
+        <span>Dashboard</span>
+      </div>
+      <div class="navigation">
+        <a href="../../../index.html" class="nav-link">
+          <i class="fas fa-home"></i> <span>Home</span>
+        </a>
+        <a href="../account/account.html" class="nav-link">
+          <i class="fas fa-user"></i> <span>Profile</span>
+        </a>
+        <a href="../wishlist/wishlist.html" class="nav-link">
+          <i class="fas fa-heart"></i> <span>Wishlist</span>
+        </a>
+        <a href="../mycart/mycart.html" class="nav-link">
+          <i class="fas fa-shopping-cart"></i> <span>Cart</span>
+        </a>
+        <a href="../OrderHistory/Orderhistory.html" class="nav-link active">
+          <i class="fas fa-history"></i> <span>Orders</span>
+        </a>
+        <a href="../securitysettings/securitysettings.html" class="nav-link">
+          <i class="fas fa-shield-alt"></i> <span>Security</span>
+        </a>
+        <a href="../support/support.html" class="nav-link">
+          <i class="fas fa-question-circle"></i> <span>Support</span>
+        </a>
+        <a
+          href="../messagepageforuser/messagepageforuser.html"
+          class="nav-link"
+        >
+          <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a>
+        <a
+          href=".../../sellerpages/bussinessprofile/bussinessprofile.html"
+          class="nav-link"
+        >
+          <i class="fas fa-store"></i> <span>Seller Portal</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" class="nav-link">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="hamburger-menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="user-welcome">
+          <h2>Order History</h2>
+        </div>
+        <div class="user-actions">
+          <a href="#" class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </a>
+          <div class="user-avatar">
+            <img
+              src="../../../assets/images/new/defaultpfp.png"
+              alt="User Avatar"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Tabs -->
+      <div class="order-tabs">
+        <button class="tab active" data-status="all">All</button>
+        <button class="tab" data-status="pending">Pending</button>
+        <button class="tab" data-status="confirmed">Confirmed</button>
+        <button class="tab" data-status="delivered">Delivered</button>
+        <button class="tab" data-status="returned">Returned</button>
+      </div>
+
+      <!-- Order History Items -->
+      <div class="content-container">
+        <div class="order-history-grid">
+          <!-- Order Item 1: Pending Order -->
+          <div class="order-item" data-status="pending">
+            <div class="order-header">
+              <h3>Order #12345</h3>
+              <p class="order-date">Placed on: 2025-02-20</p>
+            </div>
+            <div class="order-body">
+              <div class="order-details">
+                <p>Item: Wireless Headphones</p>
+                <p>Quantity: 1</p>
+                <p>Total: $199.99</p>
+              </div>
+              <div class="order-actions">
+                <!-- Only pending orders show the Cancel Order button -->
+                <button class="btn btn-secondary cancel-order">
+                  <i class="fas fa-times"></i> Cancel Order
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Item 2: Confirmed Order (no actions) -->
+          <div class="order-item" data-status="confirmed">
+            <div class="order-header">
+              <h3>Order #67890</h3>
+              <p class="order-date">Placed on: 2025-02-18</p>
+            </div>
+            <div class="order-body">
+              <div class="order-details">
+                <p>Item: Smart Watch</p>
+                <p>Quantity: 2</p>
+                <p>Total: $299.98</p>
+              </div>
+              <div class="order-actions">
+                <!-- No action buttons for confirmed orders -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Item 3: Delivered Order -->
+          <div class="order-item" data-status="delivered">
+            <div class="order-header">
+              <h3>Order #54321</h3>
+              <p class="order-date">Placed on: 2025-02-15</p>
+            </div>
+            <div class="order-body">
+              <div class="order-details">
+                <p>Item: Bluetooth Speaker</p>
+                <p>Quantity: 1</p>
+                <p>Total: $79.99</p>
+              </div>
+              <div class="order-actions">
+                <!-- Existing Request Return Button -->
+                <button class="btn btn-primary request-return">
+                  <i class="fas fa-undo"></i> Request Return
+                </button>
+                <!-- New Rate Order Button -->
+                <button class="btn btn-secondary rate-order">
+                  <i class="fas fa-star"></i> Rate Order
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional order items can be added here with appropriate data-status -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

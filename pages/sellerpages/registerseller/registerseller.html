@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seller Registration</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="module" src="./registerseller.js"></script>
+  
+  <style>
+    :root {
+      /* Color Palette */
+      --primary-color: #4361ee;
+      --primary-hover: #3a56d4;
+      --secondary-color: #4d4d4d;
+      --accent-color: #3ccfcf;
+      --light-accent: #e6f9f9;
+      --text-dark: #2d3748;
+      --text-light: #718096;
+      --text-muted: #a0aec0;
+      --bg-light: #f8fafc;
+      --bg-white: #ffffff;
+      --border-color: #e2e8f0;
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      /* Spacing */
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      /* Border Radius */
+      --radius-sm: 0.25rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: var(--bg-white);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      max-width: 600px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: var(--spacing-lg);
+    }
+    /* Tab (Wizard) Styles */
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      font-size: 1rem;
+    }
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    .navigation-buttons button {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: none;
+      border-radius: var(--radius-md);
+      background-color: var(--primary-color);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+    .navigation-buttons button:hover {
+      background-color: var(--primary-hover);
+    }
+  </style>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <div class="container">
+    <h2>Seller Registration</h2>
+    <form id="registrationForm">
+      <!-- Tab 1: Personal & Business Information -->
+      <div class="tab active">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="fullName" required>
+
+        <label for="businessName">Business Name</label>
+        <input type="text" id="businessName" name="businessName" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone Number</label>
+        <input type="number" id="phone" name="phone" required>
+
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country" required>
+
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="businessType">Business Type</label>
+        <select id="businessType" name="businessType" required>
+          <option value="">Select Business Type</option>
+          <option value="individual">Individual</option>
+          <option value="company">Company</option>
+          <option value="partnership">Partnership</option>
+        </select>
+
+        <label for="profilePic">Profile Picture (Optional)</label>
+        <input type="file" id="profilePic" name="profilePic" accept="image/*">
+
+        <label for="mobileMoney">Mobile Money/Vodafone Number</label>
+        <input type="number" id="mobileMoney" name="mobileMoney" required>
+
+        <label for="instagram">Instagram</label>
+        <input type="text" id="instagram" name="instagram" placeholder="Instagram Profile URL">
+
+        <label for="x">X (Twitter)</label>
+        <input type="text" id="x" name="x" placeholder="Twitter Profile URL">
+
+        <label for="facebook">Facebook</label>
+        <input type="text" id="facebook" name="facebook" placeholder="Facebook Profile URL">
+      </div>
+
+      <!-- Tab 2: Store Details & Policies -->
+      <div class="tab">
+        <label for="storeName">Store Name</label>
+        <input type="text" id="storeName" name="storeName" required>
+
+        <label for="storeDescription">Store Description</label>
+        <textarea id="storeDescription" name="storeDescription" required></textarea>
+
+        <label for="storeLogo">Store Logo (Optional)</label>
+        <input type="file" id="storeLogo" name="storeLogo" accept="image/*">
+
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="">Select Category</option>
+          <option value="fashion">Fashion</option>
+          <option value="electronics">Electronics</option>
+          <option value="home">Home & Garden</option>
+        </select>
+
+        <label for="shippingPolicy">Shipping & Return Policy (Optional)</label>
+        <select id="shippingPolicy" name="shippingPolicy">
+          <option value="">Select Policy (Optional)</option>
+          <option value="standard">Standard Policy</option>
+          <option value="express">Express Policy</option>
+          <option value="custom">Custom Policy</option>
+        </select>
+      </div>
+
+      <div class="navigation-buttons">
+        <button type="button" id="prevBtn" onclick="nextPrev(-1)" disabled>Previous</button>
+        <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

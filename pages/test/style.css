@@ -1,0 +1,8 @@
+#scramble-text {
+  font-family: monospace;
+  font-size: 2rem;
+  color: #00ff00; /* Green text for a "hacker" vibe */
+  background-color: black;
+  padding: 10px;
+  border-radius: 5px;
+}

@@ -1,0 +1,22 @@
+/* featured.css */
+.featured-products {
+  background-color: antiquewhite;
+}
+.featured-products,
+.latest-news {
+  padding: 4rem 0;
+}
+
+.featured-products h2,
+.latest-news h2 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 2rem;
+}
+
+.featured-products .grid,
+.latest-news .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}

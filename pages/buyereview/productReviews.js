@@ -1,25 +1,25 @@
-import { auth, db } from "../../database/config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+import { auth, db } from '../../database/config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
 import {
   collection,
   query,
   where,
   getDocs,
   orderBy,
-} from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
 // Extract product ID from URL
 const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get("id");
-console.log("ProductReviews.js - productId:", productId);
+const productId = urlParams.get('id');
+console.log('ProductReviews.js - productId:', productId);
 
-const reviewsSection = document.getElementById("reviews-section");
-const loadingMessage = document.getElementById("loading-message");
-const backBtn = document.getElementById("back-btn");
+const reviewsSection = document.getElementById('reviews-section');
+const loadingMessage = document.getElementById('loading-message');
+const backBtn = document.getElementById('back-btn');
 
 // Function to render stars based on rating
 function renderStars(rating) {
-  let starsHtml = "";
+  let starsHtml = '';
   for (let i = 1; i <= 5; i++) {
     if (i <= Math.floor(rating)) {
       starsHtml += `<i class="fas fa-star" style="color: gold;"></i>`;
@@ -35,15 +35,15 @@ function renderStars(rating) {
 // Load all reviews for the product
 async function loadAllReviews(productId) {
   if (!productId) {
-    reviewsSection.innerHTML = "<p>No product ID provided.</p>";
+    reviewsSection.innerHTML = '<p>No product ID provided.</p>';
     return;
   }
   try {
-    const reviewsRef = collection(db, "reviews");
+    const reviewsRef = collection(db, 'reviews');
     const reviewsQuery = query(
       reviewsRef,
-      where("productId", "==", productId),
-      orderBy("createdAt", "desc")
+      where('productId', '==', productId),
+      orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(reviewsQuery);
     let reviews = [];
@@ -52,25 +52,25 @@ async function loadAllReviews(productId) {
     });
 
     if (reviews.length === 0) {
-      reviewsSection.innerHTML = "<p>No reviews yet.</p>";
+      reviewsSection.innerHTML = '<p>No reviews yet.</p>';
       return;
     }
 
     // Clear loading message
-    reviewsSection.innerHTML = "";
+    reviewsSection.innerHTML = '';
 
     // Loop over all reviews and render them
     reviews.forEach((review) => {
-      const reviewCard = document.createElement("div");
-      reviewCard.classList.add("review-card");
+      const reviewCard = document.createElement('div');
+      reviewCard.classList.add('review-card');
 
-      const buyerName = review.buyerName || "Anonymous";
+      const buyerName = review.buyerName || 'Anonymous';
       const rating = review.rating || 0;
-      const comment = review.comment || "";
+      const comment = review.comment || '';
       const reviewDate =
         review.createdAt && review.createdAt.seconds
           ? new Date(review.createdAt.seconds * 1000).toLocaleString()
-          : "Unknown Date";
+          : 'Unknown Date';
 
       reviewCard.innerHTML = `
         <h3>${buyerName}</h3>
@@ -81,14 +81,14 @@ async function loadAllReviews(productId) {
       reviewsSection.appendChild(reviewCard);
     });
   } catch (error) {
-    console.error("Error loading reviews:", error);
+    console.error('Error loading reviews:', error);
     reviewsSection.innerHTML =
-      "<p>Error loading reviews. Please try again.</p>";
+      '<p>Error loading reviews. Please try again.</p>';
   }
 }
 
 // Back button: return to product details page with product id
-backBtn.addEventListener("click", () => {
+backBtn.addEventListener('click', () => {
   window.location.href = `../product/product.html?id=${productId}`;
 });
 
@@ -97,6 +97,6 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     loadAllReviews(productId);
   } else {
-    window.location.href = "../../index.html";
+    window.location.href = '../../index.html';
   }
 });

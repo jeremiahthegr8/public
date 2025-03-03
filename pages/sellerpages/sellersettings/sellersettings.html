@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seller Settings</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./sellerSettings.css" />
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
+    <!-- Animation CSS -->
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Sidebar Navigation JS -->
+    <script src="../../../components/usersidebar.js" defer></script>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <div class="logo">
+        <span>Seller Dashboard</span>
+      </div>
+      <div class="navigation">
+        <a href="../../userpages/account/account.html" class="nav-link">
+          <i class="fas fa-home"></i> <span>Go Back</span>
+        </a>
+        <a href="../bussinessprofile/bussinessprofile.html" class="nav-link">
+          <i class="fas fa-user"></i> <span>Business Profile</span>
+        </a>
+        <a href="../listings/listings.html" class="nav-link">
+          <i class="fas fa-list"></i> <span>Your Listings</span>
+        </a>
+        <a href="../addnewlisting/addnewlisting.html" class="nav-link">
+          <i class="fas fa-plus-circle"></i> <span>Add New Listings</span>
+        </a>
+        <a href="../requestedorders/requestedorders.html" class="nav-link">
+          <i class="fas fa-shopping-bag"></i> <span>Orders</span>
+        </a>
+        <a href="../myratings/myratings.html" class="nav-link">
+          <i class="fas fa-star"></i> <span>Ratings & Complaints</span>
+        </a>
+        <a
+          href="../messagepageforseller/messagepageforseller.html"
+          class="nav-link"
+        >
+          <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a>
+        <!-- Additional Recommended Links -->
+        <a href="../analytics/analytics.html" class="nav-link">
+          <i class="fas fa-chart-line"></i> <span>Analytics</span>
+        </a>
+        <a href="../sellersettings/sellersettings.html" class="nav-link active">
+          <i class="fas fa-cog"></i> <span>Settings</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" class="nav-link">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="hamburger-menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="user-welcome">
+          <h2>Seller Settings</h2>
+          <p>Manage your account and preferences.</p>
+        </div>
+      </div>
+
+      <div class="settings-container">
+        <!-- Account Information -->
+        <div class="card settings-card">
+          <div class="card-header">
+            <h3>Account Information</h3>
+            <button id="edit-account-btn" class="btn btn-outline">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div class="card-body" id="accountInfo">
+            <div class="settings-item">
+              <label for="businessName">Business Name</label>
+              <span id="businessNameDisplay">Seller Inc.</span>
+              <input
+                type="text"
+                id="businessNameInput"
+                class="hidden"
+                value="Seller Inc."
+              />
+            </div>
+            <div class="settings-item">
+              <label for="email">Email</label>
+              <span id="emailDisplay">seller@example.com</span>
+              <input
+                type="email"
+                id="emailInput"
+                class="hidden"
+                value="seller@example.com"
+              />
+            </div>
+            <div class="settings-item">
+              <label for="phone">Phone</label>
+              <span id="phoneDisplay">+1 (555) 123-4567</span>
+              <input
+                type="text"
+                id="phoneInput"
+                class="hidden"
+                value="+1 (555) 123-4567"
+              />
+            </div>
+            <div class="settings-item">
+              <label for="address">Address</label>
+              <span id="addressDisplay">123 Market St, City, Country</span>
+              <input
+                type="text"
+                id="addressInput"
+                class="hidden"
+                value="123 Market St, City, Country"
+              />
+            </div>
+          </div>
+          <div class="card-footer hidden" id="accountActions">
+            <button id="save-account-btn" class="btn btn-primary">
+              Save Changes
+            </button>
+            <button id="cancel-account-btn" class="btn btn-secondary">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="card settings-card">
+          <div class="card-header">
+            <h3>Security Settings</h3>
+          </div>
+          <div class="card-body">
+            <div class="settings-item">
+              <label for="currentPassword">Current Password</label>
+              <input
+                type="password"
+                id="currentPassword"
+                placeholder="Enter current password"
+              />
+            </div>
+            <div class="settings-item">
+              <label for="newPassword">New Password</label>
+              <input
+                type="password"
+                id="newPassword"
+                placeholder="Enter new password"
+              />
+            </div>
+            <div class="settings-item">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm new password"
+              />
+            </div>
+            <button id="changePasswordBtn" class="btn btn-primary">
+              Change Password
+            </button>
+          </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="card settings-card">
+          <div class="card-header">
+            <h3>Notification Preferences</h3>
+          </div>
+          <div class="card-body">
+            <div class="settings-item checkbox-item">
+              <input type="checkbox" id="emailNotifications" checked />
+              <label for="emailNotifications">Email Notifications</label>
+            </div>
+            <div class="settings-item checkbox-item">
+              <input type="checkbox" id="smsNotifications" />
+              <label for="smsNotifications">SMS Notifications</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Settings -->
+        <div class="card settings-card">
+          <div class="card-header">
+            <h3>Social Media Links</h3>
+          </div>
+          <div class="card-body">
+            <div class="settings-item">
+              <label for="twitter">Twitter</label>
+              <input
+                type="url"
+                id="twitter"
+                placeholder="https://twitter.com/yourprofile"
+              />
+            </div>
+            <div class="settings-item">
+              <label for="instagram">Instagram</label>
+              <input
+                type="url"
+                id="instagram"
+                placeholder="https://instagram.com/yourprofile"
+              />
+            </div>
+            <div class="settings-item">
+              <label for="facebook">Facebook</label>
+              <input
+                type="url"
+                id="facebook"
+                placeholder="https://facebook.com/yourprofile"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase Scripts (Modular) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <!-- Main Script -->
+    <script type="module" src="./sellerSettings.js"></script>
+  </body>
+</html>

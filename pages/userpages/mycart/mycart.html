@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./mycart.css" />
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
+    <script type="module" src="./mycart.js" defer></script>
+    <script src="../../../components/usersidebar.js" defer></script>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <div class="logo">
+        <span>Dashboard</span>
+      </div>
+      <div class="navigation">
+        <a href="../../../index.html" class="nav-link">
+          <i class="fas fa-home"></i> <span>Home</span>
+        </a>
+        <a href="../account/account.html" class="nav-link">
+          <i class="fas fa-user"></i> <span>Profile</span>
+        </a>
+        <a href="../wishlist/wishlist.html" class="nav-link">
+          <i class="fas fa-heart"></i> <span>Wishlist</span>
+        </a>
+        <a href="../mycart/mycart.html" class="nav-link active">
+          <i class="fas fa-shopping-cart"></i> <span>Cart</span>
+        </a>
+        <a href="../OrderHistory/Orderhistory.html" class="nav-link">
+          <i class="fas fa-history"></i> <span>Orders</span>
+        </a>
+        <a href="../securitysettings/securitysettings.html" class="nav-link">
+          <i class="fas fa-shield-alt"></i> <span>Security</span>
+        </a>
+        <a href="../support/support.html" class="nav-link">
+          <i class="fas fa-question-circle"></i> <span>Support</span>
+        </a>
+        <a
+          href="../messagepageforuser/messagepageforuser.html"
+          class="nav-link"
+        >
+          <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a>
+        <a
+          href="../../sellerpages/bussinessprofile/bussinessprofile.html"
+          class="nav-link"
+        >
+          <i class="fas fa-store"></i> <span>Seller Portal</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" class="nav-link">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="hamburger-menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="user-welcome">
+          <h2>Your Cart</h2>
+        </div>
+        <div class="user-actions">
+          <a href="#" class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </a>
+          <div class="user-avatar">
+            <img
+              src="../../../assets/images/new/defaultpfp.png"
+              alt="User Avatar"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart Items -->
+      <div class="content-container">
+        <div class="cart-grid">
+          <!-- Cart Item 1 -->
+          <div class="cart-item">
+            <div class="cart-item-image">
+              <img
+                src="../../../assets/images/hoodie-t-shirt-supreme-bluza-t-shirt-9e02e46feebfa8030fb0fcfc449a7102.png"
+                alt="Product Image"
+              />
+            </div>
+            <div class="cart-item-details">
+              <h3>Wireless Headphones</h3>
+              <p class="price">$199.99</p>
+              <p class="description">
+                Noise-cancelling over-ear headphones with 30-hour battery life.
+              </p>
+              <div class="quantity">
+                <label for="quantity1">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity1"
+                  name="quantity1"
+                  value="1"
+                  min="1"
+                />
+              </div>
+              <div class="cart-item-actions">
+                <button class="btn btn-primary">
+                  <i class="fas fa-sync-alt"></i> Update
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-trash"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart Item 2 -->
+          <div class="cart-item">
+            <div class="cart-item-image">
+              <img
+                src="../../../assets/images/t-shirt-hoodie-pierogi-clothing-t-shirt-33bdc679c6c60e61f00eea4331995fbb.png"
+                alt="Product Image"
+              />
+            </div>
+            <div class="cart-item-details">
+              <h3>Smart Watch</h3>
+              <p class="price">$149.99</p>
+              <p class="description">
+                Fitness tracker with heart rate monitor and GPS.
+              </p>
+              <div class="quantity">
+                <label for="quantity2">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity2"
+                  name="quantity2"
+                  value="2"
+                  min="1"
+                />
+              </div>
+              <div class="cart-item-actions">
+                <button class="btn btn-primary">
+                  <i class="fas fa-sync-alt"></i> Update
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-trash"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart Item 3 -->
+          <div class="cart-item">
+            <div class="cart-item-image">
+              <img
+                src="../../../assets/images/air-jordan-shoe-nike-sneakers-adidas-yeezy-jordan-9d493e6896549a636419ee58d67ba6c0.png"
+                alt="Product Image"
+              />
+            </div>
+            <div class="cart-item-details">
+              <h3>Bluetooth Speaker</h3>
+              <p class="price">$79.99</p>
+              <p class="description">
+                Portable waterproof speaker with 12-hour playback.
+              </p>
+              <div class="quantity">
+                <label for="quantity3">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity3"
+                  name="quantity3"
+                  value="1"
+                  min="1"
+                />
+              </div>
+              <div class="cart-item-actions">
+                <button class="btn btn-primary">
+                  <i class="fas fa-sync-alt"></i> Update
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-trash"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="checkout-container"
+          style="margin-top: var(--spacing-xl); text-align: right"
+        >
+          <button
+            class="btn btn-primary"
+            style="
+              font-size: 1rem;
+              padding: var(--spacing-md) var(--spacing-lg);
+            "
+          >
+            <i class="fas fa-credit-card"></i> Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

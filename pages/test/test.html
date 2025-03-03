@@ -1,194 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="./test.css" />
-    <script type="module" src="./test.js"></script>
-  </head>
-  <body>
-    <a href="../../index.html" class="home-icon">
-      <img src="../../assets/icons/home.png" alt="Home" />
-    </a>
-
-    <div class="register">
-      <form class="register__form">
-        <h1 class="register__title">Sign Up</h1>
-
-        <div class="register__content">
-          <!-- Email -->
-          <div class="register__box">
-            <i class="bx bx-user register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="email"
-                required
-                class="register__input"
-                id="email"
-                placeholder=""
-              />
-              <label for="email" class="register__label">Email</label>
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div class="register__box">
-            <i class="ri-lock-2-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="password"
-                required
-                class="register__input"
-                id="register-pass"
-                placeholder=""
-              />
-              <label for="register-pass" class="register__label">Password</label>
-              <i class="ri-eye-off-line register__eye" id="register-eye"></i>
-            </div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="register__box">
-            <i class="ri-lock-2-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="password"
-                required
-                class="register__input"
-                id="confirm-pass"
-                placeholder=""
-              />
-              <label for="confirm-pass" class="register__label"
-                >Confirm Password</label
-              >
-              <i class="ri-eye-off-line register__eye" id="confirm-eye"></i>
-            </div>
-          </div>
-
-          <!-- Full Name -->
-          <div class="register__box">
-            <i class="ri-user-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="text"
-                required
-                class="register__input"
-                id="full-name"
-                placeholder=""
-              />
-              <label for="full-name" class="register__label">Full Name</label>
-            </div>
-          </div>
-
-          <!-- Age -->
-          <div class="register__box">
-            <i class="ri-calendar-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="number"
-                required
-                class="register__input"
-                id="age"
-                placeholder=""
-                min="13"
-              />
-              <label for="age" class="register__label">Age</label>
-            </div>
-          </div>
-
-          <!-- Phone Number -->
-          <div class="register__box">
-            <i class="ri-phone-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="tel"
-                required
-                class="register__input"
-                id="phone"
-                placeholder=""
-              />
-              <label for="phone" class="register__label">Phone Number</label>
-            </div>
-          </div>
-
-          <!-- Address -->
-          <div class="register__box">
-            <i class="ri-home-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="text"
-                required
-                class="register__input"
-                id="address"
-                placeholder=""
-              />
-              <label for="address" class="register__label">Address</label>
-            </div>
-          </div>
-
-          <!-- Country -->
-          <div class="register__box">
-            <i class="ri-earth-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="text"
-                required
-                class="register__input"
-                id="country"
-                placeholder=""
-              />
-              <label for="country" class="register__label">Country</label>
-            </div>
-          </div>
-
-          <!-- City -->
-          <div class="register__box">
-            <i class="ri-building-line register__icon"></i>
-            <div class="register__box-input">
-              <input
-                type="text"
-                required
-                class="register__input"
-                id="city"
-                placeholder=""
-              />
-              <label for="city" class="register__label">City</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Privacy Policy and terms -->
-        <div class="register__terms">
-          <input type="checkbox" id="policy-agreement" required />
-          <label for="terms"
-            >I agree to the <a href="#">Privacy Policy</a> and <a href="#">Terms of
-            Service</a></label
-          >
-        </div>
-
-        <button type="submit" class="register__button">Register</button>
-
-        <!-- Social Sign-Up Options -->
-        <div class="social-login">
-          <p>Or sign up with:</p>
-          <div class="social-icons">
-            <a href="#" id="google-signup"
-              ><img src="../../assets/icons/google.png" alt="Google"
-            /></a>
-            <a href="#" id="twitter-signup"
-              ><img src="../../assets/icons/x.png" alt="Twitter"
-            /></a>
-            <a href="#" id="facebook-signup"
-              ><img src="../../assets/icons/facebook.png" alt="Facebook"
-            /></a>
-          </div>
-        </div>
-
-        <p class="register__login">
-          Already have an account? <a href="../Login/Login.html">Login</a>
-        </p>
-      </form>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Storage Upload Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .upload-container {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    input[type="file"] {
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background-color: #f3f3f3;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background-color: #4caf50;
+      width: 0;
+      transition: width 0.3s ease;
+    }
+    .download-url {
+      margin-top: 20px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h1>Upload a File to Firebase Storage</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="progressBar"></div>
     </div>
-  </body>
+    <div class="download-url" id="downloadUrl"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase Storage functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBq2uLaMnzulkAhKKWIg-NfxDIlbe3dYZA",
+      authDomain: "ecommerce-d50ed.firebaseapp.com",
+      projectId: "ecommerce-d50ed",
+      storageBucket: "ecommerce-d50ed", // Updated bucket name
+      messagingSenderId: "580091660083",
+      appId: "1:580091660083:web:c79752f4158514c0a92046",
+      measurementId: "G-Z8HYBY4WBP"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+
+    // Get DOM elements
+    const fileInput = document.getElementById("fileInput");
+    const progressBar = document.getElementById("progressBar");
+    const downloadUrl = document.getElementById("downloadUrl");
+
+    // Handle file input change
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        uploadFile(file);
+      }
+    });
+
+    // Upload file to Firebase Storage
+    function uploadFile(file) {
+      // Create a storage reference
+      const storageRef = ref(storage, `images/${file.name}`); // Store in "images" folder
+
+      // Upload the file
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      // Monitor upload progress
+      uploadTask.on("state_changed",
+        (snapshot) => {
+          // Update progress bar
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          progressBar.style.width = progress + "%";
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          // Handle errors
+          console.error("Error uploading file:", error);
+          alert("Error uploading file. Please try again.");
+        },
+        () => {
+          // Handle successful upload
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            console.log("File available at", url);
+            downloadUrl.innerHTML = `<strong>Download URL:</strong> <a href="${url}" target="_blank">${url}</a>`;
+          });
+        }
+      );
+    }
+  </script>
+</body>
 </html>

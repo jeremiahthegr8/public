@@ -1,0 +1,227 @@
+    /* CSS Variables & Theme */
+      :root {
+        /* Color Palette */
+        --primary-color: #4361ee;
+        --primary-hover: #3a56d4;
+        --secondary-color: #4d4d4d;
+        --accent-color: #3ccfcf;
+        --light-accent: #e6f9f9;
+        --text-dark: #2d3748;
+        --text-light: #718096;
+        --text-muted: #a0aec0;
+        --bg-light: #f8fafc;
+        --bg-white: #ffffff;
+        --border-color: #e2e8f0;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+        /* Spacing */
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+
+        /* Border Radius */
+        --radius-sm: 0.25rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+      }
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        margin-left: 280px;
+        padding: var(--spacing-xl);
+        transition: all 0.3s ease;
+      }
+
+      /* Top Bar */
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--spacing-xl);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid var(--border-color);
+      }
+      .hamburger-menu {
+        display: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      .user-welcome h2 {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+      .user-actions {
+        display: flex;
+        align-items: center;
+      }
+      .notification {
+        position: relative;
+        margin-right: var(--spacing-lg);
+        font-size: 1.2rem;
+      }
+      .notification .badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: var(--accent-color);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .user-avatar img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      /* Upload Form Styles */
+      .upload-form {
+        background-color: var(--bg-white);
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+      }
+      .upload-form h3 {
+        margin-bottom: var(--spacing-lg);
+        color: var(--primary-color);
+      }
+      .form-group {
+        margin-bottom: var(--spacing-lg);
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: var(--spacing-sm);
+        font-weight: 500;
+      }
+      .form-group input[type="text"],
+      .form-group input[type="number"],
+      .form-group input[type="file"],
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 0.95rem;
+      }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      /* Attribute Buttons */
+      .attribute-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+      }
+      .attribute-btn {
+        background-color: var(--light-accent);
+        color: var(--primary-color);
+        border: none;
+        border-radius: var(--radius-md);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .attribute-btn.selected,
+      .attribute-btn:disabled {
+        background-color: var(--border-color);
+        color: var(--text-muted);
+        cursor: not-allowed;
+      }
+      /* Selected Attributes Input Area */
+      .selected-attributes .attribute-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: var(--spacing-sm);
+      }
+      .selected-attributes .attribute-name {
+        width: 120px;
+        font-weight: 500;
+      }
+      .selected-attributes .attribute-value {
+        flex: 1;
+        padding: var(--spacing-xs);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+      }
+      .selected-attributes .remove-attribute {
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 1rem;
+        margin-left: var(--spacing-sm);
+        cursor: pointer;
+      }
+      /* Tag Input and Container */
+      .tags-input-container {
+        display: flex;
+        gap: var(--spacing-sm);
+      }
+      .tags-input-container input[type="text"] {
+        flex: 1;
+      }
+      .tags-container {
+        margin-top: var(--spacing-sm);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+      }
+      .tag {
+        background-color: var(--border-color);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        display: flex;
+        align-items: center;
+      }
+      .tag button {
+        background: none;
+        border: none;
+        margin-left: var(--spacing-xs);
+        color: var(--text-muted);
+        cursor: pointer;
+      }
+      /* Submit Button */
+      .submit-btn {
+        display: inline-block;
+        padding: var(--spacing-md) var(--spacing-lg);
+        border: none;
+        border-radius: var(--radius-md);
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+      .submit-btn:hover {
+        background-color: var(--primary-hover);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          width: 250px;
+        }
+        .sidebar.active {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+          padding: var(--spacing-lg);
+        }
+        .hamburger-menu {
+          display: block;
+        }
+      }

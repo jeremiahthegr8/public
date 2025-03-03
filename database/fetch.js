@@ -1,14 +1,14 @@
-import { db } from "./config.js";
+import { db } from './config.js';
 import {
   collection,
   getDocs,
-} from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const productsContainer = document.getElementById("products-container"); // Main container to hold all categories
+document.addEventListener('DOMContentLoaded', async () => {
+  const productsContainer = document.getElementById('products-container'); // Main container to hold all categories
 
   try {
-    const querySnapshot = await getDocs(collection(db, "items"));
+    const querySnapshot = await getDocs(collection(db, 'items'));
     const itemsByCategory = {};
 
     querySnapshot.forEach((doc) => {
@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Loop through categories and create sections dynamically
     for (const category in itemsByCategory) {
-      const section = document.createElement("section");
-      section.classList.add("category-section");
-      section.id = `category-${category.replace(/\s+/g, "-").toLowerCase()}`; // Unique ID
+      const section = document.createElement('section');
+      section.classList.add('category-section');
+      section.id = `category-${category.replace(/\s+/g, '-').toLowerCase()}`; // Unique ID
 
       section.innerHTML = `
         <h2>${category}</h2>
@@ -41,15 +41,15 @@ document.addEventListener("DOMContentLoaded", async () => {
               <button class="buy-now">Buy Now</button>
               <span class="wishlist-heart">❤️</span>
             </div>
-          `,
+          `
             )
-            .join("")}
+            .join('')}
         </div>
       `;
 
       productsContainer.appendChild(section);
     }
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error('Error fetching products:', error);
   }
 });

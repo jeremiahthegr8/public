@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Products & Analytics</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./listings.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../../components/usersidebar.js" defer></script>
+    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <div class="logo">
+        <span>Seller Dashboard</span>
+      </div>
+      <div class="navigation">
+        <a href="../../userpages/account/account.html" class="nav-link">
+          <i class="fas fa-home"></i> <span>Go Back</span>
+        </a>
+        <a href="../bussinessprofile/bussinessprofile.html" class="nav-link">
+          <i class="fas fa-user"></i> <span>Business Profile</span>
+        </a>
+        <a href="../listings/listings.html" class="nav-link active">
+          <i class="fas fa-list"></i> <span>Your Listings</span>
+        </a>
+        <a href="../addnewlisting/addnewlisting.html" class="nav-link">
+          <i class="fas fa-plus-circle"></i> <span>Add New Listings</span>
+        </a>
+        <a href="../requestedorders/requestedorders.html" class="nav-link">
+          <i class="fas fa-shopping-bag"></i> <span>Orders</span>
+        </a>
+        <a href="../recievedratings/recievedratings.html" class="nav-link">
+          <i class="fas fa-star"></i> <span>Ratings & Complaints</span>
+        </a>
+        <a
+          href="../messagepageforseller/messagepageforseller.html"
+          class="nav-link"
+        >
+          <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a>
+        <!-- Additional Recommended Links -->
+        <a href="../analytics/analytics.html" class="nav-link">
+          <i class="fas fa-chart-line"></i> <span>Analytics</span>
+        </a>
+        <a href="../sellersettings/sellersettings.html" class="nav-link">
+          <i class="fas fa-cog"></i> <span>Settings</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" class="nav-link">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="hamburger-menu">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="user-welcome">
+          <h2>My Products & Analytics</h2>
+        </div>
+        <div class="user-actions">
+          <a href="#" class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </a>
+          <div class="user-avatar">
+            <img
+              src="../../../assets/images/new/defaultpfp.png"
+              alt="Seller Avatar"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Header: Search & Actions -->
+      <div class="header">
+        <div class="page-title">
+          <p>Review your listings and performance metrics.</p>
+        </div>
+        <div class="header-actions">
+          <div class="search-bar">
+            <span class="search-icon"><i class="fas fa-search"></i></span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search products..."
+            />
+          </div>
+          <button class="btn btn-primary" id="addProductBtn">
+            <i class="fas fa-plus"></i> Add Product
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Stats -->
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <h3>Total Products</h3>
+          <div class="value" id="totalProducts">0</div>
+          <div class="trend up">
+            <i class="fas fa-arrow-up"></i> 12% from last month
+          </div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Sales</h3>
+          <div class="value" id="totalSales">$0.00</div>
+          <div class="trend up">
+            <i class="fas fa-arrow-up"></i> 18% from last month
+          </div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Returns</h3>
+          <div class="value" id="totalReturns">$0.00</div>
+          <div class="trend down">
+            <i class="fas fa-arrow-down"></i> 5% from last month
+          </div>
+        </div>
+        <div class="stat-card">
+          <h3>Conversion Rate</h3>
+          <div class="value" id="conversionRate">0%</div>
+          <div class="trend up">
+            <i class="fas fa-arrow-up"></i> 1.2% from last month
+          </div>
+        </div>
+        <div class="stat-card">
+          <h3>Average Rating</h3>
+          <div class="value" id="avgRating">0 / 5</div>
+          <div class="trend down">
+            <i class="fas fa-arrow-down"></i> 0.1 from last month
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Section -->
+      <div class="analytics-section">
+        <!-- Top Selling Product -->
+        <div class="top-selling">
+          <h2>Top Selling Product</h2>
+          <div class="product-card" id="topProductCard">
+            <div class="product-image">
+              <img
+                src="../../../assets/images/air-jordan-shoe-nike-sneakers-adidas-yeezy-jordan-9d493e6896549a636419ee58d67ba6c0.png"
+                alt="Product Image"
+              />
+            </div>
+            <div class="product-info">
+              <h3 id="topProductName">Product Name</h3>
+              <p id="topProductSold">Sold: 0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Performance Chart -->
+        <div class="sales-performance">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Sales & Returns Performance</div>
+              <div class="filter-group">
+                <select id="timePeriodSelect">
+                  <option value="lastWeek">Last Week</option>
+                  <option value="lastMonth" selected>Last Month</option>
+                  <option value="last3Months">Last 3 Months</option>
+                  <option value="thisYear">This Year</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-content">
+              <canvas id="salesChart"></canvas>
+              <div class="comparison">
+                <span id="salesComparison">+0%</span> Sales vs. previous
+                period&nbsp;&nbsp;
+                <span id="returnsComparison">+0%</span> Returns vs. previous
+                period
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter & Sorting Options -->
+      <div class="filter-sort">
+        <div class="filter-tabs">
+          <button class="tab active" data-filter="all">All Listings</button>
+          <button class="tab" data-filter="active">Active Listings</button>
+          <button class="tab" data-filter="inactive">Inactive Listings</button>
+        </div>
+        <div class="sort-options">
+          <label for="sort-select">Sort by:</label>
+          <select id="sort-select">
+            <option value="mostSold">Most Sold</option>
+            <option value="leastSold">Least Sold</option>
+            <option value="priceLowHigh">Price: Low to High</option>
+            <option value="priceHighLow">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Listings Container -->
+      <div class="listings-container" id="listingsContainer">
+        <div class="no-listings">
+          <i class="fas fa-box-open"></i>
+          <p>No listings found.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase Scripts (Modular) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <!-- Main Script -->
+    <script type="module" src="./listings.js"></script>
+  </body>
+</html>
