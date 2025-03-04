@@ -1,0 +1,96 @@
+/* animation.css */
+
+/* --------------------
+   KEYFRAMES
+-------------------- */
+
+/* Fade In: for elements appearing on scroll */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide In From Top: for the sticky header */
+@keyframes slideInDown {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Bounce: for interactive buttons */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-5px); }
+  60% { transform: translateY(-3px); }
+}
+
+/* --------------------
+   UTILITIES
+-------------------- */
+
+/* Apply a fadeIn animation */
+.fade-in {
+  animation: fadeIn 0.6s ease-out both;
+}
+
+/* Sticky header visible animation */
+.sticky-header.visible {
+  animation: slideInDown 0.3s ease-out both;
+}
+
+/* Bounce effect on buttons when hovered */
+.btn:hover {
+  animation: bounce 0.5s;
+}
+
+/* --------------------
+   COMPONENT ANIMATIONS
+-------------------- */
+
+/* Product Cards: subtle lift and shadow on hover */
+.product-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 20px rgba(67, 97, 238, 0.2);
+}
+
+/* Category Card Overlay: fade in on hover */
+.category-card .category-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.category-card:hover .category-overlay {
+  opacity: 1;
+}
+
+/* Testimonials: fade in each slide */
+.testimonial-slide {
+  animation: fadeIn 0.8s ease-out both;
+}
+
+/* Instagram: fade in overlay on hover */
+.instagram-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.instagram-item:hover .instagram-overlay {
+  opacity: 1;
+}
+
+/* Smooth transition for nav dropdowns (optional) */
+.dropdown-menu {
+  transition: opacity 0.3s ease;
+}

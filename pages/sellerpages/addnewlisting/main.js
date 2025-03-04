@@ -21,8 +21,8 @@ import {
   setupTags,
   mainImagePreview,
   additionalImagesPreview,
-    attributeButtons,
-   subcategorySelect,
+  attributeButtons,
+  subcategorySelect,
   selectedAttributes,
   tagsContainer,
 } from './ui.js';
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // --- Add Analytics Fields ---
+    // --- Add Analytics & Default Fields ---
     productData.createdAt = serverTimestamp();
     productData.status = 'active'; // active listing
     productData.salesCount = 0;
@@ -117,28 +117,36 @@ document.addEventListener('DOMContentLoaded', () => {
     productData.salesHistory = []; // Placeholder for monthly sales data
     productData.activityLog = []; // Placeholder for recent activity
 
+    // --- Retrieve Seller ID from User Document ---
     try {
-      // Save the product listing to the "listings" collection
-      await addDoc(collection(db, 'listings'), productData);
-
-      // --- Update Seller Data ---
-      // Retrieve the user's document from the "users" collection
       const userDocRef = doc(db, 'users', auth.currentUser.uid);
       const userSnapshot = await getDoc(userDocRef);
       if (userSnapshot.exists()) {
         const userData = userSnapshot.data();
         if (userData.sellerID) {
-          // Update the seller's document in the "sellers" collection
-          const sellerDocRef = doc(db, 'sellers', userData.sellerID);
-          await updateDoc(sellerDocRef, {
-            activeListings: increment(1),
-            numberInStock: increment(parseInt(productData.quantity)),
-          });
+          // Add seller id to the listing
+          productData.sellerId = userData.sellerID;
         } else {
           alert('Seller information not found. Please register as a seller.');
           return;
         }
       }
+    } catch (error) {
+      alert('Error retrieving seller information: ' + error.message);
+      return;
+    }
+
+    try {
+      // Save the product listing to the "listings" collection
+      await addDoc(collection(db, 'listings'), productData);
+
+      // --- Update Seller Data ---
+      // Update the seller's document in the "sellers" collection
+      const sellerDocRef = doc(db, 'sellers', productData.sellerId);
+      await updateDoc(sellerDocRef, {
+        activeListings: increment(1),
+        numberInStock: increment(parseInt(productData.quantity)),
+      });
 
       alert('Product listing added successfully!');
       form.reset();
@@ -156,8 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!data.description) isValid = false;
     if (!data.category) isValid = false;
     if (!data.subcategory) isValid = false;
-    // Instead of checking mainImageUrl (which is set only after file upload),
-    // check that the mainImage File exists.
     if (!data.mainImage) isValid = false;
     return isValid;
   }

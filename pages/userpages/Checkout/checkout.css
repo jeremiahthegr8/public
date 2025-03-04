@@ -1,0 +1,186 @@
+      /* --- CSS Variables & Reset --- */
+      :root {
+        --primary-color: #4361ee;
+        --primary-hover: #3a56d4;
+        --bg-white: #ffffff;
+        --bg-light: #f8f8f8;
+        --text-dark: #333333;
+        --border-color: #cccccc;
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --radius-sm: 4px;
+        --radius-md: 8px;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-light);
+        color: var(--text-dark);
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-lg);
+      }
+      
+      /* --- Progress Indicator --- */
+      .progress-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--spacing-lg);
+      }
+      .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+      }
+      .progress-step .circle {
+        width: 40px;
+        height: 40px;
+        background: var(--border-color);
+        border-radius: 50%;
+        margin: 0 auto;
+        line-height: 40px;
+        color: white;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+      .progress-step.active .circle,
+      .progress-step.completed .circle {
+        background: var(--primary-color);
+      }
+      .progress-step .label {
+        margin-top: var(--spacing-xs);
+        font-size: 14px;
+      }
+      .progress-step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: var(--border-color);
+        z-index: -1;
+        transition: background 0.3s;
+      }
+      .progress-step.completed:not(:last-child)::after {
+        background: var(--primary-color);
+      }
+      
+      /* --- Layout: Form & Order Summary --- */
+      .checkout-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-lg);
+      }
+      .checkout-form {
+        flex: 2;
+        min-width: 300px;
+      }
+      .checkout-summary {
+        flex: 1;
+        min-width: 250px;
+        background: var(--bg-white);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-md);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: var(--spacing-lg);
+      }
+      .order-summary h2 {
+        margin-bottom: var(--spacing-md);
+      }
+      .order-summary .line {
+        display: flex;
+        justify-content: space-between;
+        margin: var(--spacing-xs) 0;
+      }
+      .order-summary .total {
+        font-weight: bold;
+      }
+      
+      /* --- Form Styles --- */
+      form {
+        background: var(--bg-white);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-md);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+      .form-step {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+      .form-step.active {
+        display: block;
+      }
+      .form-group {
+        margin-bottom: var(--spacing-md);
+      }
+      label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        font-weight: 500;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="number"],
+      input[type="tel"] {
+        width: 100%;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+      }
+      button {
+        padding: var(--spacing-md) var(--spacing-lg);
+        border: none;
+        border-radius: var(--radius-md);
+        background: var(--primary-color);
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: var(--primary-hover);
+      }
+      .btn-secondary {
+        background: var(--border-color);
+        color: var(--text-dark);
+      }
+      .btn-secondary:hover {
+        background: #bbb;
+      }
+      
+      /* --- Payment Method Fields --- */
+      .payment-methods {
+        margin-bottom: var(--spacing-md);
+      }
+      .payment-methods label {
+        margin-right: var(--spacing-md);
+        cursor: pointer;
+      }
+      .payment-details {
+        display: none;
+        margin-top: var(--spacing-md);
+      }
+      .payment-details.active {
+        display: block;
+      }
+      
+      /* --- Animations --- */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* --- Responsive --- */
+      @media (max-width: 768px) {
+        .checkout-container {
+          flex-direction: column;
+        }
+      }

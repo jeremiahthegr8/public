@@ -80,7 +80,8 @@ function getDeviceAndBrowserInfo() {
 document.querySelector('.SignUpForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const FullName = document.getElementById('FullName').value.trim();
+  const FirstName = document.getElementById('FirstName').value.trim();
+  const LastName = document.getElementById('LastName').value.trim();
   const email = document.getElementById('SignUpEmail').value.trim();
   const password = document.getElementById('SignUpPassword').value.trim();
   const confirmPassword = document
@@ -93,7 +94,7 @@ document.querySelector('.SignUpForm').addEventListener('submit', async (e) => {
   const Country = document.getElementById('Country').value.trim();
   const termsAndConditions = document.getElementById('Agreementbox').checked;
 
-  if (!FullName || !email || !password) {
+  if (!FirstName || !LastName || !email || !password) {
     alert('Please fill in all fields.');
     return;
   }
@@ -141,7 +142,9 @@ document.querySelector('.SignUpForm').addEventListener('submit', async (e) => {
     const userDoc = doc(db, 'users', user.uid);
     await setDoc(userDoc, {
       uid: user.uid,
-      FullName,
+      FullName: FirstName + ' ' + LastName,
+      FirstName: FirstName,
+      LastName: LastName,
       email,
       ip: locationData.ip,
       city: locationData.city,
@@ -181,6 +184,8 @@ document.querySelector('.SignUpForm').addEventListener('submit', async (e) => {
         isVerified: false,
         timestamp: new Date().toISOString(),
       },
+      cartCount: 0,
+      wishlistCount: 0,
     });
 
     // Configure email verification settings

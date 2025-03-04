@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 /* General Styles */
 :root {
   /* Color Palette */
@@ -91,16 +94,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--bg-white);
 }
 
-/* Header Styles */
-/* .main-header{
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: var(--spacing-md) 0;
-} */
-
 .header-top {
   background-color: var(--bg-light);
   padding: var(--spacing-sm) 0;
@@ -134,10 +127,6 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 14px;
   color: var(--text-light);
 }
-
-.main-header {
-}
-
 .header-wrapper {
   display: flex;
   justify-content: space-between;
@@ -1337,4 +1326,60 @@ product-details{
 /* Sentinel element (can be minimal in height) */
 .header-sentinel {
   height: 1px;
+}/* -------------------------------
+   Account Container & Button Styles
+---------------------------------*/
+
+/* Container styling for both main and sticky headers */
+#account-container-main,
+#account-container-sticky {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+}
+
+/* Styling for the account link (either "Sign In" with login icon or "Account" with profile icon) */
+#account-container-main a,
+#account-container-sticky a {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-dark);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#account-container-main a:hover,
+#account-container-sticky a:hover {
+  color: var(--primary-color);
+}
+
+/* Styling for the logout button */
+#account-container-main button,
+#account-container-sticky button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dark);
+  font-size: 16px;
+  transition: color 0.3s ease;
+  padding: 0;
+}
+
+#account-container-main button:hover,
+#account-container-sticky button:hover {
+  color: var(--primary-color);
+}
+
+/* Ensure icons are sized consistently */
+#account-container-main i,
+#account-container-sticky i {
+  font-size: 18px;
+}
+
+/* Optional: Add a little spacing between the account link and logout button if both exist */
+#account-container-main a + button,
+#account-container-sticky a + button {
+  margin-left: 0.5rem;
 }

@@ -8,9 +8,10 @@ import {
   doc,
   updateDoc,
   getDoc,
+  increment,
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
-// Import cart and wishlist functions (see below)
+// Import cart and wishlist functions
 import { addToCart, updateCartItemQuantity, removeFromCart } from './carts.js';
 import { toggleWishlist } from './components/wishlist.js';
 
@@ -32,28 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Current authenticated user
   let currentUser = null;
+
   // ========= 1. HEADER COUNTERS =========
+  // Instead of iterating through the cart/wishlist subcollections, we now fetch the aggregated counters
   async function updateUserCounters() {
     if (!currentUser) return;
-    // Query user's cart collection and sum the quantities.
-    const cartSnapshot = await getDocs(
-      collection(db, 'users', currentUser.uid, 'cart')
-    );
-    let cartCount = 0;
-    cartSnapshot.forEach((docSnap) => {
-      cartCount += docSnap.data().quantity;
-    });
-    // Query wishlist collection; count the number of documents.
-    const wishlistSnapshot = await getDocs(
-      collection(db, 'users', currentUser.uid, 'wishlist')
-    );
-    let wishlistCount = wishlistSnapshot.size;
-    // Update the user document with these counts.
-    await updateDoc(doc(db, 'users', currentUser.uid), {
-      cartCount,
-      wishlistCount,
-    });
-    // Update the header icons for both main and sticky headers.
+    const userDocSnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const userData = userDocSnap.data() || {};
+    const cartCount = userData.cartCount || 0;
+    const wishlistCount = userData.wishlistCount || 0;
     updateHeaderIcons(cartCount, wishlistCount);
   }
 
@@ -63,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cartCountElems.forEach((elem) => {
       elem.textContent = cartCount;
     });
-
     // Update all elements with class 'whishlistcount'
     const wishlistCountElems = document.querySelectorAll('.whishlistcount');
     wishlistCountElems.forEach((elem) => {
@@ -71,99 +58,90 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ========= 2. DROPDOWN & MOBILE MENUS (for both headers) =========
+  // ========= 2. ACCOUNT LINK LOGIC =========
+  // Update the account containers based on login status.
+  function updateAccountLink() {
+    const containerMain = document.getElementById('account-container-main');
+    const containerSticky = document.getElementById('account-container-sticky');
 
-  // Select both main and sticky header toggles using a comma-separated selector.
-  const accountToggleElems = document.querySelectorAll(
-    '#account-toggle, #account-toggle-sticky'
-  );
-  const cartToggleElems = document.querySelectorAll(
-    '#cart-toggle, #cart-toggle-sticky'
-  );
-
-  // Assuming both headers share the same dropdown menus, we can target them once:
-  const accountDropdownElems = document.querySelectorAll('.account-dropdown');
-  const cartDropdownElems = document.querySelectorAll('.cart-dropdown');
-
-  accountToggleElems.forEach((toggle) => {
-    toggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Toggle the display of all account dropdowns.
-      accountDropdownElems.forEach((dropdown) => {
-        dropdown.style.display =
-          dropdown.style.display === 'block' ? 'none' : 'block';
-      });
-      // Hide cart dropdowns
-      cartDropdownElems.forEach((dropdown) => {
-        dropdown.style.display = 'none';
-      });
-    });
-  });
-
-  cartToggleElems.forEach((toggle) => {
-    toggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Toggle the display of all cart dropdowns.
-      cartDropdownElems.forEach((dropdown) => {
-        dropdown.style.display =
-          dropdown.style.display === 'block' ? 'none' : 'block';
-      });
-      // Hide account dropdowns
-      accountDropdownElems.forEach((dropdown) => {
-        dropdown.style.display = 'none';
-      });
-    });
-  });
-
-  // Hide dropdowns if clicking outside of them.
-  document.addEventListener('click', (e) => {
-    // If the click target isn't contained in any account toggle or dropdown, hide account dropdowns.
-    if (
-      ![...accountToggleElems].some((el) => el.contains(e.target)) &&
-      ![...accountDropdownElems].some((el) => el.contains(e.target))
-    ) {
-      accountDropdownElems.forEach(
-        (dropdown) => (dropdown.style.display = 'none')
-      );
+    if (currentUser) {
+      // User is logged in: show profile link and logout button.
+      if (containerMain) {
+        containerMain.innerHTML = `
+          <a href="./pages/userpages/account/account.html" id="account-link">
+            <i class="fas fa-user-circle"></i>
+            <span>Account</span>
+          </a>
+          <button id="logout-button" title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        `;
+      }
+      if (containerSticky) {
+        containerSticky.innerHTML = `
+          <a href="./pages/userpages/account/account.html" id="account-link-sticky">
+            <i class="fas fa-user-circle"></i>
+            <span>Account</span>
+          </a>
+          <button id="logout-button-sticky" title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        `;
+      }
+    } else {
+      // User is not logged in: show "Sign In" link with login icon.
+      if (containerMain) {
+        containerMain.innerHTML = `
+          <a href="./pages/userpages/SignUp/SignUp.html" id="account-link">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Sign In</span>
+          </a>
+        `;
+      }
+      if (containerSticky) {
+        containerSticky.innerHTML = `
+          <a href="./pages/userpages/SignUp/SignUp.html" id="account-link-sticky">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Sign In</span>
+          </a>
+        `;
+      }
     }
-    // Similarly for cart toggles.
-    if (
-      ![...cartToggleElems].some((el) => el.contains(e.target)) &&
-      ![...cartDropdownElems].some((el) => el.contains(e.target))
-    ) {
-      cartDropdownElems.forEach(
-        (dropdown) => (dropdown.style.display = 'none')
-      );
-    }
-  });
+    // Attach logout handlers if needed.
+    attachLogoutHandler();
+  }
 
-  // Mobile menu code remains unchanged.
-  const mobileMenuButton = document.getElementById('mobile-menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.style.display =
-      mobileMenu.style.display === 'block' ? 'none' : 'block';
-  });
-  document.addEventListener('click', (e) => {
-    if (
-      !mobileMenuButton.contains(e.target) &&
-      !mobileMenu.contains(e.target)
-    ) {
-      mobileMenu.style.display = 'none';
+  // Attach click handlers to logout buttons.
+  function attachLogoutHandler() {
+    const logoutBtn = document.getElementById('logout-button');
+    const logoutBtnSticky = document.getElementById('logout-button-sticky');
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        auth.signOut().then(() => {
+          updateAccountLink();
+        });
+      });
     }
-  });
+    if (logoutBtnSticky) {
+      logoutBtnSticky.addEventListener('click', (e) => {
+        e.preventDefault();
+        auth.signOut().then(() => {
+          updateAccountLink();
+        });
+      });
+    }
+  }
 
   // Listen for auth state changes.
   auth.onAuthStateChanged((user) => {
     currentUser = user;
-    if (currentUser) {
-      updateUserCounters();
-    }
+    updateUserCounters();
+    updateAccountLink();
   });
 
-  // ===================================================
-  // 2. HERO SLIDER
-  // ===================================================
+  // ========= 3. HERO SLIDER =========
   const heroSlider = document.getElementById('hero-slider');
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.dot');
@@ -203,41 +181,24 @@ document.addEventListener('DOMContentLoaded', () => {
     autoSlideInterval = setInterval(nextSlide, 5000);
   });
 
-  // ===================================================
-  // 3. DROPDOWN & MOBILE MENUS
-  // ===================================================
-  const accountToggle = document.getElementById('account-toggle');
-  const accountDropdown = document.querySelector('.account-dropdown');
+  // ========= 4. DROPDOWN & MOBILE MENUS =========
+  // For Cart dropdown.
   const cartToggle = document.getElementById('cart-toggle');
   const cartDropdown = document.querySelector('.cart-dropdown');
 
-  accountToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    accountDropdown.style.display =
-      accountDropdown.style.display === 'block' ? 'none' : 'block';
-    cartDropdown.style.display = 'none';
-  });
   cartToggle.addEventListener('click', (e) => {
     e.preventDefault();
     cartDropdown.style.display =
       cartDropdown.style.display === 'block' ? 'none' : 'block';
-    accountDropdown.style.display = 'none';
   });
   document.addEventListener('click', (e) => {
-    if (
-      !accountToggle.contains(e.target) &&
-      !accountDropdown.contains(e.target)
-    ) {
-      accountDropdown.style.display = 'none';
-    }
+    // Close cart dropdown if click outside.
     if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
       cartDropdown.style.display = 'none';
     }
   });
 
-  // ===================================================
-  // 4. FETCH ALL LISTINGS FROM FIRESTORE
-  // ===================================================
+  // ========= 5. FETCH ALL LISTINGS FROM FIRESTORE =========
   async function fetchAllListings() {
     try {
       const listingsSnapshot = await getDocs(collection(db, 'listings'));
@@ -252,9 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ===================================================
-  // 5. GENERATE RATING STARS (Helper Function)
-  // ===================================================
+  // ========= 6. GENERATE RATING STARS (Helper Function) =========
   function generateRatingStars(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
@@ -272,14 +231,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return starsHTML;
   }
 
-  // ===================================================
-  // 6. QUICK VIEW MODAL (with Cart & Wishlist Actions)
-  // ===================================================
+  // ========= 7. QUICK VIEW MODAL (with Cart & Wishlist Actions) =========
   const quickViewModal = document.getElementById('quick-view-modal');
   const closeQuickView = document.getElementById('close-quick-view');
   closeQuickView.addEventListener('click', () => {
     quickViewModal.style.display = 'none';
   });
+
   function showQuickView(product) {
     quickViewModal.style.display = 'flex';
     const rating = product.rating || 0;
@@ -303,69 +261,68 @@ document.addEventListener('DOMContentLoaded', () => {
         .join('');
     }
 
-    // The modal HTML now includes placeholders for dynamic cart controls and wishlist icon.
     document.getElementById('quick-view-content').innerHTML = `
-    <div class="quick-view-container" style="display: flex; flex-direction: row; gap: 20px; max-height: 90vh;">
-      <!-- Left Column: Image Gallery -->
-      <div class="quick-view-gallery" style="flex: 1; display: flex; flex-direction: column;">
-        <div class="main-image-container" style="flex: 1; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-          <img src="${product.mainImageUrl}" alt="${
+      <div class="quick-view-container" style="display: flex; flex-direction: row; gap: 20px; max-height: 90vh;">
+        <!-- Left Column: Image Gallery -->
+        <div class="quick-view-gallery" style="flex: 1; display: flex; flex-direction: column;">
+          <div class="main-image-container" style="flex: 1; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+            <img src="${product.mainImageUrl}" alt="${
       product.name
     }" class="main-image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-        </div>
-        ${
-          thumbnailsHTML
-            ? `<div class="thumbnail-gallery" style="display: flex; justify-content: center; gap: 10px; margin-top: var(--spacing-sm);">
-                ${thumbnailsHTML}
-              </div>`
-            : ''
-        }
-      </div>
-      <!-- Right Column: Product Info -->
-      <div class="quick-view-info" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; max-height: 90vh;">
-        <div>
-          <h3>${product.name}</h3>
-          ${tagsHTML}
-          <div class="product-meta">
-            <div class="rating">${ratingStars}</div>
-            <span>(${product.ratingCount || 0} reviews)</span>
           </div>
-          <div class="product-category">
-            <span>${product.category || ''}</span>
-            ${
-              product.subcategory
-                ? ` > <span>${product.subcategory}</span>`
-                : ''
-            }
-          </div>
-          <div class="product-price">
-            <p class="current-price">$${product.price}</p>
-          </div>
-          <div class="availability">${stockStatus}</div>
           ${
-            product.attributes && product.attributes.Model
-              ? `<div class="product-model">Model: ${product.attributes.Model}</div>`
+            thumbnailsHTML
+              ? `<div class="thumbnail-gallery" style="display: flex; justify-content: center; gap: 10px; margin-top: var(--spacing-sm);">
+                  ${thumbnailsHTML}
+                </div>`
               : ''
           }
-          <div class="product-description">
-            <p>${
-              product.description ||
-              'No description available for this product.'
-            }</p>
-          </div>
         </div>
-        <!-- Product Actions: Cart controls on the left, Wishlist toggle on the right -->
-        <div class="product-actions" style="margin-top: var(--spacing-md); display: flex; align-items: center; justify-content: space-between;">
-          <div class="cart-action-area">
-            <!-- This area will be dynamically updated to show either Add to Cart or cart controls -->
+        <!-- Right Column: Product Info -->
+        <div class="quick-view-info" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; max-height: 90vh;">
+          <div>
+            <h3>${product.name}</h3>
+            ${tagsHTML}
+            <div class="product-meta">
+              <div class="rating">${ratingStars}</div>
+              <span>(${product.ratingCount || 0} reviews)</span>
+            </div>
+            <div class="product-category">
+              <span>${product.category || ''}</span>
+              ${
+                product.subcategory
+                  ? ` > <span>${product.subcategory}</span>`
+                  : ''
+              }
+            </div>
+            <div class="product-price">
+              <p class="current-price">$${product.price}</p>
+            </div>
+            <div class="availability">${stockStatus}</div>
+            ${
+              product.attributes && product.attributes.Model
+                ? `<div class="product-model">Model: ${product.attributes.Model}</div>`
+                : ''
+            }
+            <div class="product-description">
+              <p>${
+                product.description ||
+                'No description available for this product.'
+              }</p>
+            </div>
           </div>
-          <button class="wishlist-btn btn btn-outline">
-            <i class="wishlist-icon far fa-heart"></i>
-          </button>
+          <!-- Product Actions: Cart controls on the left, Wishlist toggle on the right -->
+          <div class="product-actions" style="margin-top: var(--spacing-md); display: flex; align-items: center; justify-content: space-between;">
+            <div class="cart-action-area">
+              <!-- This area will be dynamically updated to show either Add to Cart or cart controls -->
+            </div>
+            <button class="wishlist-btn btn btn-outline">
+              <i class="wishlist-icon far fa-heart"></i>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  `;
+    `;
 
     // Setup thumbnail click to update main image.
     const thumbnails = document.querySelectorAll('.thumbnail');
@@ -376,16 +333,29 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Load product state (cart and wishlist) to update the UI
+    // Load product state (cart and wishlist) to update the UI.
     updateProductActions(product);
 
     // Wishlist toggle event listener.
     const wishlistBtn = document.querySelector('.wishlist-btn');
     if (wishlistBtn && currentUser) {
       wishlistBtn.addEventListener('click', async () => {
+        // Check if the product is already in the wishlist
+        const wishlistDocRef = doc(
+          db,
+          'users',
+          currentUser.uid,
+          'wishlist',
+          product.id
+        );
+        const docSnap = await getDoc(wishlistDocRef);
+        const wasAdded = !docSnap.exists();
         await toggleWishlist(db, currentUser, product);
+        // Update aggregated wishlist counter: increment if added, decrement if removed
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          wishlistCount: increment(wasAdded ? 1 : -1),
+        });
         await updateUserCounters();
-        // Immediately update the wishlist icon after toggling.
         updateWishlistIcon(product);
       });
     }
@@ -406,49 +376,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cartActionArea = document.querySelector('.cart-action-area');
     if (inCart) {
-      // Show cart controls: decrement, quantity display, increment and remove buttons.
       cartActionArea.innerHTML = `
-      <div class="cart-controls">
-        <button class="cart-decrement btn btn-secondary" style="margin-right:5px;">-</button>
-        <span class="cart-quantity" style="margin:0 8px;">${quantity}</span>
-        <button class="cart-increment btn btn-secondary" style="margin-left:5px;">+</button>
-        <button class="cart-remove btn btn-danger" style="margin-left:10px;"><i class="fa fa-trash"></i></button>
-      </div>
-    `;
-
-      // Attach event listeners to each cart control button.
+        <div class="cart-controls">
+          <button class="cart-decrement btn btn-secondary" style="margin-right:5px;">-</button>
+          <span class="cart-quantity" style="margin:0 8px;">${quantity}</span>
+          <button class="cart-increment btn btn-secondary" style="margin-left:5px;">+</button>
+          <button class="cart-remove btn btn-danger" style="margin-left:10px;"><i class="fa fa-trash"></i></button>
+        </div>
+      `;
       const decrementBtn = cartActionArea.querySelector('.cart-decrement');
       const incrementBtn = cartActionArea.querySelector('.cart-increment');
       const removeBtn = cartActionArea.querySelector('.cart-remove');
 
       decrementBtn.addEventListener('click', async () => {
         const newQty = quantity - 1;
-        await updateCartItemQuantity(db, currentUser, product, newQty);
+        if (newQty > 0) {
+          await updateCartItemQuantity(db, currentUser, product, newQty);
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            cartCount: increment(-1),
+          });
+        } else {
+          // Remove the product if quantity reaches 0
+          await removeFromCart(db, currentUser, product);
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            cartCount: increment(-quantity),
+          });
+        }
         updateProductActions(product);
         updateUserCounters();
       });
 
+      // For the increment button:
       incrementBtn.addEventListener('click', async () => {
-        const newQty = quantity + 1;
-        await updateCartItemQuantity(db, currentUser, product, newQty);
-        updateProductActions(product);
-        updateUserCounters();
-      });
+        // Disable the button and change its color to indicate it's processing.
+        incrementBtn.disabled = true;
+        incrementBtn.style.backgroundColor = 'gray';
 
-      removeBtn.addEventListener('click', async () => {
-        await removeFromCart(db, currentUser, product);
-        updateProductActions(product);
-        updateUserCounters();
+        const cartDocRef = doc(
+          db,
+          'users',
+          currentUser.uid,
+          'cart',
+          product.id
+        );
+        try {
+          // Atomically increment the quantity.
+          await updateDoc(cartDocRef, { quantity: increment(1) });
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            cartCount: increment(1),
+          });
+        } catch (error) {
+          console.error('Error incrementing quantity:', error);
+        } finally {
+          // Re-enable the button and reset its color.
+          incrementBtn.disabled = false;
+          incrementBtn.style.backgroundColor = '';
+          // Refresh UI after update.
+          updateProductActions(product);
+          updateUserCounters();
+        }
       });
     } else {
-      // If product is not in the cart, show the "Add to Cart" button.
       cartActionArea.innerHTML = `<button class="add-to-cart-btn btn btn-primary">Add to Cart</button>`;
       const addToCartBtn = cartActionArea.querySelector('.add-to-cart-btn');
       addToCartBtn.addEventListener('click', async () => {
         await addToCart(db, currentUser, product);
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          cartCount: increment(1),
+        });
         updateProductActions(product);
         updateUserCounters();
-        // Show a cart notification without reloading the page.
         const cartNotification = document.getElementById('cart-notification');
         cartNotification.style.display = 'block';
         setTimeout(() => {
@@ -456,12 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
       });
     }
-    // Always update the wishlist icon based on the current state.
     updateWishlistIcon(product);
   }
 
-  // This function updates the wishlist icon to be red (filled) if the product is in the wishlist,
-  // or grey (outline) if it is not.
+  // This function updates the wishlist icon based on the current state.
   async function updateWishlistIcon(product) {
     const wishlistIcon = document.querySelector('.wishlist-icon');
     let inWishlist = false;
@@ -491,9 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ===================================================
-  // 7. FEATURED PRODUCTS (Render listings)
-  // ===================================================
+  // ========= 7. FEATURED PRODUCTS (Render listings) =========
   const filterTabs = document.querySelectorAll('.filter-tabs li');
   const productsGrid = document.getElementById('products-grid');
 
@@ -534,9 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentPage++;
   }
 
-  // ===================================================
-  // 8. TRENDING PRODUCTS
-  // ===================================================
+  // ========= 8. TRENDING PRODUCTS =========
   function loadTrendingProducts() {
     const trendingContainer = document.getElementById('trending-products');
     trendingContainer.innerHTML = '';
@@ -564,9 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ===================================================
-  // 9. TESTIMONIALS
-  // ===================================================
+  // ========= 9. TESTIMONIALS =========
   function loadTestimonials() {
     const testimonialsSlider = document.getElementById('testimonials-slider');
     const testimonialDots = document.getElementById('testimonial-dots');
@@ -606,9 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
   }
 
-  // ===================================================
-  // 10. BACK TO TOP BUTTON & CART NOTIFICATION
-  // ===================================================
+  // ========= 10. BACK TO TOP BUTTON & CART NOTIFICATION =========
   const backToTopButton = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
     backToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
@@ -626,9 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ===================================================
-  // 11. INITIALIZE PAGE DATA
-  // ===================================================
+  // ========= 11. INITIALIZE PAGE DATA =========
   async function initializePageData() {
     allListings = await fetchAllListings();
     allListings = allListings.sort(() => 0.5 - Math.random());
@@ -638,9 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   initializePageData();
 
-  // ===================================================
-  // 12. SCROLL ANIMATIONS FOR PRODUCT CARDS
-  // ===================================================
+  // ========= 12. SCROLL ANIMATIONS FOR PRODUCT CARDS =========
   function addScrollAnimations() {
     const productCards = document.querySelectorAll('.product-card');
     const observer = new IntersectionObserver(
