@@ -68,7 +68,7 @@
 /* Wishlist Grid */
 .wishlist-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: var(--spacing-xl);
 }
 
@@ -90,8 +90,8 @@
 
 .wishlist-item-image img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 100px;
+  object-fit: scale-down;
 }
 
 .wishlist-item-details {
@@ -166,7 +166,7 @@
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    width: 250px;
+    width: 270px;
   }
 
   .sidebar.active {

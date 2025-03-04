@@ -1,5 +1,4 @@
 // mycart.js
-
 import { auth, db } from '../../../database/config.js';
 import {
   collection,
@@ -8,6 +7,7 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  increment,
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
 // Load the user's cart items, merge with product details from "listings", and render them.
@@ -49,9 +49,32 @@ async function loadCartItems() {
   // Filter out any items that may not exist.
   products = products.filter((product) => product !== null);
 
-  // Render the cart items using the merged product data.
-  renderCartItems(products);
-  attachCartActions(); // Attach event listeners for update and remove actions.
+  // If no products exist, hide checkout container and display empty cart message.
+  if (products.length === 0) {
+    const cartGrid = document.querySelector('.cart-grid');
+    cartGrid.innerHTML = `
+      <p>Your cart is empty.</p>
+      <button class="btn btn-primary shop-btn">Shop Now</button>
+    `;
+    // Hide the checkout container if present.
+    const checkoutContainer = document.querySelector('.checkout-container');
+    if (checkoutContainer) {
+      checkoutContainer.style.display = 'none';
+    }
+    // Attach event listener to the shop button.
+    const shopBtn = document.querySelector('.shop-btn');
+    shopBtn.addEventListener('click', () => {
+      window.location.href = '../../../index.html'; // Adjust URL as needed
+    });
+  } else {
+    // Show the checkout container if products exist.
+    const checkoutContainer = document.querySelector('.checkout-container');
+    if (checkoutContainer) {
+      checkoutContainer.style.display = 'block';
+    }
+    renderCartItems(products);
+    attachCartActions(); // Attach event listeners for update and remove actions.
+  }
 }
 
 // Render cart items into the cart grid.
@@ -136,10 +159,19 @@ async function updateCartItemQuantity(itemId, newQuantity) {
   loadCartItems(); // Reload the cart items to reflect changes.
 }
 
-// Remove a cart item from Firestore.
+// Remove a cart item from Firestore and update the aggregated cartCount.
 async function removeCartItem(itemId) {
   const userId = auth.currentUser.uid;
   const itemRef = doc(db, 'users', userId, 'cart', itemId);
+  // Retrieve the item's quantity before deletion.
+  const itemSnap = await getDoc(itemRef);
+  if (itemSnap.exists()) {
+    const quantity = itemSnap.data().quantity || 0;
+    // Decrement the user's aggregated cartCount by the item's quantity.
+    await updateDoc(doc(db, 'users', userId), {
+      cartCount: increment(-quantity),
+    });
+  }
   await deleteDoc(itemRef);
   alert('Item removed from cart!');
   loadCartItems(); // Reload the cart items after removal.
