@@ -1,452 +1,458 @@
-import { auth, db } from './database/config.js';
-import {
-  onAuthStateChanged,
-  signOut,
-} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+// main.js
+
+// Import Firebase configuration and Firestore functions
+import { app, auth, db, storage, analytics } from './database/config.js';
 import {
   collection,
   getDocs,
-  doc,
-  setDoc,
-  deleteDoc,
-  updateDoc,
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
-// Global state
-let currentUser = null;
-let userCart = {}; // { productId: quantity }
-let userWishlist = []; // [productId, ...]
+document.addEventListener('DOMContentLoaded', () => {
+  // Global variables for listings and pagination
+  let allListings = [];
+  let currentPage = 0;
+  const productsPerPage = 8;
 
-// ---------------------
-// HEADER & AUTH HANDLING
-// ---------------------
-document.addEventListener('DOMContentLoaded', async () => {
-  const signupLink = document.querySelector('.signup-link');
-  const accountLink = document.querySelector('.account-link');
-  const logoutBtn = document.querySelector('.logout-btn');
-  const cartIcon = document.querySelector('.fa-shopping-cart').parentElement;
-  const wishlistIcon = document.querySelector('.fa-heart').parentElement;
-  const searchInput = document.getElementById('searchInput');
-  const searchBtn = document.getElementById('searchBtn');
+  // Fake testimonials data (since you don't have testimonials in Firebase)
+  const fakeTestimonials = [
+    { message: 'I love Elegance! Great quality and service.', author: 'Alice' },
+    { message: 'Fantastic shopping experience.', author: 'Bob' },
+    {
+      message: 'Highly recommend Elegance for premium products.',
+      author: 'Charlie',
+    },
+  ];
 
-  onAuthStateChanged(auth, async (user) => {
-    currentUser = user;
-    if (user) {
-      signupLink.style.display = 'none';
-      accountLink.style.display = 'block';
-      logoutBtn.style.display = 'block';
+  // ========= HERO SLIDER =========
+  const heroSlider = document.getElementById('hero-slider');
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.dot');
+  const prevSlideButton = document.getElementById('prev-slide');
+  const nextSlideButton = document.getElementById('next-slide');
+  let currentSlide = 0;
 
-      cartIcon.addEventListener('click', () => {
-        window.location.href = './pages/userpages/mycart/mycart.html';
-      });
-      wishlistIcon.addEventListener('click', () => {
-        window.location.href = './pages/userpages/wishlist/wishlist.html';
-      });
-
-      await fetchUserCart();
-      await fetchUserWishlist();
-      updateHeaderCounters();
-      await loadFeaturedProducts();
-    } else {
-      signupLink.style.display = 'block';
-      accountLink.style.display = 'none';
-      logoutBtn.style.display = 'none';
-
-      cartIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = './pages/userpages/SignUp/SignUp.html';
-      });
-      wishlistIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = './pages/userpages/SignUp/SignUp.html';
-      });
-      userCart = {};
-      userWishlist = [];
-      await loadFeaturedProducts();
-    }
-  });
-
-  logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    signOut(auth)
-      .then(() => location.reload())
-      .catch((error) => console.error('Logout Error:', error));
-  });
-
-  // ---------------------
-  // CATEGORY & SEARCH REDIRECTION
-  // ---------------------
-  const categoryCards = document.querySelectorAll('.categories .card');
-  categoryCards.forEach((card) => {
-    card.addEventListener('click', () => {
-      const categoryName = card.querySelector('.content h3').textContent.trim();
-      window.location.href = `./pages/userpages/Shop/shop.html?category=${encodeURIComponent(
-        categoryName
-      )}`;
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
     });
-  });
-  if (searchBtn && searchInput) {
-    searchBtn.addEventListener('click', () => {
-      const searchTerm = searchInput.value.trim();
-      if (searchTerm) {
-        window.location.href = `./pages/userpages/Shop/shop.html?search=${encodeURIComponent(
-          searchTerm
-        )}`;
-      }
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
     });
   }
 
-  // Load featured products after user data is ready
-  await loadFeaturedProducts();
-
-  // (Optional) Carousel & scroll animations…
-  const track = document.querySelector('.carousel-track');
-  const items = document.querySelectorAll('.carousel-item');
-  if (items.length > 0) {
-    const itemWidth = items[0].clientWidth;
-    const totalItems = items.length / 2;
-    let index = 0;
-    function moveCarousel() {
-      index++;
-      track.style.transform = `translateX(-${itemWidth * index}px)`;
-      if (index === totalItems) {
-        setTimeout(() => {
-          track.style.transition = 'none';
-          track.style.transform = 'translateX(0)';
-          index = 0;
-          void track.offsetWidth;
-          track.style.transition = 'transform 0.5s ease-in-out';
-        }, 500);
-      }
-    }
-    setInterval(moveCarousel, 10000);
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
   }
-  const animatedElements = document.querySelectorAll(
-    '.fade-in, .slide-in-left, .zoom-in'
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(currentSlide);
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentSlide = index;
+      showSlide(currentSlide);
+    });
+  });
+
+  prevSlideButton.addEventListener('click', prevSlide);
+  nextSlideButton.addEventListener('click', nextSlide);
+
+  let autoSlideInterval = setInterval(nextSlide, 5000);
+  heroSlider.addEventListener('mouseenter', () =>
+    clearInterval(autoSlideInterval)
   );
-  const observerOptions = { threshold: 0.2 };
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
-  animatedElements.forEach((el) => observer.observe(el));
-});
-
-// ---------------------
-// UTILITY FUNCTIONS
-// ---------------------
-function generateStars(rating) {
-  const fullStars = Math.floor(rating || 0);
-  const halfStar = (rating || 0) - fullStars >= 0.5;
-  let starsHtml = '';
-  for (let i = 0; i < fullStars; i++) {
-    starsHtml += '<i class="fas fa-star"></i>';
-  }
-  if (halfStar) {
-    starsHtml += '<i class="fas fa-star-half-alt"></i>';
-  }
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  for (let i = 0; i < emptyStars; i++) {
-    starsHtml += '<i class="far fa-star"></i>';
-  }
-  return starsHtml;
-}
-
-async function fetchUserCart() {
-  if (!currentUser) return;
-  try {
-    const cartSnapshot = await getDocs(
-      collection(db, 'users', currentUser.uid, 'cart')
-    );
-    userCart = {};
-    cartSnapshot.forEach((docSnap) => {
-      userCart[docSnap.id] = docSnap.data().quantity;
-    });
-  } catch (error) {
-    console.error('Error fetching user cart:', error);
-  }
-}
-
-async function fetchUserWishlist() {
-  if (!currentUser) return;
-  try {
-    const wishlistSnapshot = await getDocs(
-      collection(db, 'users', currentUser.uid, 'wishlist')
-    );
-    userWishlist = [];
-    wishlistSnapshot.forEach((docSnap) => {
-      userWishlist.push(docSnap.id);
-    });
-  } catch (error) {
-    console.error('Error fetching user wishlist:', error);
-  }
-}
-
-function updateHeaderCounters() {
-  const cartLink = document.querySelector('.fa-shopping-cart').parentElement;
-  let cartBadge = cartLink.querySelector('.cart-badge');
-  if (!cartBadge) {
-    cartBadge = document.createElement('span');
-    cartBadge.classList.add('cart-badge');
-    cartBadge.style.background = '#3b82f6';
-    cartBadge.style.color = '#fff';
-    cartBadge.style.borderRadius = '50%';
-    cartBadge.style.padding = '0 6px';
-    cartBadge.style.marginLeft = '5px';
-    cartBadge.style.minWidth = '20px';
-    cartBadge.style.display = 'inline-block';
-    cartBadge.style.textAlign = 'center';
-    cartLink.appendChild(cartBadge);
-  }
-  const cartCount = Object.values(userCart).reduce((sum, qty) => sum + qty, 0);
-  cartBadge.textContent = cartCount;
-
-  const wishlistLink = document.querySelector('.fa-heart').parentElement;
-  let wishlistBadge = wishlistLink.querySelector('.wishlist-badge');
-  if (!wishlistBadge) {
-    wishlistBadge = document.createElement('span');
-    wishlistBadge.classList.add('wishlist-badge');
-    wishlistBadge.style.background = '#3b82f6';
-    wishlistBadge.style.color = '#fff';
-    wishlistBadge.style.borderRadius = '50%';
-    wishlistBadge.style.padding = '0 6px';
-    wishlistBadge.style.marginLeft = '5px';
-    wishlistBadge.style.minWidth = '20px';
-    wishlistBadge.style.display = 'inline-block';
-    wishlistBadge.style.textAlign = 'center';
-    wishlistLink.appendChild(wishlistBadge);
-  }
-  wishlistBadge.textContent = userWishlist.length;
-}
-
-async function updateUserCounters() {
-  if (!currentUser) return;
-  const cartCount = Object.values(userCart).reduce((sum, qty) => sum + qty, 0);
-  const wishlistCount = userWishlist.length;
-  try {
-    await updateDoc(doc(db, 'users', currentUser.uid), {
-      cartCount,
-      wishlistCount,
-    });
-  } catch (error) {
-    console.error('Error updating user counters:', error);
-  }
-}
-
-// ---------------------
-// FEATURED PRODUCTS FUNCTIONS
-// ---------------------
-async function loadFeaturedProducts() {
-  try {
-    const listingsSnapshot = await getDocs(collection(db, 'listings'));
-    const listings = listingsSnapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data(),
-    }));
-    listings.sort(() => 0.5 - Math.random());
-    const featured = listings.slice(0, Math.min(5, listings.length));
-    renderFeaturedProducts(featured);
-  } catch (error) {
-    console.error('Error loading featured products:', error);
-  }
-}
-
-function renderFeaturedProducts(products) {
-  const featuredGrid = document.querySelector('.featured-products .grid');
-  if (!featuredGrid) return;
-  featuredGrid.innerHTML = '';
-  products.forEach((product) => {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.dataset.id = product.id;
-    renderFeaturedCard(card, product);
-    attachCardEvents(card, product);
-    featuredGrid.appendChild(card);
+  heroSlider.addEventListener('mouseleave', () => {
+    autoSlideInterval = setInterval(nextSlide, 5000);
   });
-}
 
-function renderFeaturedCard(card, product) {
-  let cartHTML = '';
-  if (currentUser && userCart[product.id]) {
-    cartHTML = `
-      <div class="cart-controls" data-id="${product.id}">
-        <button class="decrease">-</button>
-        <span class="quantity">${userCart[product.id]}</span>
-        <button class="increase">+</button>
-        <button class="remove"><i class="fas fa-trash"></i></button>
-      </div>
-    `;
-  } else {
-    cartHTML = `<a href="#" class="add-to-cart"><i class="fas fa-shopping-cart"></i></a>`;
+  // ========= DROPDOWN MENUS =========
+  const accountToggle = document.getElementById('account-toggle');
+  const accountDropdown = document.querySelector('.account-dropdown');
+  const cartToggle = document.getElementById('cart-toggle');
+  const cartDropdown = document.querySelector('.cart-dropdown');
+
+  accountToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    accountDropdown.style.display =
+      accountDropdown.style.display === 'block' ? 'none' : 'block';
+    cartDropdown.style.display = 'none';
+  });
+
+  cartToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    cartDropdown.style.display =
+      cartDropdown.style.display === 'block' ? 'none' : 'block';
+    accountDropdown.style.display = 'none';
+  });
+
+  document.addEventListener('click', (e) => {
+    if (
+      !accountToggle.contains(e.target) &&
+      !accountDropdown.contains(e.target)
+    ) {
+      accountDropdown.style.display = 'none';
+    }
+    if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
+      cartDropdown.style.display = 'none';
+    }
+  });
+
+  // ========= MOBILE MENU =========
+  const mobileMenuButton = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileMenuButton.addEventListener('click', () => {
+    mobileMenu.style.display =
+      mobileMenu.style.display === 'block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', (e) => {
+    if (
+      !mobileMenuButton.contains(e.target) &&
+      !mobileMenu.contains(e.target)
+    ) {
+      mobileMenu.style.display = 'none';
+    }
+  });
+
+  // ========= FETCH ALL LISTINGS FROM FIRESTORE =========
+  async function fetchAllListings() {
+    try {
+      const listingsSnapshot = await getDocs(collection(db, 'listings'));
+      const listings = listingsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return listings;
+    } catch (error) {
+      console.error('Error fetching listings:', error);
+      return [];
+    }
   }
-  const wishlistClass =
-    currentUser && userWishlist.includes(product.id)
-      ? 'add-to-wishlist active'
-      : 'add-to-wishlist';
 
-  card.innerHTML = `
-    <div class="image-container">
-      <img src="${product.mainImageUrl}" alt="${product.name}" />
-    </div>
-    <div class="content">
-      <h3 title="${product.name}">${product.name}</h3>
-      <p>$${product.price}</p>
-      <div class="rating">
-        ${generateStars(product.rating)} <span class="count">(${
-    product.ratingCount || 0
-  })</span>
+  // Enhanced product card creation functions
+
+  // Function to load featured products with enhanced styling
+  function loadFeaturedProducts(reset = false) {
+    if (reset) {
+      currentPage = 0;
+      productsGrid.innerHTML = '';
+    }
+
+    const startIndex = currentPage * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const listingsToDisplay = allListings.slice(startIndex, endIndex);
+
+    listingsToDisplay.forEach((product, index) => {
+      // Create enhanced product card
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      // New code: use the rating from the listing data
+      const rating = product.rating; // Ensure each product in Firestore includes a "rating" field
+      const ratingStars = generateRatingStars(rating);
+
+      // Add badge to some products (every 3rd product)
+      const badgeHTML =
+        index % 3 === 0
+          ? `<span class="badge ${index % 6 === 0 ? 'sale' : 'new'}">${
+              index % 6 === 0 ? 'Sale' : 'New'
+            }</span>`
+          : '';
+
+      card.innerHTML = `
+      ${badgeHTML}
+      <div class="product-image">
+        <img src="${product.mainImageUrl}" alt="${product.name}">
       </div>
-      <div class="buttons">
-        ${cartHTML}
-        <a href="#" class="${wishlistClass}"><i class="fas fa-heart"></i></a>
+      <div class="product-content">
+        <h3>${product.name}</h3>
+        <p>$${product.price}</p>
+        <div class="rating">${ratingStars}</div>
+      </div>
+      <div class="quick-view">Quick View</div>
+    `;
+
+      card.addEventListener('click', () => showQuickView(product));
+      productsGrid.appendChild(card);
+    });
+
+    currentPage++;
+  }
+
+  // Function to load trending products with special styling
+  function loadTrendingProducts() {
+    const trendingContainer = document.getElementById('trending-products');
+    trendingContainer.innerHTML = '';
+
+    // Randomly select 4 trending products from allListings
+    const trendingItems = [...allListings]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 4);
+
+    trendingItems.forEach((product) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      // Generate random sales count for trending items
+      const salesCount = Math.floor(Math.random() * 200) + 100;
+
+      card.innerHTML = `
+      <span class="badge trending">Trending</span>
+      <div class="product-image">
+        <img src="${product.mainImageUrl}" alt="${product.name}">
+      </div>
+      <div class="product-content">
+        <h3>${product.name}</h3>
+        <p>$${product.price}</p>
+        <small>${salesCount} sold this week</small>
+      </div>
+      <div class="quick-view">Quick View</div>
+    `;
+
+      card.addEventListener('click', () => showQuickView(product));
+      trendingContainer.appendChild(card);
+    });
+  }
+
+  // Helper function to generate rating stars
+  function generateRatingStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    let starsHTML = '';
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+      starsHTML += '<i class="fas fa-star"></i>';
+    }
+
+    // Add half star if needed
+    if (hasHalfStar) {
+      starsHTML += '<i class="fas fa-star-half-alt"></i>';
+    }
+
+    // Add empty stars
+    for (let i = 0; i < emptyStars; i++) {
+      starsHTML += '<i class="far fa-star"></i>';
+    }
+
+    return starsHTML;
+  }
+function showQuickView(product) {
+  quickViewModal.style.display = 'flex';
+
+  // Use the product's actual rating
+  const rating = product.rating || 0;
+  const ratingStars = generateRatingStars(rating);
+
+  // Build tags HTML if available
+  const tagsHTML =
+    product.tags && product.tags.length > 0
+      ? `<div class="product-tags">${product.tags
+          .map((tag) => `<span class="tag">${tag}</span>`)
+          .join('')}</div>`
+      : '';
+
+  // Format stock availability based on quantity
+  const quantity = parseInt(product.quantity) || 0;
+  const stockStatus =
+    quantity > 0
+      ? `<span class="in-stock">In Stock (${quantity} available)</span>`
+      : '<span class="out-of-stock">Out of Stock</span>';
+
+  // Build thumbnails HTML (limit to 4 thumbnails)
+  let thumbnailsHTML = '';
+  if (product.additionalImageUrls && product.additionalImageUrls.length > 0) {
+    thumbnailsHTML = product.additionalImageUrls
+      .slice(0, 4)
+      .map((url) => `<img src="${url}" alt="Thumbnail" class="thumbnail" />`)
+      .join('');
+  }
+
+  // Use a two-column flex layout so that images appear on the left and details on the right.
+  document.getElementById('quick-view-content').innerHTML = `
+    <div class="quick-view-container" style="display: flex; flex-direction: row; gap: 20px; max-height: 90vh;">
+      <!-- Left Column: Image Gallery -->
+      <div class="quick-view-gallery" style="flex: 1; display: flex; flex-direction: column;">
+        <div class="main-image-container" style="flex: 1; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <img src="${product.mainImageUrl}" alt="${
+    product.name
+  }" class="main-image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        </div>
+        ${
+          thumbnailsHTML
+            ? `<div class="thumbnail-gallery" style="display: flex; justify-content: center; gap: 10px; margin-top: var(--spacing-sm);">
+                ${thumbnailsHTML}
+              </div>`
+            : ''
+        }
+      </div>
+
+      <!-- Right Column: Product Info -->
+      <div class="quick-view-info" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; max-height: 90vh;">
+        <div>
+          <h3>${product.name}</h3>
+          ${tagsHTML}
+          <div class="product-meta">
+            <div class="rating">${ratingStars}</div>
+            <span>(${product.ratingCount || 0} reviews)</span>
+          </div>
+          <div class="product-category">
+            <span>${product.category || ''}</span>
+            ${
+              product.subcategory
+                ? ` > <span>${product.subcategory}</span>`
+                : ''
+            }
+          </div>
+          <div class="product-price">
+            <p class="current-price">$${product.price}</p>
+          </div>
+          <div class="availability">${stockStatus}</div>
+          ${
+            product.attributes && product.attributes.Model
+              ? `<div class="product-model">Model: ${product.attributes.Model}</div>`
+              : ''
+          }
+          <div class="product-description">
+            <p>${
+              product.description ||
+              'No description available for this product.'
+            }</p>
+          </div>
+        </div>
+        <div class="product-actions" style="margin-top: var(--spacing-md);">
+          <button class="add-to-cart-btn btn btn-primary">Add to Cart</button>
+          <button class="wishlist-btn btn btn-outline"><i class="far fa-heart"></i></button>
+        </div>
       </div>
     </div>
   `;
+
+  // Add event listeners for thumbnails: clicking a thumbnail updates the main image.
+  const thumbnails = document.querySelectorAll('.thumbnail');
+  const mainImage = document.querySelector('.main-image');
+
+  thumbnails.forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      mainImage.src = thumb.src;
+    });
+  });
+
+  // Add event listener for the add-to-cart button to trigger cart notification.
+  document.querySelector('.add-to-cart-btn')?.addEventListener('click', () => {
+    cartNotification.style.display = 'block';
+    setTimeout(() => {
+      cartNotification.style.display = 'none';
+    }, 3000);
+  });
 }
 
-function attachCardEvents(card, product) {
-  if (currentUser) {
-    if (userCart[product.id]) {
-      const cartControls = card.querySelector('.cart-controls');
-      cartControls
-        .querySelector('.decrease')
-        .addEventListener('click', async (e) => {
-          e.preventDefault();
-          const currentQty = userCart[product.id];
-          if (currentQty <= 1) {
-            await removeFromCartHomepage(product);
-          } else {
-            await updateCartItemQuantityHomepage(product, currentQty - 1);
-          }
-          updateProductCard(product);
+  // Call this function after loading products
+  document.addEventListener('DOMContentLoaded', () => {
+    // Your existing code...
+
+    // Add this to your initialization
+    const originalInitPageData = initializePageData;
+
+    // Override with enhanced version
+    window.initializePageData = async function () {
+      await originalInitPageData();
+      addScrollAnimations();
+    };
+  });
+
+  // ========= FEATURED PRODUCTS =========
+  const filterTabs = document.querySelectorAll('.filter-tabs li');
+  const productsGrid = document.getElementById('products-grid');
+
+  // ========= TESTIMONIALS =========
+  function loadTestimonials() {
+    const testimonialsSlider = document.getElementById('testimonials-slider');
+    const testimonialDots = document.getElementById('testimonial-dots');
+    testimonialsSlider.innerHTML = '';
+    testimonialDots.innerHTML = '';
+
+    fakeTestimonials.forEach((testimonial, index) => {
+      const slide = document.createElement('div');
+      slide.className = 'testimonial-slide';
+      slide.innerHTML = `
+        <p>"${testimonial.message}"</p>
+        <h4>${testimonial.author}</h4>
+      `;
+      if (index === 0) slide.classList.add('active');
+      testimonialsSlider.appendChild(slide);
+
+      const dot = document.createElement('span');
+      dot.className = 'dot' + (index === 0 ? ' active' : '');
+      dot.addEventListener('click', () => {
+        const slides =
+          testimonialsSlider.querySelectorAll('.testimonial-slide');
+        slides.forEach((s, i) => {
+          s.classList.toggle('active', i === index);
         });
-      cartControls
-        .querySelector('.increase')
-        .addEventListener('click', async (e) => {
-          e.preventDefault();
-          const currentQty = userCart[product.id];
-          await updateCartItemQuantityHomepage(product, currentQty + 1);
-          updateProductCard(product);
+        const dots = testimonialDots.querySelectorAll('.dot');
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === index);
         });
-      cartControls
-        .querySelector('.remove')
-        .addEventListener('click', async (e) => {
-          e.preventDefault();
-          await removeFromCartHomepage(product);
-          updateProductCard(product);
-        });
-    } else {
-      const addToCartBtn = card.querySelector('.add-to-cart');
-      addToCartBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        await addToCartHomepage(product);
-        updateProductCard(product);
       });
-    }
-    const wishlistBtn = card.querySelector('.add-to-wishlist');
-    wishlistBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await toggleWishlistHomepage(product);
-      updateProductCard(product);
-    });
-  } else {
-    card.querySelector('.add-to-cart').addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = './pages/userpages/SignUp/SignUp.html';
-    });
-    card.querySelector('.add-to-wishlist').addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = './pages/userpages/SignUp/SignUp.html';
+      testimonialDots.appendChild(dot);
     });
   }
-}
 
-function updateProductCard(product) {
-  const card = document.querySelector(
-    `.featured-products .card[data-id="${product.id}"]`
-  );
-  if (card) {
-    renderFeaturedCard(card, product);
-    attachCardEvents(card, product);
-  }
-  updateHeaderCounters();
-}
+  // ========= QUICK VIEW MODAL =========
+  const quickViewModal = document.getElementById('quick-view-modal');
+  const closeQuickView = document.getElementById('close-quick-view');
 
-// ---------------------
-// HOMEPAGE CART & WISHLIST ACTIONS
-// ---------------------
-async function addToCartHomepage(product) {
-  if (!currentUser) {
-    window.location.href = './pages/userpages/SignUp/SignUp.html';
-    return;
-  }
-  try {
-    const cartDocRef = doc(db, 'users', currentUser.uid, 'cart', product.id);
-    await setDoc(cartDocRef, { quantity: 1 });
-    userCart[product.id] = 1;
-    await updateUserCounters();
-    updateHeaderCounters();
-  } catch (error) {
-    console.error('Error adding product to cart:', error);
-  }
-}
 
-async function updateCartItemQuantityHomepage(product, newQuantity) {
-  try {
-    const cartDocRef = doc(db, 'users', currentUser.uid, 'cart', product.id);
-    if (newQuantity <= 0) {
-      await deleteDoc(cartDocRef);
-      delete userCart[product.id];
-    } else {
-      await setDoc(cartDocRef, { quantity: newQuantity });
-      userCart[product.id] = newQuantity;
-    }
-    await updateUserCounters();
-    updateHeaderCounters();
-  } catch (error) {
-    console.error('Error updating cart quantity:', error);
-  }
-}
+  closeQuickView.addEventListener('click', () => {
+    quickViewModal.style.display = 'none';
+  });
 
-async function removeFromCartHomepage(product) {
-  try {
-    const cartDocRef = doc(db, 'users', currentUser.uid, 'cart', product.id);
-    await deleteDoc(cartDocRef);
-    delete userCart[product.id];
-    await updateUserCounters();
-    updateHeaderCounters();
-  } catch (error) {
-    console.error('Error removing product from cart:', error);
-  }
-}
+  // ========= BACK TO TOP BUTTON =========
+  const backToTopButton = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    backToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+  backToTopButton.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
-async function toggleWishlistHomepage(product) {
-  if (!currentUser) {
-    window.location.href = './pages/userpages/SignUp/SignUp.html';
-    return;
+  // ========= CART NOTIFICATION =========
+  const cartNotification = document.getElementById('cart-notification');
+  document.querySelectorAll('.add-to-cart').forEach((button) => {
+    button.addEventListener('click', () => {
+      cartNotification.style.display = 'block';
+      setTimeout(() => {
+        cartNotification.style.display = 'none';
+      }, 3000);
+    });
+  });
+
+  // ========= INITIALIZE PAGE DATA =========
+  async function initializePageData() {
+    // Fetch all listings from Firestore and store in a global array
+    allListings = await fetchAllListings();
+    // Shuffle listings to ensure randomness
+    allListings = allListings.sort(() => 0.5 - Math.random());
+    loadFeaturedProducts(true);
+    loadTrendingProducts();
+    loadTestimonials();
   }
-  try {
-    const wishlistDocRef = doc(
-      db,
-      'users',
-      currentUser.uid,
-      'wishlist',
-      product.id
-    );
-    if (userWishlist.includes(product.id)) {
-      await deleteDoc(wishlistDocRef);
-      userWishlist = userWishlist.filter((id) => id !== product.id);
-    } else {
-      await setDoc(wishlistDocRef, { addedAt: new Date() });
-      userWishlist.push(product.id);
-    }
-    await updateUserCounters();
-    updateHeaderCounters();
-  } catch (error) {
-    console.error('Error toggling wishlist:', error);
-  }
-}
+
+  initializePageData();
+
+  // ========= FILTER TABS (Optional) =========
+  filterTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      filterTabs.forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      // For demo purposes, reshuffle listings for "all" products when a filter is clicked
+      allListings = allListings.sort(() => 0.5 - Math.random());
+      loadFeaturedProducts(true);
+    });
+  });
+});

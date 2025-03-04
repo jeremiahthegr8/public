@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Professional E-commerce Frontpage</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/styles/ai.css" />
+    <link rel="stylesheet" href="./assets/styles/animation.css" />
+    <link rel="stylesheet" href="./assets/styles/base.css" />
+    <link rel="stylesheet" href="./assets/styles/card.css" />
+    <link rel="stylesheet" href="./assets/styles/footer.css" />
+    <link rel="stylesheet" href="./assets/styles/header.css" />
+    <link rel="stylesheet" href="./assets/styles/hero.css" />
+    <link rel="stylesheet" href="./assets/styles/featured.css" />
+    <link rel="stylesheet" href="./assets/styles/category.css" />
+    <link rel="stylesheet" href="./assets/styles/latestnews.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="main.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-container">
+        <div class="logo">
+          <a href="./index.html">E-Shop</a>
+        </div>
+        <div class="search-bar">
+          <input
+            type="text"
+            placeholder="Search products..."
+            id="searchInput"
+          />
+          <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="user-menu">
+          <a
+            href="./pages/userpages/account/account.html"
+            class="sixty-nine account-link"
+            ><i class="fas fa-user"></i> Profile</a
+          >
+          <div class="seventy-one">
+            <a
+              href="./pages/userpages/wishlist/wishlist.html"
+              class="sixty-nine"
+              ><i class="fas fa-heart"></i> Wishlist</a
+            >
+            <a href="./pages/userpages/mycart/mycart.html" class="sixty-nine"
+              ><i class="fas fa-shopping-cart"></i> Cart</a
+            >
+          </div>
+          <a
+            href="./pages/userpages/SignUp/SignUp.html"
+            class="seventy signup-link"
+            >Sign In</a
+          >
+          <a href="#" class="seventy logout-btn" style="display: none"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </header>
+    <!-- Hero Section with Carousel Background -->
+    <section class="hero">
+      <!-- Carousel as background -->
+      <div class="carousel-background">
+        <div class="carousel">
+          <div class="carousel-track">
+            <!-- Original set of images -->
+            <div class="carousel-item">
+              <img src="./assets/images/new/backboot.jpg" alt="Image 1" />
+            </div>
+            <div class="carousel-item">
+              <img
+                src="./assets/images/backgrounds/nikeone.png"
+                alt="Image 2"
+              />
+            </div>
+            <div class="carousel-item">
+              <img src="./assets/images/new/backbooks.jpg" alt="Image 3" />
+            </div>
+            <!-- Duplicate set for seamless looping -->
+            <div class="carousel-item">
+              <img
+                src="./assets/images/new/backboot.jpg"
+                alt="Image 1 Duplicate"
+              />
+            </div>
+            <div class="carousel-item">
+              <img
+                src="./assets/images/backgrounds/nikeone.png"
+                alt="Image 2 Duplicate"
+              />
+            </div>
+            <div class="carousel-item">
+              <img
+                src="./assets/images/new/backbooks.jpg"
+                alt="Image 3 Duplicate"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Hero content overlay -->
+
+      <div class="content">
+        <h1 class="herohead">Discover the Best Products</h1>
+        <p class="heropara">
+          Shop the latest trends and find your perfect style. Enjoy exclusive
+          offers and discounts.
+        </p>
+        <a class="herobut" href="./pages/userpages/Shop/shop.html">Shop Now</a>
+      </div>
+    </section>
+    <!-- Categories -->
+    <section class="categories categories fade-in">
+      <div class="container">
+        <h2>Categories</h2>
+        <div class="grid">
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/nWvEzrmDPsW0TGzm7oK_2yyeXMETPHKcVuE-YiBX_P4.jpg"
+              alt="Electronics"
+            />
+            <div class="content">
+              <h3>Electronics</h3>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/zTFz4hGhfVHUR6di5aQSJGLg_SOorKGiurXrCJy-x0M.jpg"
+              alt="Fashion"
+            />
+            <div class="content">
+              <h3>Fashion</h3>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/2gvoYKDC9h_XSYgzzbMl_rhPx7_PJcRgIHR_rvOVc1c.jpg"
+              alt="Home Decor"
+            />
+            <div class="content">
+              <h3>Home Decor</h3>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/PE8wR1x98Ee7iYXj4CNaIL2NAZT-vOiUF-BQhw1GQSw.jpg"
+              alt="Beauty"
+            />
+            <div class="content">
+              <h3>Beauty</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Featured Products -->
+    <section class="featured-products">
+      <div class="container">
+        <h2>Featured Products</h2>
+        <div class="grid">
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/qyKWpAJ52MjpcT5xWDGMCzy0Ej7iJOCUT8bSUdKKA1E.jpg"
+              alt="Modern Chair"
+            />
+            <div class="content">
+              <h3>Modern Chair</h3>
+              <p>$120.00</p>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/5lUT1q1bQz58Se19dJWqSZSjUJh_H1j4_OND2rT_hwI.jpg"
+              alt="A sleek modern desk with a laptop and office supplies"
+            />
+            <div class="content">
+              <h3>Office Desk</h3>
+              <p>$250.00</p>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/kYGnfS6czkIJ4OtZwBvhO6gBZCNXGCgETKL7QFfYHfU.jpg"
+              alt="A comfortable modern sofa in a living room setting"
+            />
+            <div class="content">
+              <h3>Comfortable Sofa</h3>
+              <p>$350.00</p>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/2gvoYKDC9h_XSYgzzbMl_rhPx7_PJcRgIHR_rvOVc1c.jpg"
+              alt="A stylish modern lamp in a living room setting"
+            />
+            <div class="content">
+              <h3>Modern Lamp</h3>
+              <p>$80.00</p>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/PE8wR1x98Ee7iYXj4CNaIL2NAZT-vOiUF-BQhw1GQSw.jpg"
+              alt="A set of modern kitchen utensils"
+            />
+            <div class="content">
+              <h3>Kitchen Utensils</h3>
+              <p>$45.00</p>
+              <div class="buttons">
+                <a href="#" class="add-to-cart"
+                  ><i class="fas fa-shopping-cart"></i
+                ></a>
+                <a href="#" class="add-to-wishlist"
+                  ><i class="fas fa-heart"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Latest News -->
+    <section class="latest-news">
+      <div class="container">
+        <h2>Latest News</h2>
+        <div class="grid">
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/R1ULz3fbLnDwEjfSpV4uF4NQndoXvo0o_NMTdb7-ncU.jpg"
+              alt="Shopping Tips"
+            />
+            <div class="content">
+              <h3>Online Shopping Tips</h3>
+              <p>
+                Learn how to make the most of your online shopping experience
+                with our expert tips.
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/amN2l0FYOfMt8YQVFdptj4Czjp7O2gpYhsfQ6Qn_nKw.jpg"
+              alt="New Collection"
+            />
+            <div class="content">
+              <h3>New Collection Launch</h3>
+              <p>
+                Discover our latest collection of modern home decor items, now
+                available online.
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <img
+              src="https://storage.googleapis.com/a1aa/image/LjfNiHYFwrUnU0mBJAy9O58-EjiAjF9u6Swtl3UKH58.jpg"
+              alt="Unboxing Experience"
+            />
+            <div class="content">
+              <h3>Unboxing Experience</h3>
+              <p>
+                Check out our customers' unboxing experiences and see what they
+                have to say about our products.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer class="footer slide-in-left">
+      <div class="container">
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: support@eshop.com</p>
+          <p>Phone: +123 456 7890</p>
+          <p>Address: 123 E-Shop St, Commerce City, CO 80022</p>
+        </div>
+        <div class="footer-section">
+          <h3>Categories</h3>
+          <a href="#">Electronics</a>
+          <a href="#">Fashion</a>
+          <a href="#">Home Decor</a>
+          <a href="#">Beauty</a>
+        </div>
+        <div class="footer-section">
+          <h3>Sponsors & Partners</h3>
+          <a href="#">Partner 1</a>
+          <a href="#">Partner 2</a>
+          <a href="#">Partner 3</a>
+          <a href="#">Partner 4</a>
+        </div>
+        <div class="footer-section newsletter">
+          <h3>Newsletter</h3>
+          <p>
+            Subscribe to our newsletter to get the latest updates and offers.
+          </p>
+          <input type="email" placeholder="Enter your email" />
+          <button>Subscribe</button>
+        </div>
+      </div>
+      <div class="container">
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="container">
+        <p class="copyright">© 2021 E-Shop. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Floating AI Assistant Icon -->
+    <div id="ai-assistant" class="ai-assistant">
+      <i class="fas fa-robot"></i>
+    </div>
+  </body>
+</html>
