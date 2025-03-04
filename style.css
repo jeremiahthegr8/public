@@ -92,6 +92,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Header Styles */
+/* .main-header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-md) 0;
+} */
+
 .header-top {
   background-color: var(--bg-light);
   padding: var(--spacing-sm) 0;
@@ -127,7 +136,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .main-header {
-  padding: var(--spacing-md) 0;
 }
 
 .header-wrapper {
@@ -307,6 +315,8 @@ h1, h2, h3, h4, h5, h6 {
 .hero-image {
   background-size: cover;
   background-position: center;
+  /* fixed background image */
+  background-attachment: fixed;
   height: 500px;
   display: flex;
   align-items: center;
@@ -1216,4 +1226,115 @@ product-details{
   background: white;
   border: 1px solid #ddd;
   cursor: pointer;
+}.testimonials-section {
+  background: #f8fafc;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.testimonials-section .section-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.testimonials-section .section-header p {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.testimonials-slider {
+  position: relative;
+  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.testimonial-slide {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  padding: 0 20px;
+}
+
+.testimonial-slide.active {
+  display: block;
+  opacity: 1;
+}
+
+.testimonial-slide p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.testimonial-slide h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #4361ee;
+  margin: 0;
+}
+
+.slider-dots {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.slider-dots .dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 6px;
+  background-color: #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.slider-dots .dot.active {
+  background-color: #4361ee;
+}
+/* styles.css */
+
+.wishlist-btn.in-wishlist {
+  color: red;
+}
+.whishlistcount{
+  background-color: #4361ee;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 44%;
+  font-size: 0.75rem;
+}
+.cartcount{
+  background-color: #4361ee;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 44%;
+  font-size: 0.75rem;
+}
+/* Sticky Header Styles */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1001; /* higher than your main header */
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  /* Optional: reduce padding if you want a slimmer sticky header */
+  padding: var(--spacing-md) 0;
+}
+
+.sticky-header.visible {
+  transform: translateY(0);
+}
+
+/* Sentinel element (can be minimal in height) */
+.header-sentinel {
+  height: 1px;
 }

@@ -5,7 +5,14 @@ import { app, auth, db, storage, analytics } from './database/config.js';
 import {
   collection,
   getDocs,
+  doc,
+  updateDoc,
+  getDoc,
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+
+// Import cart and wishlist functions (see below)
+import { addToCart, updateCartItemQuantity, removeFromCart } from './carts.js';
+import { toggleWishlist } from './components/wishlist.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Global variables for listings and pagination
@@ -13,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentPage = 0;
   const productsPerPage = 8;
 
-  // Fake testimonials data (since you don't have testimonials in Firebase)
+  // Fake testimonials data
   const fakeTestimonials = [
     { message: 'I love Elegance! Great quality and service.', author: 'Alice' },
     { message: 'Fantastic shopping experience.', author: 'Bob' },
@@ -23,84 +30,114 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   ];
 
-  // ========= HERO SLIDER =========
-  const heroSlider = document.getElementById('hero-slider');
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.dot');
-  const prevSlideButton = document.getElementById('prev-slide');
-  const nextSlideButton = document.getElementById('next-slide');
-  let currentSlide = 0;
-
-  function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === index);
+  // Current authenticated user
+  let currentUser = null;
+  // ========= 1. HEADER COUNTERS =========
+  async function updateUserCounters() {
+    if (!currentUser) return;
+    // Query user's cart collection and sum the quantities.
+    const cartSnapshot = await getDocs(
+      collection(db, 'users', currentUser.uid, 'cart')
+    );
+    let cartCount = 0;
+    cartSnapshot.forEach((docSnap) => {
+      cartCount += docSnap.data().quantity;
     });
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
+    // Query wishlist collection; count the number of documents.
+    const wishlistSnapshot = await getDocs(
+      collection(db, 'users', currentUser.uid, 'wishlist')
+    );
+    let wishlistCount = wishlistSnapshot.size;
+    // Update the user document with these counts.
+    await updateDoc(doc(db, 'users', currentUser.uid), {
+      cartCount,
+      wishlistCount,
+    });
+    // Update the header icons for both main and sticky headers.
+    updateHeaderIcons(cartCount, wishlistCount);
+  }
+
+  function updateHeaderIcons(cartCount, wishlistCount) {
+    // Update all elements with class 'cartcount'
+    const cartCountElems = document.querySelectorAll('.cartcount');
+    cartCountElems.forEach((elem) => {
+      elem.textContent = cartCount;
+    });
+
+    // Update all elements with class 'whishlistcount'
+    const wishlistCountElems = document.querySelectorAll('.whishlistcount');
+    wishlistCountElems.forEach((elem) => {
+      elem.textContent = wishlistCount;
     });
   }
 
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % slides.length;
-    showSlide(currentSlide);
-  }
+  // ========= 2. DROPDOWN & MOBILE MENUS (for both headers) =========
 
-  function prevSlide() {
-    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(currentSlide);
-  }
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-      currentSlide = index;
-      showSlide(currentSlide);
-    });
-  });
-
-  prevSlideButton.addEventListener('click', prevSlide);
-  nextSlideButton.addEventListener('click', nextSlide);
-
-  let autoSlideInterval = setInterval(nextSlide, 5000);
-  heroSlider.addEventListener('mouseenter', () =>
-    clearInterval(autoSlideInterval)
+  // Select both main and sticky header toggles using a comma-separated selector.
+  const accountToggleElems = document.querySelectorAll(
+    '#account-toggle, #account-toggle-sticky'
   );
-  heroSlider.addEventListener('mouseleave', () => {
-    autoSlideInterval = setInterval(nextSlide, 5000);
+  const cartToggleElems = document.querySelectorAll(
+    '#cart-toggle, #cart-toggle-sticky'
+  );
+
+  // Assuming both headers share the same dropdown menus, we can target them once:
+  const accountDropdownElems = document.querySelectorAll('.account-dropdown');
+  const cartDropdownElems = document.querySelectorAll('.cart-dropdown');
+
+  accountToggleElems.forEach((toggle) => {
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Toggle the display of all account dropdowns.
+      accountDropdownElems.forEach((dropdown) => {
+        dropdown.style.display =
+          dropdown.style.display === 'block' ? 'none' : 'block';
+      });
+      // Hide cart dropdowns
+      cartDropdownElems.forEach((dropdown) => {
+        dropdown.style.display = 'none';
+      });
+    });
   });
 
-  // ========= DROPDOWN MENUS =========
-  const accountToggle = document.getElementById('account-toggle');
-  const accountDropdown = document.querySelector('.account-dropdown');
-  const cartToggle = document.getElementById('cart-toggle');
-  const cartDropdown = document.querySelector('.cart-dropdown');
-
-  accountToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    accountDropdown.style.display =
-      accountDropdown.style.display === 'block' ? 'none' : 'block';
-    cartDropdown.style.display = 'none';
+  cartToggleElems.forEach((toggle) => {
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Toggle the display of all cart dropdowns.
+      cartDropdownElems.forEach((dropdown) => {
+        dropdown.style.display =
+          dropdown.style.display === 'block' ? 'none' : 'block';
+      });
+      // Hide account dropdowns
+      accountDropdownElems.forEach((dropdown) => {
+        dropdown.style.display = 'none';
+      });
+    });
   });
 
-  cartToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    cartDropdown.style.display =
-      cartDropdown.style.display === 'block' ? 'none' : 'block';
-    accountDropdown.style.display = 'none';
-  });
-
+  // Hide dropdowns if clicking outside of them.
   document.addEventListener('click', (e) => {
+    // If the click target isn't contained in any account toggle or dropdown, hide account dropdowns.
     if (
-      !accountToggle.contains(e.target) &&
-      !accountDropdown.contains(e.target)
+      ![...accountToggleElems].some((el) => el.contains(e.target)) &&
+      ![...accountDropdownElems].some((el) => el.contains(e.target))
     ) {
-      accountDropdown.style.display = 'none';
+      accountDropdownElems.forEach(
+        (dropdown) => (dropdown.style.display = 'none')
+      );
     }
-    if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
-      cartDropdown.style.display = 'none';
+    // Similarly for cart toggles.
+    if (
+      ![...cartToggleElems].some((el) => el.contains(e.target)) &&
+      ![...cartDropdownElems].some((el) => el.contains(e.target))
+    ) {
+      cartDropdownElems.forEach(
+        (dropdown) => (dropdown.style.display = 'none')
+      );
     }
   });
 
-  // ========= MOBILE MENU =========
+  // Mobile menu code remains unchanged.
   const mobileMenuButton = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
   mobileMenuButton.addEventListener('click', () => {
@@ -116,13 +153,97 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ========= FETCH ALL LISTINGS FROM FIRESTORE =========
+  // Listen for auth state changes.
+  auth.onAuthStateChanged((user) => {
+    currentUser = user;
+    if (currentUser) {
+      updateUserCounters();
+    }
+  });
+
+  // ===================================================
+  // 2. HERO SLIDER
+  // ===================================================
+  const heroSlider = document.getElementById('hero-slider');
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.dot');
+  const prevSlideButton = document.getElementById('prev-slide');
+  const nextSlideButton = document.getElementById('next-slide');
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(currentSlide);
+  }
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentSlide = index;
+      showSlide(currentSlide);
+    });
+  });
+  prevSlideButton.addEventListener('click', prevSlide);
+  nextSlideButton.addEventListener('click', nextSlide);
+  let autoSlideInterval = setInterval(nextSlide, 5000);
+  heroSlider.addEventListener('mouseenter', () =>
+    clearInterval(autoSlideInterval)
+  );
+  heroSlider.addEventListener('mouseleave', () => {
+    autoSlideInterval = setInterval(nextSlide, 5000);
+  });
+
+  // ===================================================
+  // 3. DROPDOWN & MOBILE MENUS
+  // ===================================================
+  const accountToggle = document.getElementById('account-toggle');
+  const accountDropdown = document.querySelector('.account-dropdown');
+  const cartToggle = document.getElementById('cart-toggle');
+  const cartDropdown = document.querySelector('.cart-dropdown');
+
+  accountToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    accountDropdown.style.display =
+      accountDropdown.style.display === 'block' ? 'none' : 'block';
+    cartDropdown.style.display = 'none';
+  });
+  cartToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    cartDropdown.style.display =
+      cartDropdown.style.display === 'block' ? 'none' : 'block';
+    accountDropdown.style.display = 'none';
+  });
+  document.addEventListener('click', (e) => {
+    if (
+      !accountToggle.contains(e.target) &&
+      !accountDropdown.contains(e.target)
+    ) {
+      accountDropdown.style.display = 'none';
+    }
+    if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
+      cartDropdown.style.display = 'none';
+    }
+  });
+
+  // ===================================================
+  // 4. FETCH ALL LISTINGS FROM FIRESTORE
+  // ===================================================
   async function fetchAllListings() {
     try {
       const listingsSnapshot = await getDocs(collection(db, 'listings'));
-      const listings = listingsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
+      const listings = listingsSnapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data(),
       }));
       return listings;
     } catch (error) {
@@ -131,156 +252,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Enhanced product card creation functions
-
-  // Function to load featured products with enhanced styling
-  function loadFeaturedProducts(reset = false) {
-    if (reset) {
-      currentPage = 0;
-      productsGrid.innerHTML = '';
-    }
-
-    const startIndex = currentPage * productsPerPage;
-    const endIndex = startIndex + productsPerPage;
-    const listingsToDisplay = allListings.slice(startIndex, endIndex);
-
-    listingsToDisplay.forEach((product, index) => {
-      // Create enhanced product card
-      const card = document.createElement('div');
-      card.className = 'product-card';
-
-      // New code: use the rating from the listing data
-      const rating = product.rating; // Ensure each product in Firestore includes a "rating" field
-      const ratingStars = generateRatingStars(rating);
-
-      // Add badge to some products (every 3rd product)
-      const badgeHTML =
-        index % 3 === 0
-          ? `<span class="badge ${index % 6 === 0 ? 'sale' : 'new'}">${
-              index % 6 === 0 ? 'Sale' : 'New'
-            }</span>`
-          : '';
-
-      card.innerHTML = `
-      ${badgeHTML}
-      <div class="product-image">
-        <img src="${product.mainImageUrl}" alt="${product.name}">
-      </div>
-      <div class="product-content">
-        <h3>${product.name}</h3>
-        <p>$${product.price}</p>
-        <div class="rating">${ratingStars}</div>
-      </div>
-      <div class="quick-view">Quick View</div>
-    `;
-
-      card.addEventListener('click', () => showQuickView(product));
-      productsGrid.appendChild(card);
-    });
-
-    currentPage++;
-  }
-
-  // Function to load trending products with special styling
-  function loadTrendingProducts() {
-    const trendingContainer = document.getElementById('trending-products');
-    trendingContainer.innerHTML = '';
-
-    // Randomly select 4 trending products from allListings
-    const trendingItems = [...allListings]
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 4);
-
-    trendingItems.forEach((product) => {
-      const card = document.createElement('div');
-      card.className = 'product-card';
-
-      // Generate random sales count for trending items
-      const salesCount = Math.floor(Math.random() * 200) + 100;
-
-      card.innerHTML = `
-      <span class="badge trending">Trending</span>
-      <div class="product-image">
-        <img src="${product.mainImageUrl}" alt="${product.name}">
-      </div>
-      <div class="product-content">
-        <h3>${product.name}</h3>
-        <p>$${product.price}</p>
-        <small>${salesCount} sold this week</small>
-      </div>
-      <div class="quick-view">Quick View</div>
-    `;
-
-      card.addEventListener('click', () => showQuickView(product));
-      trendingContainer.appendChild(card);
-    });
-  }
-
-  // Helper function to generate rating stars
+  // ===================================================
+  // 5. GENERATE RATING STARS (Helper Function)
+  // ===================================================
   function generateRatingStars(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
     let starsHTML = '';
-
-    // Add full stars
     for (let i = 0; i < fullStars; i++) {
       starsHTML += '<i class="fas fa-star"></i>';
     }
-
-    // Add half star if needed
     if (hasHalfStar) {
       starsHTML += '<i class="fas fa-star-half-alt"></i>';
     }
-
-    // Add empty stars
     for (let i = 0; i < emptyStars; i++) {
       starsHTML += '<i class="far fa-star"></i>';
     }
-
     return starsHTML;
   }
-function showQuickView(product) {
-  quickViewModal.style.display = 'flex';
 
-  // Use the product's actual rating
-  const rating = product.rating || 0;
-  const ratingStars = generateRatingStars(rating);
+  // ===================================================
+  // 6. QUICK VIEW MODAL (with Cart & Wishlist Actions)
+  // ===================================================
+  const quickViewModal = document.getElementById('quick-view-modal');
+  const closeQuickView = document.getElementById('close-quick-view');
+  closeQuickView.addEventListener('click', () => {
+    quickViewModal.style.display = 'none';
+  });
+  function showQuickView(product) {
+    quickViewModal.style.display = 'flex';
+    const rating = product.rating || 0;
+    const ratingStars = generateRatingStars(rating);
+    const tagsHTML =
+      product.tags && product.tags.length > 0
+        ? `<div class="product-tags">${product.tags
+            .map((tag) => `<span class="tag">${tag}</span>`)
+            .join('')}</div>`
+        : '';
+    const quantity = parseInt(product.quantity) || 0;
+    const stockStatus =
+      quantity > 0
+        ? `<span class="in-stock">In Stock (${quantity} available)</span>`
+        : '<span class="out-of-stock">Out of Stock</span>';
+    let thumbnailsHTML = '';
+    if (product.additionalImageUrls && product.additionalImageUrls.length > 0) {
+      thumbnailsHTML = product.additionalImageUrls
+        .slice(0, 4)
+        .map((url) => `<img src="${url}" alt="Thumbnail" class="thumbnail" />`)
+        .join('');
+    }
 
-  // Build tags HTML if available
-  const tagsHTML =
-    product.tags && product.tags.length > 0
-      ? `<div class="product-tags">${product.tags
-          .map((tag) => `<span class="tag">${tag}</span>`)
-          .join('')}</div>`
-      : '';
-
-  // Format stock availability based on quantity
-  const quantity = parseInt(product.quantity) || 0;
-  const stockStatus =
-    quantity > 0
-      ? `<span class="in-stock">In Stock (${quantity} available)</span>`
-      : '<span class="out-of-stock">Out of Stock</span>';
-
-  // Build thumbnails HTML (limit to 4 thumbnails)
-  let thumbnailsHTML = '';
-  if (product.additionalImageUrls && product.additionalImageUrls.length > 0) {
-    thumbnailsHTML = product.additionalImageUrls
-      .slice(0, 4)
-      .map((url) => `<img src="${url}" alt="Thumbnail" class="thumbnail" />`)
-      .join('');
-  }
-
-  // Use a two-column flex layout so that images appear on the left and details on the right.
-  document.getElementById('quick-view-content').innerHTML = `
+    // The modal HTML now includes placeholders for dynamic cart controls and wishlist icon.
+    document.getElementById('quick-view-content').innerHTML = `
     <div class="quick-view-container" style="display: flex; flex-direction: row; gap: 20px; max-height: 90vh;">
       <!-- Left Column: Image Gallery -->
       <div class="quick-view-gallery" style="flex: 1; display: flex; flex-direction: column;">
         <div class="main-image-container" style="flex: 1; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
           <img src="${product.mainImageUrl}" alt="${
-    product.name
-  }" class="main-image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+      product.name
+    }" class="main-image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
         </div>
         ${
           thumbnailsHTML
@@ -290,7 +321,6 @@ function showQuickView(product) {
             : ''
         }
       </div>
-
       <!-- Right Column: Product Info -->
       <div class="quick-view-info" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; max-height: 90vh;">
         <div>
@@ -324,58 +354,224 @@ function showQuickView(product) {
             }</p>
           </div>
         </div>
-        <div class="product-actions" style="margin-top: var(--spacing-md);">
-          <button class="add-to-cart-btn btn btn-primary">Add to Cart</button>
-          <button class="wishlist-btn btn btn-outline"><i class="far fa-heart"></i></button>
+        <!-- Product Actions: Cart controls on the left, Wishlist toggle on the right -->
+        <div class="product-actions" style="margin-top: var(--spacing-md); display: flex; align-items: center; justify-content: space-between;">
+          <div class="cart-action-area">
+            <!-- This area will be dynamically updated to show either Add to Cart or cart controls -->
+          </div>
+          <button class="wishlist-btn btn btn-outline">
+            <i class="wishlist-icon far fa-heart"></i>
+          </button>
         </div>
       </div>
     </div>
   `;
 
-  // Add event listeners for thumbnails: clicking a thumbnail updates the main image.
-  const thumbnails = document.querySelectorAll('.thumbnail');
-  const mainImage = document.querySelector('.main-image');
-
-  thumbnails.forEach((thumb) => {
-    thumb.addEventListener('click', () => {
-      mainImage.src = thumb.src;
+    // Setup thumbnail click to update main image.
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.querySelector('.main-image');
+    thumbnails.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        mainImage.src = thumb.src;
+      });
     });
-  });
 
-  // Add event listener for the add-to-cart button to trigger cart notification.
-  document.querySelector('.add-to-cart-btn')?.addEventListener('click', () => {
-    cartNotification.style.display = 'block';
-    setTimeout(() => {
-      cartNotification.style.display = 'none';
-    }, 3000);
-  });
-}
+    // Load product state (cart and wishlist) to update the UI
+    updateProductActions(product);
 
-  // Call this function after loading products
-  document.addEventListener('DOMContentLoaded', () => {
-    // Your existing code...
+    // Wishlist toggle event listener.
+    const wishlistBtn = document.querySelector('.wishlist-btn');
+    if (wishlistBtn && currentUser) {
+      wishlistBtn.addEventListener('click', async () => {
+        await toggleWishlist(db, currentUser, product);
+        await updateUserCounters();
+        // Immediately update the wishlist icon after toggling.
+        updateWishlistIcon(product);
+      });
+    }
+  }
 
-    // Add this to your initialization
-    const originalInitPageData = initializePageData;
+  // This function checks whether the product is in the cart and displays the appropriate controls.
+  async function updateProductActions(product) {
+    let inCart = false;
+    let quantity = 0;
+    if (currentUser) {
+      const cartDocRef = doc(db, 'users', currentUser.uid, 'cart', product.id);
+      const docSnap = await getDoc(cartDocRef);
+      if (docSnap.exists()) {
+        inCart = true;
+        quantity = docSnap.data().quantity || 1;
+      }
+    }
 
-    // Override with enhanced version
-    window.initializePageData = async function () {
-      await originalInitPageData();
-      addScrollAnimations();
-    };
-  });
+    const cartActionArea = document.querySelector('.cart-action-area');
+    if (inCart) {
+      // Show cart controls: decrement, quantity display, increment and remove buttons.
+      cartActionArea.innerHTML = `
+      <div class="cart-controls">
+        <button class="cart-decrement btn btn-secondary" style="margin-right:5px;">-</button>
+        <span class="cart-quantity" style="margin:0 8px;">${quantity}</span>
+        <button class="cart-increment btn btn-secondary" style="margin-left:5px;">+</button>
+        <button class="cart-remove btn btn-danger" style="margin-left:10px;"><i class="fa fa-trash"></i></button>
+      </div>
+    `;
 
-  // ========= FEATURED PRODUCTS =========
+      // Attach event listeners to each cart control button.
+      const decrementBtn = cartActionArea.querySelector('.cart-decrement');
+      const incrementBtn = cartActionArea.querySelector('.cart-increment');
+      const removeBtn = cartActionArea.querySelector('.cart-remove');
+
+      decrementBtn.addEventListener('click', async () => {
+        const newQty = quantity - 1;
+        await updateCartItemQuantity(db, currentUser, product, newQty);
+        updateProductActions(product);
+        updateUserCounters();
+      });
+
+      incrementBtn.addEventListener('click', async () => {
+        const newQty = quantity + 1;
+        await updateCartItemQuantity(db, currentUser, product, newQty);
+        updateProductActions(product);
+        updateUserCounters();
+      });
+
+      removeBtn.addEventListener('click', async () => {
+        await removeFromCart(db, currentUser, product);
+        updateProductActions(product);
+        updateUserCounters();
+      });
+    } else {
+      // If product is not in the cart, show the "Add to Cart" button.
+      cartActionArea.innerHTML = `<button class="add-to-cart-btn btn btn-primary">Add to Cart</button>`;
+      const addToCartBtn = cartActionArea.querySelector('.add-to-cart-btn');
+      addToCartBtn.addEventListener('click', async () => {
+        await addToCart(db, currentUser, product);
+        updateProductActions(product);
+        updateUserCounters();
+        // Show a cart notification without reloading the page.
+        const cartNotification = document.getElementById('cart-notification');
+        cartNotification.style.display = 'block';
+        setTimeout(() => {
+          cartNotification.style.display = 'none';
+        }, 3000);
+      });
+    }
+    // Always update the wishlist icon based on the current state.
+    updateWishlistIcon(product);
+  }
+
+  // This function updates the wishlist icon to be red (filled) if the product is in the wishlist,
+  // or grey (outline) if it is not.
+  async function updateWishlistIcon(product) {
+    const wishlistIcon = document.querySelector('.wishlist-icon');
+    let inWishlist = false;
+    if (currentUser) {
+      const wishlistDocRef = doc(
+        db,
+        'users',
+        currentUser.uid,
+        'wishlist',
+        product.id
+      );
+      const docSnap = await getDoc(wishlistDocRef);
+      if (docSnap.exists()) {
+        inWishlist = true;
+      }
+    }
+    if (wishlistIcon) {
+      if (inWishlist) {
+        wishlistIcon.classList.remove('far');
+        wishlistIcon.classList.add('fas');
+        wishlistIcon.style.color = 'red';
+      } else {
+        wishlistIcon.classList.remove('fas');
+        wishlistIcon.classList.add('far');
+        wishlistIcon.style.color = 'grey';
+      }
+    }
+  }
+
+  // ===================================================
+  // 7. FEATURED PRODUCTS (Render listings)
+  // ===================================================
   const filterTabs = document.querySelectorAll('.filter-tabs li');
   const productsGrid = document.getElementById('products-grid');
 
-  // ========= TESTIMONIALS =========
+  function loadFeaturedProducts(reset = false) {
+    if (reset) {
+      currentPage = 0;
+      productsGrid.innerHTML = '';
+    }
+    const startIndex = currentPage * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const listingsToDisplay = allListings.slice(startIndex, endIndex);
+    listingsToDisplay.forEach((product, index) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      const rating = product.rating;
+      const ratingStars = generateRatingStars(rating);
+      const badgeHTML =
+        index % 3 === 0
+          ? `<span class="badge ${index % 6 === 0 ? 'sale' : 'new'}">${
+              index % 6 === 0 ? 'Sale' : 'New'
+            }</span>`
+          : '';
+      card.innerHTML = `
+        ${badgeHTML}
+        <div class="product-image">
+          <img src="${product.mainImageUrl}" alt="${product.name}">
+        </div>
+        <div class="product-content">
+          <h3>${product.name}</h3>
+          <p>$${product.price}</p>
+          <div class="rating">${ratingStars}</div>
+        </div>
+        <div class="quick-view">Quick View</div>
+      `;
+      card.addEventListener('click', () => showQuickView(product));
+      productsGrid.appendChild(card);
+    });
+    currentPage++;
+  }
+
+  // ===================================================
+  // 8. TRENDING PRODUCTS
+  // ===================================================
+  function loadTrendingProducts() {
+    const trendingContainer = document.getElementById('trending-products');
+    trendingContainer.innerHTML = '';
+    const trendingItems = [...allListings]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 4);
+    trendingItems.forEach((product) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      const salesCount = Math.floor(Math.random() * 200) + 100;
+      card.innerHTML = `
+        <span class="badge trending">Trending</span>
+        <div class="product-image">
+          <img src="${product.mainImageUrl}" alt="${product.name}">
+        </div>
+        <div class="product-content">
+          <h3>${product.name}</h3>
+          <p>$${product.price}</p>
+          <small>${salesCount} sold this week</small>
+        </div>
+        <div class="quick-view">Quick View</div>
+      `;
+      card.addEventListener('click', () => showQuickView(product));
+      trendingContainer.appendChild(card);
+    });
+  }
+
+  // ===================================================
+  // 9. TESTIMONIALS
+  // ===================================================
   function loadTestimonials() {
     const testimonialsSlider = document.getElementById('testimonials-slider');
     const testimonialDots = document.getElementById('testimonial-dots');
     testimonialsSlider.innerHTML = '';
     testimonialDots.innerHTML = '';
-
     fakeTestimonials.forEach((testimonial, index) => {
       const slide = document.createElement('div');
       slide.className = 'testimonial-slide';
@@ -385,34 +581,34 @@ function showQuickView(product) {
       `;
       if (index === 0) slide.classList.add('active');
       testimonialsSlider.appendChild(slide);
-
       const dot = document.createElement('span');
-      dot.className = 'dot' + (index === 0 ? ' active' : '');
+      dot.className = 'dot';
+      if (index === 0) dot.classList.add('active');
       dot.addEventListener('click', () => {
-        const slides =
-          testimonialsSlider.querySelectorAll('.testimonial-slide');
-        slides.forEach((s, i) => {
-          s.classList.toggle('active', i === index);
-        });
-        const dots = testimonialDots.querySelectorAll('.dot');
-        dots.forEach((d, i) => {
-          d.classList.toggle('active', i === index);
-        });
+        updateTestimonial(index);
       });
       testimonialDots.appendChild(dot);
     });
+    let currentIndex = 0;
+    function updateTestimonial(newIndex) {
+      const slides = testimonialsSlider.querySelectorAll('.testimonial-slide');
+      const dots = testimonialDots.querySelectorAll('.dot');
+      slides[currentIndex].classList.remove('active');
+      dots[currentIndex].classList.remove('active');
+      currentIndex = newIndex;
+      slides[currentIndex].classList.add('active');
+      dots[currentIndex].classList.add('active');
+    }
+    setInterval(() => {
+      const slides = testimonialsSlider.querySelectorAll('.testimonial-slide');
+      let nextIndex = (currentIndex + 1) % slides.length;
+      updateTestimonial(nextIndex);
+    }, 5000);
   }
 
-  // ========= QUICK VIEW MODAL =========
-  const quickViewModal = document.getElementById('quick-view-modal');
-  const closeQuickView = document.getElementById('close-quick-view');
-
-
-  closeQuickView.addEventListener('click', () => {
-    quickViewModal.style.display = 'none';
-  });
-
-  // ========= BACK TO TOP BUTTON =========
+  // ===================================================
+  // 10. BACK TO TOP BUTTON & CART NOTIFICATION
+  // ===================================================
   const backToTopButton = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
     backToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
@@ -420,8 +616,6 @@ function showQuickView(product) {
   backToTopButton.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-
-  // ========= CART NOTIFICATION =========
   const cartNotification = document.getElementById('cart-notification');
   document.querySelectorAll('.add-to-cart').forEach((button) => {
     button.addEventListener('click', () => {
@@ -432,27 +626,41 @@ function showQuickView(product) {
     });
   });
 
-  // ========= INITIALIZE PAGE DATA =========
+  // ===================================================
+  // 11. INITIALIZE PAGE DATA
+  // ===================================================
   async function initializePageData() {
-    // Fetch all listings from Firestore and store in a global array
     allListings = await fetchAllListings();
-    // Shuffle listings to ensure randomness
     allListings = allListings.sort(() => 0.5 - Math.random());
     loadFeaturedProducts(true);
     loadTrendingProducts();
     loadTestimonials();
   }
-
   initializePageData();
 
-  // ========= FILTER TABS (Optional) =========
-  filterTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      filterTabs.forEach((t) => t.classList.remove('active'));
-      tab.classList.add('active');
-      // For demo purposes, reshuffle listings for "all" products when a filter is clicked
-      allListings = allListings.sort(() => 0.5 - Math.random());
-      loadFeaturedProducts(true);
+  // ===================================================
+  // 12. SCROLL ANIMATIONS FOR PRODUCT CARDS
+  // ===================================================
+  function addScrollAnimations() {
+    const productCards = document.querySelectorAll('.product-card');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    productCards.forEach((card) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(card);
     });
-  });
+  }
+  window.addEventListener('load', addScrollAnimations);
 });
