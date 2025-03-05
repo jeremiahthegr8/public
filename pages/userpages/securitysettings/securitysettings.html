@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
     <script type="module" src="./securitysettings.js" defer></script>
     <script src="../../../components/usersidebar.js" defer></script>
+    <script type="module" src="./paymentmethod.js" defer></script>
+    <script type="module" src="./profile.js" defer></script>
+    <script type="module" src="./settings.js" defer></script>
   </head>
   <body>
     <!-- Sidebar Navigation -->
@@ -149,202 +152,226 @@
   </div>
 </div>
 
-      <!-- Tab Content: Security & Privacy -->
-      <div class="tab-content" id="security">
-        <!-- Request Password Change -->
-        <div class="form-section">
-          <h3>Request Password Change</h3>
-          <p>
-            Click below to receive a password change link. The link is valid for
-            1 minute.
-          </p>
-          <button id="requestPasswordChange" class="btn-submit">
-            Send Password Change Link
-          </button>
-          <span
-            id="passwordTimer"
-            style="margin-left: var(--spacing-md); color: var(--primary-color)"
-          ></span>
-        </div>
+<!-- Tab Content: Security & Privacy -->
+<div class="tab-content" id="security">
+  <!-- Request Password Change -->
+  <div class="form-section">
+    <h3>Request Password Change</h3>
+    <p>
+      Click below to receive a password change link. The link is valid for 1 minute.
+    </p>
+    <button id="requestPasswordChange" class="btn-submit">
+      Send Password Change Link
+    </button>
+    <span
+      id="passwordTimer"
+      style="margin-left: var(--spacing-md); color: var(--primary-color)"
+    ></span>
+  </div>
 
-        <!-- Two-Factor Authentication -->
-        <div class="form-section">
-          <h3>Two-Factor Authentication</h3>
-          <p>Enable two-factor authentication for added security.</p>
-          <label>
-            <input type="checkbox" id="twoFactorToggle" />
-            Enable 2FA
-          </label>
-        </div>
+  <!-- Two-Factor Authentication -->
+  <div class="form-section">
+    <h3>Two-Factor Authentication</h3>
+    <p>Enable two-factor authentication for added security.</p>
+    <label>
+      <input type="checkbox" id="twoFactorToggle" />
+      Enable 2FA
+    </label>
+  </div>
 
-        <!-- Login History -->
-        <div class="form-section">
-          <h3>Login History</h3>
-          <p>Recent logins:</p>
-          <ul id="loginHistory">
-            <li>2025-02-20 10:00 AM - IP: 192.168.1.10</li>
-            <li>2025-02-19 08:30 PM - IP: 192.168.1.15</li>
-          </ul>
-        </div>
+  <!-- Login History -->
+  <div class="form-section">
+    <h3>Login History</h3>
+    <p>Recent logins:</p>
+    <ul id="loginHistory">
+      <li>2025-02-20 10:00 AM - IP: 192.168.1.10</li>
+      <li>2025-02-19 08:30 PM - IP: 192.168.1.15</li>
+    </ul>
+  </div>
 
-        <!-- Active Sessions -->
-        <div class="form-section">
-          <h3>Active Sessions</h3>
-          <p>Your current active sessions:</p>
-          <ul id="activeSessions">
-            <li>
-              Chrome on Windows - Last active: 5 mins ago
-              <button class="btn-remove">Logout</button>
-            </li>
-            <li>
-              Firefox on Android - Last active: 10 mins ago
-              <button class="btn-remove">Logout</button>
-            </li>
-          </ul>
-        </div>
+  <!-- Active Sessions -->
+  <div class="form-section">
+    <h3>Active Sessions</h3>
+    <p>Your current active sessions:</p>
+    <ul id="activeSessions">
+      <li>
+        Chrome on Windows - Last active: 5 mins ago
+        <button class="btn-remove">Logout</button>
+      </li>
+      <li>
+        Firefox on Android - Last active: 10 mins ago
+        <button class="btn-remove">Logout</button>
+      </li>
+    </ul>
+    <!-- 
+      Suggestion for Active Sessions Implementation:
+      • On login, create a session document (e.g., under users/{uid}/sessions) 
+      • Include device info, IP, login timestamp, etc.
+      • List these sessions here and allow revoking by deleting the document.
+    -->
+  </div>
 
-        <!-- Security Notifications & Push -->
-        <div class="form-section">
-          <h3>Security Notifications & Push</h3>
-          <label>
-            <input type="checkbox" id="securityNotifications" />
-            Receive security notifications via email
-          </label>
-          <br />
-          <label>
-            <input type="checkbox" id="pushNotifications" />
-            Enable push notifications
-          </label>
-        </div>
+  <!-- Security Notifications & Push -->
+  <div class="form-section">
+    <h3>Security Notifications & Push</h3>
+    <label>
+      <input type="checkbox" id="securityNotifications" />
+      Receive security notifications via email
+    </label>
+    <br />
+    <label>
+      <input type="checkbox" id="pushNotifications" />
+      Enable push notifications
+    </label>
+  </div>
 
-        <!-- Alternate Recovery Email -->
-        <div class="form-section">
-          <h3>Alternate Recovery Email</h3>
-          <form id="recoveryEmailForm">
-            <div class="form-group">
-              <label for="recoveryEmail">Recovery Email</label>
-              <input
-                type="email"
-                id="recoveryEmail"
-                name="recoveryEmail"
-                placeholder="Enter alternate recovery email"
-              />
-            </div>
-            <button type="submit" class="btn-submit">
-              Update Recovery Email
-            </button>
-          </form>
-        </div>
+  <!-- Alternate Recovery Email -->
+  <div class="form-section">
+    <h3>Alternate Recovery Email</h3>
+    <form id="recoveryEmailForm">
+      <div class="form-group">
+        <label for="recoveryEmail">Recovery Email</label>
+        <input
+          type="email"
+          id="recoveryEmail"
+          name="recoveryEmail"
+          placeholder="Enter alternate recovery email"
+        />
+      </div>
+      <button type="submit" class="btn-submit">
+        Update Recovery Email
+      </button>
+    </form>
+  </div>
 
-        <!-- Session Timeout, Billing, and Account Actions -->
-        <div class="form-section">
-          <h3>Session & Account Settings</h3>
-          <div class="form-group">
-            <label for="sessionTimeout">Session Timeout (minutes)</label>
-            <select id="sessionTimeout" name="sessionTimeout">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="30">30</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="billingAddress">Billing Address</label>
-            <textarea
-              id="billingAddress"
-              name="billingAddress"
-              placeholder="Enter your billing address"
-            ></textarea>
-          </div>
-          <button
-            id="deleteAccount"
-            class="btn-submit"
-            style="background-color: #e53e3e; margin-right: var(--spacing-md)"
-          >
-            Delete Account
-          </button>
-          <button
-            id="downloadData"
-            class="btn-submit"
-            style="background-color: var(--primary-color)"
-          >
-            Download Your Data
-          </button>
+  <!-- Session Timeout -->
+  <div class="form-section">
+    <h3>Session Timeout</h3>
+    <div class="form-group">
+      <label for="sessionTimeout">Set Session Timeout (minutes)</label>
+      <select id="sessionTimeout" name="sessionTimeout">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="30">30</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Account Actions: Delete Account -->
+  <div class="form-section">
+    <h3>Account Deletion</h3>
+    <p>Type your password to confirm account deletion:</p>
+    <input
+      type="password"
+      id="deletePassword"
+      placeholder="Enter your password"
+      style="margin-bottom: var(--spacing-md); padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--radius-sm);"
+    />
+    <button id="deleteAccount" class="btn-submit" style="background-color: #e53e3e;">
+      Delete Account
+    </button>
+  </div>
+
+  <!-- Account Actions: Download Data -->
+  <div class="form-section">
+    <h3>Download Your Data</h3>
+    <p>Click below to download all your account data.</p>
+    <button id="downloadData" class="btn-submit" style="background-color: var(--primary-color);">
+      Download Your Data
+    </button>
+  </div>
+</div>
+
+<!-- Tab Content: Payment Methods -->
+<div class="tab-content" id="payment">
+  <!-- Saved Payment Methods -->
+  <div class="form-section">
+    <h3>Saved Payment Methods</h3>
+    <div class="saved-cards" id="savedCards">
+      <!-- Saved methods will be rendered here by JS -->
+    </div>
+  </div>
+
+  <!-- Add / Update Payment Method -->
+  <div class="form-section">
+    <h3>Add / Update Payment Method</h3>
+    <!-- Payment method type selection -->
+    <div class="form-group">
+      <label>Select Payment Method Type:</label>
+      <div class="payment-method-selection">
+        <label>
+          <input type="radio" name="paymentMethodType" value="card" checked />
+          Card
+        </label>
+        <label>
+          <input type="radio" name="paymentMethodType" value="momo" />
+          Mobile Money (MoMo)
+        </label>
+      </div>
+    </div>
+    <form id="paymentForm">
+      <!-- Card Details Container -->
+      <div id="cardDetails" style="display: block;">
+        <div class="form-group">
+          <label for="cardNumber">Card Number</label>
+          <input
+            type="text"
+            id="cardNumber"
+            name="cardNumber"
+            placeholder="1234 5678 9012 3456"
+            maxlength="19"
+          />
+        </div>
+        <div class="form-group">
+          <label for="cardName">Name on Card</label>
+          <input
+            type="text"
+            id="cardName"
+            name="cardName"
+            placeholder="Enter name on card"
+          />
+        </div>
+        <div class="form-group">
+          <label for="expiryDate">Expiry Date</label>
+          <input
+            type="text"
+            id="expiryDate"
+            name="expiryDate"
+            placeholder="MM/YY"
+            maxlength="5"
+          />
+        </div>
+        <div class="form-group">
+          <label for="cvv">CVV</label>
+          <input
+            type="text"
+            id="cvv"
+            name="cvv"
+            placeholder="123"
+            maxlength="3"
+          />
         </div>
       </div>
-
-      <!-- Tab Content: Payment Methods -->
-      <div class="tab-content" id="payment">
-        <!-- Saved Cards -->
-        <div class="form-section">
-          <h3>Saved Cards</h3>
-          <div class="saved-cards" id="savedCards">
-            <div class="card-item">
-              <div class="card-details">
-                **** **** **** 1234 <br />
-                Exp: 12/24
-              </div>
-              <button class="btn-remove remove-card">Remove</button>
-            </div>
-            <div class="card-item">
-              <div class="card-details">
-                **** **** **** 5678 <br />
-                Exp: 09/23
-              </div>
-              <button class="btn-remove remove-card">Remove</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add New Card -->
-        <div class="form-section">
-          <h3>Add / Update Payment Method</h3>
-          <form id="paymentForm">
-            <div class="form-group">
-              <label for="cardNumber">Card Number</label>
-              <input
-                type="text"
-                id="cardNumber"
-                name="cardNumber"
-                placeholder="1234 5678 9012 3456"
-                maxlength="19"
-              />
-            </div>
-            <div class="form-group">
-              <label for="cardName">Name on Card</label>
-              <input
-                type="text"
-                id="cardName"
-                name="cardName"
-                placeholder="Enter name on card"
-              />
-            </div>
-            <div class="form-group">
-              <label for="expiryDate">Expiry Date</label>
-              <input
-                type="text"
-                id="expiryDate"
-                name="expiryDate"
-                placeholder="MM/YY"
-                maxlength="5"
-              />
-            </div>
-            <div class="form-group">
-              <label for="cvv">CVV</label>
-              <input
-                type="text"
-                id="cvv"
-                name="cvv"
-                placeholder="123"
-                maxlength="3"
-              />
-            </div>
-            <button type="submit" class="btn-submit">
-              Add/Update Payment Method
-            </button>
-          </form>
+      <!-- MoMo Details Container -->
+      <div id="momoDetails" style="display: none;">
+        <div class="form-group">
+          <label for="momoNumber">Mobile Money Number</label>
+          <input
+            type="text"
+            id="momoNumber"
+            name="momoNumber"
+            placeholder="Enter Mobile Money number"
+          />
         </div>
       </div>
+      <button type="submit" class="btn-submit">
+        Add/Update Payment Method
+      </button>
+    </form>
+  </div>
+</div>
+
     </div>
   </body>
 </html>
