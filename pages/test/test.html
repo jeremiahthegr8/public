@@ -1,137 +1,810 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Charts</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        canvas {
-            max-width: 400px;
-            max-height: 400px;
-            margin: 20px;
-        }
-        .chart-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Analytics Dashboard</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4A6FFF;
+      --secondary-color: #F5F7FF;
+      --success-color: #4CAF50;
+      --danger-color: #F44336;
+      --warning-color: #FFC107;
+      --dark-color: #333;
+      --light-color: #f4f4f4;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    h1, h2, h3 {
+      color: var(--dark-color);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: opacity 0.3s;
+    }
+    
+    .btn:hover {
+      opacity: 0.9;
+    }
+    
+    .btn-danger {
+      background: var(--danger-color);
+    }
+    
+    .dashboard-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .summary-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .summary-card .icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    
+    .summary-card .number {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .summary-card .label {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .charts-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .chart-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chart-card h3 {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .chart-container {
+      height: 300px;
+    }
+    
+    @media (max-width: 768px) {
+      .charts-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .orders-table th, 
+    .orders-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .orders-table th {
+      background-color: var(--secondary-color);
+      font-weight: bold;
+    }
+    
+    .orders-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-dropdown {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .status.pending {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #856404;
+    }
+    
+    .status.confirmed {
+      background-color: rgba(0, 123, 255, 0.2);
+      color: #004085;
+    }
+    
+    .status.delivered {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #155724;
+    }
+    
+    .status.returned {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #721c24;
+    }
+    
+    .date-pickers {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    
+    .date-input {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-
-    <h2 style="text-align:center;">Firebase Charts</h2>
+  <div class="container">
+    <header>
+      <h1>Seller Analytics Dashboard</h1>
+      <button id="logout-btn" class="btn btn-danger">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </header>
     
-    <div class="chart-container">
-        <canvas id="barChart"></canvas>
-        <canvas id="lineChart"></canvas>
-        <canvas id="pieChart"></canvas>
+    <div class="date-pickers">
+      <label for="start-date">From:</label>
+      <input type="date" id="start-date" class="date-input">
+      <label for="end-date">To:</label>
+      <input type="date" id="end-date" class="date-input">
+      <button id="apply-date-filter" class="btn">Apply</button>
     </div>
+    
+    <div class="dashboard-summary">
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-shopping-bag"></i></div>
+        <div class="number" id="total-orders">0</div>
+        <div class="label">Total Orders</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+        <div class="number" id="total-revenue">$0</div>
+        <div class="label">Total Revenue</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-box"></i></div>
+        <div class="number" id="items-sold">0</div>
+        <div class="label">Items Sold</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-users"></i></div>
+        <div class="number" id="unique-customers">0</div>
+        <div class="label">Unique Customers</div>
+      </div>
+    </div>
+    
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Revenue Over Time</h3>
+        <div class="chart-container">
+          <canvas id="revenue-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Order Status Distribution</h3>
+        <div class="chart-container">
+          <canvas id="status-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Top Selling Products</h3>
+        <div class="chart-container">
+          <canvas id="products-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Orders by Day of Week</h3>
+        <div class="chart-container">
+          <canvas id="weekday-chart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <h2>Recent Orders</h2>
+    <div class="filters">
+      <select id="status-filter" class="filter-dropdown">
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="delivered">Delivered</option>
+        <option value="returned">Returned</option>
+      </select>
+      <select id="sort-by" class="filter-dropdown">
+        <option value="date-desc">Date (Newest First)</option>
+        <option value="date-asc">Date (Oldest First)</option>
+        <option value="amount-desc">Amount (Highest First)</option>
+        <option value="amount-asc">Amount (Lowest First)</option>
+      </select>
+    </div>
+    
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="recent-orders">
+        <!-- Order rows will be populated dynamically -->
+      </tbody>
+    </table>
+  </div>
+  
+  <script type="module">
+    import { auth, db } from '../../database/config.js';
+    import {
+      onAuthStateChanged,
+      signOut,
+    } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+    import {
+      collection,
+      query,
+      where,
+      onSnapshot,
+      doc,
+      getDoc,
+      getDocs,
+      Timestamp,
+    } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
-    <script type="module">
-        // Import Firebase services
-        import { db } from "../../database/config.js";
-        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    // Global variables
+    let currentSellerId = null;
+    let allOrders = [];
+    let startDate = null;
+    let endDate = null;
 
-        async function getSellerAndOrderData() {
-            const sellersRef = collection(db, "sellers");
-            const sellersSnapshot = await getDocs(sellersRef);
-            
-            let monthlyRevenue = Array(12).fill(0);
-            let salesData = Array(12).fill(0);
-            let returnsData = Array(12).fill(0);
-            let categorySales = {};
+    // DOM Elements
+    const totalOrdersEl = document.getElementById('total-orders');
+    const totalRevenueEl = document.getElementById('total-revenue');
+    const itemsSoldEl = document.getElementById('items-sold');
+    const uniqueCustomersEl = document.getElementById('unique-customers');
+    const recentOrdersEl = document.getElementById('recent-orders');
+    const statusFilterEl = document.getElementById('status-filter');
+    const sortByEl = document.getElementById('sort-by');
+    const startDateEl = document.getElementById('start-date');
+    const endDateEl = document.getElementById('end-date');
+    const applyDateFilterBtn = document.getElementById('apply-date-filter');
+    const logoutBtn = document.getElementById('logout-btn');
 
-            sellersSnapshot.forEach(doc => {
-                let data = doc.data();
-                if (data.createdAt && data.totalRevenue) {
-                    let createdAt = new Date(data.createdAt.seconds * 1000);
-                    let monthIndex = createdAt.getMonth();
-                    monthlyRevenue[monthIndex] += data.totalRevenue;
-                }
-            });
+    // Charts
+    let revenueChart, statusChart, productsChart, weekdayChart;
 
-            const ordersRef = collection(db, "orders");
-            const ordersSnapshot = await getDocs(ordersRef);
-
-            ordersSnapshot.forEach(doc => {
-                let data = doc.data();
-                if (data.createdAt && data.items) {
-                    let createdAt = new Date(data.createdAt.seconds * 1000);
-                    let monthIndex = createdAt.getMonth();
-
-                    data.items.forEach(item => {
-                        let category = item.category || "Other";
-                        let sales = item.salesCount || 0;
-                        let returns = item.returnsCount || 0;
-
-                        salesData[monthIndex] += sales;
-                        returnsData[monthIndex] += returns;
-
-                        categorySales[category] = (categorySales[category] || 0) + sales;
-                    });
-                }
-            });
-
-            updateCharts(monthlyRevenue, salesData, returnsData, categorySales);
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = '../../index.html';
+      } else {
+        // Get the user's document
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          currentSellerId = userData.sellerID;
+          if (!currentSellerId) {
+            console.error("Seller ID not found in user's document.");
+            return;
+          }
+          
+          // Set default date range (last 30 days)
+          const today = new Date();
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(today.getDate() - 30);
+          
+          startDateEl.valueAsDate = thirtyDaysAgo;
+          endDateEl.valueAsDate = today;
+          
+          startDate = thirtyDaysAgo;
+          endDate = today;
+          
+          loadOrders();
+          setupEventListeners();
+          initCharts();
+        } else {
+          console.error('User document does not exist.');
         }
+      }
+    });
 
-        function updateCharts(monthlyRevenue, salesData, returnsData, categorySales) {
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-            // Bar Chart - Monthly Revenue
-            new Chart(document.getElementById("barChart"), {
-                type: "bar",
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: "Monthly Revenue ($)",
-                        data: monthlyRevenue,
-                        backgroundColor: "rgba(54, 162, 235, 0.6)"
-                    }]
+    // Initialize charts
+    function initCharts() {
+      // Revenue Over Time Chart
+      const revCtx = document.getElementById('revenue-chart').getContext('2d');
+      revenueChart = new Chart(revCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Daily Revenue',
+            data: [],
+            borderColor: '#4A6FFF',
+            backgroundColor: 'rgba(74, 111, 255, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '$' + value;
                 }
-            });
-
-            // Line Chart - Sales & Returns Over Time
-            new Chart(document.getElementById("lineChart"), {
-                type: "line",
-                data: {
-                    labels: months,
-                    datasets: [
-                        {
-                            label: "Total Sales",
-                            data: salesData,
-                            borderColor: "blue",
-                            backgroundColor: "rgba(0, 0, 255, 0.2)",
-                            fill: true
-                        },
-                        {
-                            label: "Total Returns",
-                            data: returnsData,
-                            borderColor: "red",
-                            backgroundColor: "rgba(255, 0, 0, 0.2)",
-                            fill: true
-                        }
-                    ]
-                }
-            });
-
-            // Pie Chart - Sales Distribution by Category
-            new Chart(document.getElementById("pieChart"), {
-                type: "pie",
-                data: {
-                    labels: Object.keys(categorySales),
-                    datasets: [{
-                        label: "Sales by Category",
-                        data: Object.values(categorySales),
-                        backgroundColor: ["red", "blue", "green", "purple", "orange"]
-                    }]
-                }
-            });
+              }
+            }
+          }
         }
+      });
+      
+      // Order Status Distribution Chart
+      const statusCtx = document.getElementById('status-chart').getContext('2d');
+      statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Pending', 'Confirmed', 'Delivered', 'Returned'],
+          datasets: [{
+            data: [0, 0, 0, 0],
+            backgroundColor: [
+              '#FFC107',
+              '#4A6FFF',
+              '#4CAF50',
+              '#F44336'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right'
+            }
+          }
+        }
+      });
+      
+      // Top Products Chart
+      const productsCtx = document.getElementById('products-chart').getContext('2d');
+      productsChart = new Chart(productsCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Units Sold',
+            data: [],
+            backgroundColor: 'rgba(74, 111, 255, 0.7)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      
+      // Orders by Day of Week Chart
+      const weekdayCtx = document.getElementById('weekday-chart').getContext('2d');
+      weekdayChart = new Chart(weekdayCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          datasets: [{
+            label: 'Number of Orders',
+            data: [0, 0, 0, 0, 0, 0, 0],
+            backgroundColor: 'rgba(74, 111, 255, 0.7)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
 
-        getSellerAndOrderData();
-    </script>
+    // Load orders from the seller's orders subcollection
+    function loadOrders() {
+      const sellerOrdersRef = collection(db, 'sellers', currentSellerId, 'orders');
+      
+      onSnapshot(sellerOrdersRef, (snapshot) => {
+        allOrders = [];
+        
+        snapshot.forEach((docSnap) => {
+          const order = docSnap.data();
+          order.id = docSnap.id;
+          
+          // Convert Firestore timestamp to JavaScript Date if it exists
+          if (order.createdAt instanceof Timestamp) {
+            order.orderDate = order.createdAt.toDate();
+          } else if (order.date instanceof Timestamp) {
+            order.orderDate = order.date.toDate();
+          } else {
+            // If no date exists, use current date as fallback
+            order.orderDate = new Date();
+          }
+          
+          allOrders.push(order);
+        });
+        
+        // Apply date filters
+        filterAndDisplayOrders();
+      });
+    }
 
+    // Filter orders and update all displays
+    function filterAndDisplayOrders() {
+      // Filter orders by date range
+      const filteredByDate = allOrders.filter(order => {
+        return (!startDate || order.orderDate >= startDate) && 
+               (!endDate || order.orderDate <= endDate);
+      });
+      
+      // Filter by status if needed
+      const statusFilter = statusFilterEl.value;
+      const filteredOrders = statusFilter === 'all' 
+        ? filteredByDate 
+        : filteredByDate.filter(order => {
+            const orderStatus = (order.shippingInfo?.status || order.status || '').toLowerCase();
+            return orderStatus === statusFilter;
+          });
+      
+      // Sort orders
+      const sortBy = sortByEl.value;
+      const sortedOrders = [...filteredOrders].sort((a, b) => {
+        switch (sortBy) {
+          case 'date-desc':
+            return b.orderDate - a.orderDate;
+          case 'date-asc':
+            return a.orderDate - b.orderDate;
+          case 'amount-desc':
+            return (b.totals?.total || 0) - (a.totals?.total || 0);
+          case 'amount-asc':
+            return (a.totals?.total || 0) - (b.totals?.total || 0);
+          default:
+            return b.orderDate - a.orderDate;
+        }
+      });
+      
+      // Update summary metrics
+      updateSummaryMetrics(filteredByDate);
+      
+      // Update charts
+      updateCharts(filteredByDate);
+      
+      // Display recent orders (top 10)
+      displayRecentOrders(sortedOrders.slice(0, 10));
+    }
+
+    // Update summary metrics
+    function updateSummaryMetrics(orders) {
+      // Total orders
+      totalOrdersEl.textContent = orders.length;
+      
+      // Total revenue
+      const totalRevenue = orders.reduce((sum, order) => {
+        return sum + (order.totals?.total || 0);
+      }, 0);
+      totalRevenueEl.textContent = '$' + totalRevenue.toFixed(2);
+      
+      // Items sold
+      const itemsSold = orders.reduce((sum, order) => {
+        if (!order.items) return sum;
+        return sum + order.items.reduce((itemSum, item) => {
+          return itemSum + (item.quantity || 1);
+        }, 0);
+      }, 0);
+      itemsSoldEl.textContent = itemsSold;
+      
+      // Unique customers
+      const customerIds = new Set(orders.map(order => order.userId));
+      uniqueCustomersEl.textContent = customerIds.size;
+    }
+
+    // Update all charts with filtered data
+    function updateCharts(orders) {
+      updateRevenueChart(orders);
+      updateStatusChart(orders);
+      updateProductsChart(orders);
+      updateWeekdayChart(orders);
+    }
+
+    // Update revenue over time chart
+    function updateRevenueChart(orders) {
+      // Group orders by date and calculate daily revenue
+      const dailyRevenue = {};
+      
+      // Initialize all dates in range
+      if (startDate && endDate) {
+        let currentDate = new Date(startDate);
+        while (currentDate <= endDate) {
+          const dateString = currentDate.toISOString().split('T')[0];
+          dailyRevenue[dateString] = 0;
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
+      
+      // Add revenue from orders
+      orders.forEach(order => {
+        const dateString = order.orderDate.toISOString().split('T')[0];
+        if (!dailyRevenue[dateString]) {
+          dailyRevenue[dateString] = 0;
+        }
+        dailyRevenue[dateString] += (order.totals?.total || 0);
+      });
+      
+      // Sort dates chronologically
+      const sortedDates = Object.keys(dailyRevenue).sort();
+      
+      // Update chart
+      revenueChart.data.labels = sortedDates.map(date => {
+        const d = new Date(date);
+        return `${d.getMonth() + 1}/${d.getDate()}`;
+      });
+      revenueChart.data.datasets[0].data = sortedDates.map(date => dailyRevenue[date]);
+      revenueChart.update();
+    }
+
+    // Update status distribution chart
+    function updateStatusChart(orders) {
+      // Count orders by status
+      const statusCounts = {
+        pending: 0,
+        confirmed: 0,
+        delivered: 0,
+        returned: 0
+      };
+      
+      orders.forEach(order => {
+        const orderStatus = (order.shippingInfo?.status || order.status || '').toLowerCase();
+        if (statusCounts.hasOwnProperty(orderStatus)) {
+          statusCounts[orderStatus]++;
+        } else if (orderStatus === 'returned requested') {
+          statusCounts.returned++;
+        }
+      });
+      
+      // Update chart
+      statusChart.data.datasets[0].data = [
+        statusCounts.pending,
+        statusCounts.confirmed,
+        statusCounts.delivered,
+        statusCounts.returned
+      ];
+      statusChart.update();
+    }
+
+    // Update top products chart
+    function updateProductsChart(orders) {
+      // Count items sold
+      const productCounts = {};
+      
+      orders.forEach(order => {
+        if (!order.items) return;
+        
+        order.items.forEach(item => {
+          const productName = item.itemName || item.name || 'N/A';
+          if (!productCounts[productName]) {
+            productCounts[productName] = 0;
+          }
+          productCounts[productName] += (item.quantity || 1);
+        });
+      });
+      
+      // Sort products by quantity
+      const sortedProducts = Object.entries(productCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5); // Top 5 products
+      
+      // Update chart
+      productsChart.data.labels = sortedProducts.map(([name]) => name);
+      productsChart.data.datasets[0].data = sortedProducts.map(([, count]) => count);
+      productsChart.update();
+    }
+
+    // Update orders by day of week chart
+    function updateWeekdayChart(orders) {
+      // Count orders by day of week
+      const weekdayCounts = [0, 0, 0, 0, 0, 0, 0]; // Sun, Mon, ..., Sat
+      
+      orders.forEach(order => {
+        const dayOfWeek = order.orderDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+        weekdayCounts[dayOfWeek]++;
+      });
+      
+      // Update chart
+      weekdayChart.data.datasets[0].data = weekdayCounts;
+      weekdayChart.update();
+    }
+
+    // Display recent orders
+    async function displayRecentOrders(orders) {
+      recentOrdersEl.innerHTML = '';
+      
+      if (orders.length === 0) {
+        recentOrdersEl.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 20px;">
+              No orders found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      // Get buyer names for all orders
+      const buyerPromises = orders.map(order => getBuyerName(order.userId));
+      const buyerNames = await Promise.all(buyerPromises);
+      
+      orders.forEach((order, index) => {
+        const row = document.createElement('tr');
+        
+        const orderStatus = (order.shippingInfo?.status || order.status || '').toLowerCase();
+        const formattedDate = order.orderDate.toLocaleDateString();
+        
+        // Format items string
+        const itemsStr = order.items
+          ? order.items
+              .map(item => {
+                const name = item.itemName || item.name || 'N/A';
+                return `${name} (x${item.quantity})`;
+              })
+              .join(', ')
+          : 'N/A';
+        
+        row.innerHTML = `
+          <td>${order.id}</td>
+          <td>${formattedDate}</td>
+          <td>${buyerNames[index]}</td>
+          <td>${itemsStr}</td>
+          <td>$${order.totals && order.totals.total ? order.totals.total.toFixed(2) : '0.00'}</td>
+          <td><span class="status ${orderStatus}">${orderStatus.charAt(0).toUpperCase() + orderStatus.slice(1)}</span></td>
+        `;
+        
+        recentOrdersEl.appendChild(row);
+      });
+    }
+
+    // Helper: Get buyer's full name
+    async function getBuyerName(buyerId) {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', buyerId));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          return `${data.FirstName || ''} ${data.LastName || ''}`.trim() || 'N/A';
+        }
+      } catch (error) {
+        console.error('Error fetching buyer name:', error);
+      }
+      return 'N/A';
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Status filter change
+      statusFilterEl.addEventListener('change', filterAndDisplayOrders);
+      
+      // Sort by change
+      sortByEl.addEventListener('change', filterAndDisplayOrders);
+      
+      // Date filter apply button
+      applyDateFilterBtn.addEventListener('click', () => {
+        startDate = startDateEl.valueAsDate;
+        endDate = endDateEl.valueAsDate;
+        
+        // Add one day to end date to include that day fully
+        if (endDate) {
+          endDate = new Date(endDate);
+          endDate.setDate(endDate.getDate() + 1);
+        }
+        
+        filterAndDisplayOrders();
+      });
+      
+      // Logout button
+      logoutBtn.addEventListener('click', () => {
+        signOut(auth)
+          .then(() => (window.location.href = '../../index.html'))
+          .catch((err) => console.error('Error signing out:', err));
+      });
+    }
+  </script>
 </body>
 </html>

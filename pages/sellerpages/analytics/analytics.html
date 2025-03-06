@@ -12,6 +12,11 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+      <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+ 
     <link rel="stylesheet" href="./analytics.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../../components/usersidebar.js" defer></script>
@@ -89,44 +94,99 @@
         </div>
       </div>
 
-      <!-- Analytics Dashboard -->
-      <div class="analytics-dashboard">
-        <!-- Summary Stats Cards -->
-        <div class="stats-cards">
-          <div class="stats-card">
-            <h3>Total Revenue</h3>
-            <p id="totalRevenue">$0.00</p>
-          </div>
-          <div class="stats-card">
-            <h3>Total Sales</h3>
-            <p id="totalSales">0</p>
-          </div>
-          <div class="stats-card">
-            <h3>Active Listings</h3>
-            <p id="activeListings">0</p>
-          </div>
-          <div class="stats-card">
-            <h3>Average Rating</h3>
-            <p id="avgRating">0 / 5</p>
-          </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div class="charts-section">
-          <div class="chart-card">
-            <h3>Revenue Over Time</h3>
-            <canvas id="revenueChart"></canvas>
-          </div>
-          <div class="chart-card">
-            <h3>Sales by Category</h3>
-            <canvas id="salesCategoryChart"></canvas>
-          </div>
-          <div class="chart-card">
-            <h3>Ratings Distribution</h3>
-            <canvas id="ratingsChart"></canvas>
-          </div>
+        <div class="container">
+    
+    <div class="date-pickers">
+      <label for="start-date">From:</label>
+      <input type="date" id="start-date" class="date-input">
+      <label for="end-date">To:</label>
+      <input type="date" id="end-date" class="date-input">
+      <button id="apply-date-filter" class="btn">Apply</button>
+    </div>
+    
+    <div class="dashboard-summary">
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-shopping-bag"></i></div>
+        <div class="number" id="total-orders">0</div>
+        <div class="label">Total Orders</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+        <div class="number" id="total-revenue">$0</div>
+        <div class="label">Total Revenue</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-box"></i></div>
+        <div class="number" id="items-sold">0</div>
+        <div class="label">Items Sold</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon"><i class="fas fa-users"></i></div>
+        <div class="number" id="unique-customers">0</div>
+        <div class="label">Unique Customers</div>
+      </div>
+    </div>
+    
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Revenue Over Time</h3>
+        <div class="chart-container">
+          <canvas id="revenue-chart"></canvas>
         </div>
       </div>
+      <div class="chart-card">
+        <h3>Order Status Distribution</h3>
+        <div class="chart-container">
+          <canvas id="status-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Top Selling Products</h3>
+        <div class="chart-container">
+          <canvas id="products-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Orders by Day of Week</h3>
+        <div class="chart-container">
+          <canvas id="weekday-chart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <h2>Recent Orders</h2>
+    <div class="filters">
+      <select id="status-filter" class="filter-dropdown">
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="delivered">Delivered</option>
+        <option value="returned">Returned</option>
+      </select>
+      <select id="sort-by" class="filter-dropdown">
+        <option value="date-desc">Date (Newest First)</option>
+        <option value="date-asc">Date (Oldest First)</option>
+        <option value="amount-desc">Amount (Highest First)</option>
+        <option value="amount-asc">Amount (Lowest First)</option>
+      </select>
+    </div>
+    
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="recent-orders">
+        <!-- Order rows will be populated dynamically -->
+      </tbody>
+    </table>
+  </div>
     </div>
   </body>
 </html>

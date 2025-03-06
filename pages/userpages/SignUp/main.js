@@ -200,17 +200,6 @@ document.querySelector('.SignUpForm').addEventListener('submit', async (e) => {
       'A verification email has been sent. Please verify your email before logging in.'
     );
 
-    // // Create default subcollections for the user
-    // await setDoc(doc(db, 'users', user.uid, 'cart', 'default'), { items: [] });
-    // await setDoc(doc(db, 'users', user.uid, 'wishlist', 'default'), {
-    //   items: [],
-    // });
-    // await setDoc(doc(db, 'users', user.uid, 'orders', 'default'), {
-    //   orders: [],
-    // });
-    // await setDoc(doc(db, 'users', user.uid, 'settings', 'default'), {
-    //   preferences: {},
-    // });
 
     // Sign out to enforce email verification before next login
     await signOut(auth);
@@ -249,19 +238,7 @@ document.getElementById('GoogleSignUp').addEventListener('click', async () => {
         lastLogin: new Date().toISOString(),
         sellerStatus: false, // Seller status created here too
       });
-      // // Create default subcollections for the user
-      // await setDoc(doc(db, 'users', user.uid, 'cart', 'default'), {
-      //   items: [],
-      // });
-      // await setDoc(doc(db, 'users', user.uid, 'wishlist', 'default'), {
-      //   items: [],
-      // });
-      // await setDoc(doc(db, 'users', user.uid, 'orders', 'default'), {
-      //   orders: [],
-      // });
-      // await setDoc(doc(db, 'users', user.uid, 'settings', 'default'), {
-      //   preferences: {},
-      // });
+    
     }
 
     window.location.href = '../../../index.html';

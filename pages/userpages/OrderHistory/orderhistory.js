@@ -1,4 +1,3 @@
-// Orderhistory.js
 import { auth, db } from '../../../database/config.js';
 import {
   collection,
@@ -61,7 +60,6 @@ function renderOrders(orders) {
     const style = getStatusStyle(orderStatus);
 
     // Create a new order item element.
-    // We add data attributes for order-id, seller-id, and created-at for use in actions.
     const orderElement = document.createElement('div');
     orderElement.className = 'order-item';
     orderElement.setAttribute('data-status', orderStatus);
@@ -186,7 +184,10 @@ async function requestReturn(orderElement) {
 
     if (sellerId) {
       const sellerOrderDoc = doc(db, 'sellers', sellerId, 'orders', orderId);
-      await updateDoc(sellerOrderDoc, { status: 'returned requested' });
+      await updateDoc(sellerOrderDoc, {
+        status: 'returned requested',
+        'shippingInfo.status': 'returned requested',
+      });
     }
 
     alert('Return requested successfully.');
