@@ -532,3 +532,9 @@ td {
   font-size: 0.875rem;
   color: var(--text-dark);
 }
+/* Ensure the canvas container has a fixed height */
+canvas {
+  height: 200px; /* or whatever height you need */
+  max-width: 100%;
+  max-height: 100%;
+}

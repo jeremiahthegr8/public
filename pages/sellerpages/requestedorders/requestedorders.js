@@ -1,17 +1,19 @@
-import { auth, db } from '../../database/config.js';
+import { auth, db } from '../../../database/config.js';
 import {
   onAuthStateChanged,
   signOut,
-} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
 import {
   collection,
-  query,
-  where,
-  orderBy,
   onSnapshot,
   doc,
   updateDoc,
-} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+  getDoc,
+  addDoc,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+
+// Global variable to store the seller's ID (retrieved from the user's document in "users")
+let currentSellerId = null;
 
 // DOM Elements
 const ordersListEl = document.querySelector('.orders-list');
@@ -20,26 +22,52 @@ const logoutBtn = document.getElementById('logout-btn');
 
 let allOrders = [];
 
-// Check authentication and load orders
-onAuthStateChanged(auth, (user) => {
+/**
+ * Helper: Retrieves the buyer's full name from the "users" collection using buyerId.
+ * Assumes user document has "FirstName" and "LastName" fields.
+ */
+async function getBuyerName(buyerId) {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', buyerId));
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      return `${data.FirstName || ''} ${data.LastName || ''}`.trim() || 'N/A';
+    }
+  } catch (error) {
+    console.error('Error fetching buyer name:', error);
+  }
+  return 'N/A';
+}
+
+// Check authentication and then retrieve the seller ID from the user's document
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = '../../index.html';
   } else {
-    loadOrders(user.uid);
-    attachTabListeners();
+    // Get the user's document from the "users" collection
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      // The seller's ID is stored under the "sellerID" field in the user document
+      currentSellerId = userData.sellerID;
+      if (!currentSellerId) {
+        console.error("Seller ID not found in user's document.");
+        return;
+      }
+      loadOrders(currentSellerId);
+      attachTabListeners();
+    } else {
+      console.error('User document does not exist.');
+    }
   }
 });
 
-// Load orders from Firestore for the seller
+// Load orders from the seller's orders subcollection: sellers/{sellerID}/orders
 function loadOrders(sellerId) {
-  const ordersRef = collection(db, 'orders');
-  const ordersQuery = query(
-    ordersRef,
-    where('sellerId', '==', sellerId),
-    orderBy('createdAt', 'desc')
-  );
+  const sellerOrdersRef = collection(db, 'sellers', sellerId, 'orders');
 
-  onSnapshot(ordersQuery, (snapshot) => {
+  onSnapshot(sellerOrdersRef, (snapshot) => {
     allOrders = [];
     ordersListEl.innerHTML = ''; // Clear previous orders
 
@@ -55,10 +83,12 @@ function loadOrders(sellerId) {
     snapshot.forEach((docSnap) => {
       const order = docSnap.data();
       order.id = docSnap.id;
+      // Ensure each order document includes the sellerId (if not already present)
+      order.sellerId = sellerId;
       allOrders.push(order);
     });
 
-    // Apply the filter of the currently active tab
+    // Filter orders based on the active tab's status (using shippingInfo.status if available)
     const activeTab = document.querySelector('.tab.active');
     const statusFilter = activeTab
       ? activeTab.getAttribute('data-status')
@@ -73,9 +103,10 @@ function filterOrders(statusFilter) {
   const filteredOrders =
     statusFilter === 'all'
       ? allOrders
-      : allOrders.filter(
-          (order) => order.status.toLowerCase() === statusFilter
-        );
+      : allOrders.filter((order) => {
+          const orderStatus = order.shippingInfo?.status || order.status;
+          return orderStatus.toLowerCase() === statusFilter;
+        });
 
   if (filteredOrders.length === 0) {
     ordersListEl.innerHTML = `
@@ -87,32 +118,52 @@ function filterOrders(statusFilter) {
   }
 
   filteredOrders.forEach((order) => {
+    // Use shippingInfo.status if available for display
+    const orderStatus = order.shippingInfo?.status || order.status;
     const orderCard = document.createElement('div');
     orderCard.classList.add('order-card');
 
-    // Create a comma-separated list of items (if available)
+    // Build a comma-separated list of items. Use "name" from checkout if item.itemName is missing.
     const itemsStr = order.items
       ? order.items
-          .map((item) => `${item.itemName} (x${item.quantity})`)
+          .map((item) => {
+            const name = item.itemName || item.name || 'N/A';
+            return `${name} (x${item.quantity})`;
+          })
           .join(', ')
       : 'N/A';
 
+    // Prepare buyer name. If buyerInfo is not provided, display "Loading..."
+    let buyerName = order.buyerInfo?.fullName || 'Loading...';
+
     orderCard.innerHTML = `
       <h3>Order ID: ${order.id}</h3>
-      <p><strong>Buyer:</strong> ${order.buyerInfo?.fullName || 'N/A'}</p>
+      <p><strong>Buyer:</strong> <span class="buyer-name" data-buyerid="${
+        order.userId
+      }">${buyerName}</span></p>
       <p><strong>Items:</strong> ${itemsStr}</p>
       <p><strong>Total:</strong> $${
-        order.total ? order.total.toFixed(2) : '0.00'
+        order.totals && order.totals.total
+          ? order.totals.total.toFixed(2)
+          : '0.00'
       }</p>
-      <p><strong>Status:</strong> <span class="order-status ${order.status.toLowerCase()}">${
-        order.status
-      }</span></p>
+      <p><strong>Status:</strong> <span class="order-status ${orderStatus.toLowerCase()}">${orderStatus}</span></p>
       <div class="order-actions"></div>
     `;
 
-    // Add action buttons based on current order status
+    // If buyerInfo wasn't set, fetch the buyer name asynchronously and update the span
+    if (!order.buyerInfo || !order.buyerInfo.fullName) {
+      getBuyerName(order.userId).then((name) => {
+        const span = orderCard.querySelector(
+          `.buyer-name[data-buyerid="${order.userId}"]`
+        );
+        if (span) span.textContent = name;
+      });
+    }
+
     const actionsDiv = orderCard.querySelector('.order-actions');
-    if (order.status.toLowerCase() === 'pending') {
+    // Display action buttons based on the current order status
+    if (orderStatus.toLowerCase() === 'pending') {
       const confirmBtn = document.createElement('button');
       confirmBtn.classList.add('btn', 'btn-primary');
       confirmBtn.textContent = 'Confirm Order';
@@ -120,7 +171,7 @@ function filterOrders(statusFilter) {
         updateOrderStatus(order.id, 'Confirmed')
       );
       actionsDiv.appendChild(confirmBtn);
-    } else if (order.status.toLowerCase() === 'confirmed') {
+    } else if (orderStatus.toLowerCase() === 'confirmed') {
       const deliverBtn = document.createElement('button');
       deliverBtn.classList.add('btn', 'btn-primary');
       deliverBtn.textContent = 'Mark as Delivered';
@@ -129,7 +180,7 @@ function filterOrders(statusFilter) {
       );
       actionsDiv.appendChild(deliverBtn);
     }
-    if (order.status.toLowerCase() === 'returnrequested') {
+    if (orderStatus.toLowerCase() === 'returnrequested') {
       const approveReturnBtn = document.createElement('button');
       approveReturnBtn.classList.add('btn', 'btn-warning');
       approveReturnBtn.textContent = 'Approve Return';
@@ -143,7 +194,15 @@ function filterOrders(statusFilter) {
   });
 }
 
-// Function to update the order status
+/**
+ * Updates the order status in three locations:
+ * 1. The seller's orders subcollection: sellers/{sellerID}/orders/{orderID}
+ * 2. The global orders collection: orders/{orderID}
+ * 3. The buyer's orders subcollection: users/{buyerID}/orders/{orderID}
+ *
+ * It then calculates net revenue effect using the subtotal from totals (or, if zero, by summing price*quantity from items)
+ * and creates an analytics record.
+ */
 async function updateOrderStatus(orderId, newStatus) {
   if (
     !confirm(
@@ -152,8 +211,75 @@ async function updateOrderStatus(orderId, newStatus) {
   )
     return;
   try {
-    const orderRef = doc(db, 'orders', orderId);
-    await updateDoc(orderRef, { status: newStatus });
+    // Reference the seller's order document
+    const sellerOrderRef = doc(
+      db,
+      'sellers',
+      currentSellerId,
+      'orders',
+      orderId
+    );
+    // Get the current order data from the seller's subcollection
+    const orderSnap = await getDoc(sellerOrderRef);
+    if (!orderSnap.exists()) {
+      alert('Order not found.');
+      return;
+    }
+    const orderData = orderSnap.data();
+
+    // Prepare references to the global and buyer's order documents
+    const globalOrderRef = doc(db, 'orders', orderId);
+    const userOrderRef = doc(db, 'users', orderData.userId, 'orders', orderId);
+
+    // Update all three order documents concurrently
+    await Promise.all([
+      updateDoc(sellerOrderRef, {
+        status: newStatus,
+        'shippingInfo.status': newStatus,
+      }),
+      updateDoc(globalOrderRef, {
+        status: newStatus,
+        'shippingInfo.status': newStatus,
+      }),
+      updateDoc(userOrderRef, {
+        status: newStatus,
+        'shippingInfo.status': newStatus,
+      }),
+    ]);
+
+    // Calculate revenue using totals.subtotal if available; otherwise, recalc from items
+    let revenue = 0;
+    if (orderData.totals && parseFloat(orderData.totals.subtotal) > 0) {
+      revenue = parseFloat(orderData.totals.subtotal);
+    } else if (orderData.items && orderData.items.length > 0) {
+      revenue = orderData.items.reduce((sum, item) => {
+        const price = parseFloat(item.price) || 0;
+        const quantity = item.quantity || 1;
+        return sum + price * quantity;
+      }, 0);
+    }
+
+    let netRevenueEffect = 0;
+    if (newStatus.toLowerCase() === 'returned') {
+      netRevenueEffect = -revenue;
+    } else if (
+      newStatus.toLowerCase() === 'confirmed' ||
+      newStatus.toLowerCase() === 'delivered'
+    ) {
+      netRevenueEffect = revenue;
+    }
+
+    // Create an analytics record in the "sellerAnalytics" collection
+    const analyticsRef = collection(db, 'sellerAnalytics');
+    await addDoc(analyticsRef, {
+      orderId,
+      sellerId: currentSellerId,
+      status: newStatus,
+      netRevenueEffect,
+      totals: orderData.totals || null,
+      timestamp: new Date(),
+    });
+
     alert(`Order ${orderId} updated to ${newStatus}.`);
   } catch (error) {
     console.error('Error updating order status:', error);
@@ -161,7 +287,7 @@ async function updateOrderStatus(orderId, newStatus) {
   }
 }
 
-// Attach event listeners to the tab buttons
+// Attach event listeners to tab buttons for filtering orders by status
 function attachTabListeners() {
   tabButtons.forEach((tab) => {
     tab.addEventListener('click', () => {

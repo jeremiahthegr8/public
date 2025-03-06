@@ -3,662 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#4361ee">
-    <meta name="msapplication-navbutton-color" content="#4361ee">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#4361ee">
-    <title>Elegance - Premium Shopping Experience</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <meta name="description" content="Elegance - Your premier destination for premium fashion, tech, and lifestyle products.">
+    <title>Firebase Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            max-width: 400px;
+            max-height: 400px;
+            margin: 20px;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="header-top">
-            <div class="container">
-                <div class="top-bar">
-                    <div class="contact-info">
-                        <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
-                        <span><i class="fas fa-envelope"></i> support@elegance.com</span>
-                    </div>
-                    <div class="top-nav">
-                        <ul>
-                            <li><a href="#">Store Locator</a></li>
-                            <li><a href="#">Track Order</a></li>
-                            <li class="currency-selector">
-                                <select id="currency-select">
-                                    <option value="usd">USD</option>
-                                    <option value="eur">EUR</option>
-                                    <option value="gbp">GBP</option>
-                                </select>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="main-header">
-            <div class="container">
-                <div class="header-wrapper">
-                    <div class="logo">
-                        <a href="index.html">
-                            <h1>Elegance</h1>
-                        </a>
-                    </div>
-                    <div class="search-bar">
-                        <form action="#" method="get">
-                            <input type="text" placeholder="Search for products..." id="search-input">
-                            <button type="submit"><i class="fas fa-search"></i></button>
-                        </form>
-                    </div>
-                    <div class="header-actions">
-                        <div class="action-item">
-                            <a href="#" id="account-toggle">
-                                <i class="fas fa-user"></i>
-                                <span>Account</span>
-                            </a>
-                            <div class="dropdown-menu account-dropdown">
-                                <ul>
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="#">Register</a></li>
-                                    <li><a href="#">My Orders</a></li>
-                                    <li><a href="#">My Wishlist</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="action-item">
-                            <a href="#" id="wishlist-toggle">
-                                <i class="fas fa-heart"></i>
-                                <span>Wishlist</span>
-                                <span class="count">0</span>
-                            </a>
-                        </div>
-                        <div class="action-item">
-                            <a href="#" id="cart-toggle">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span>Cart</span>
-                                <span class="count">0</span>
-                            </a>
-                            <div class="dropdown-menu cart-dropdown">
-                                <div class="cart-items" id="cart-items">
-                                    <p class="empty-cart">Your cart is empty</p>
-                                </div>
-                                <div class="cart-footer">
-                                    <div class="cart-total">
-                                        <span>Total:</span>
-                                        <span id="cart-total">$0.00</span>
-                                    </div>
-                                    <div class="cart-actions">
-                                        <a href="#" class="btn btn-outline">View Cart</a>
-                                        <a href="#" class="btn btn-primary">Checkout</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <nav class="main-nav">
-            <div class="container">
-                <ul class="nav-list">
-                    <li class="nav-item has-dropdown">
-                        <a href="#">Home</a>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="#">Shop <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu nav-dropdown mega-menu">
-                            <div class="mega-menu-wrapper">
-                                <div class="mega-menu-column">
-                                    <h3>Categories</h3>
-                                    <ul>
-                                        <li><a href="#">Women's Fashion</a></li>
-                                        <li><a href="#">Men's Fashion</a></li>
-                                        <li><a href="#">Kids' Fashion</a></li>
-                                        <li><a href="#">Accessories</a></li>
-                                        <li><a href="#">Beauty</a></li>
-                                        <li><a href="#">Electronics</a></li>
-                                        <li><a href="#">Home & Living</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-column">
-                                    <h3>Featured</h3>
-                                    <ul>
-                                        <li><a href="#">New Arrivals</a></li>
-                                        <li><a href="#">Best Sellers</a></li>
-                                        <li><a href="#">Trending Now</a></li>
-                                        <li><a href="#">Sale Items</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-column featured-product">
-                                    <div class="promo-box">
-                                        <h3>Season Sale</h3>
-                                        <p>Up to 70% Off</p>
-                                        <a href="#" class="btn btn-outline">Shop Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="#">Products <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-menu nav-dropdown">
-                            <ul>
-                                <li><a href="#">New Arrivals</a></li>
-                                <li><a href="#">Best Sellers</a></li>
-                                <li><a href="#">On Sale</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a href="#">Collections</a></li>
-                    <li class="nav-item"><a href="#">Blog</a></li>
-                    <li class="nav-item"><a href="#">About Us</a></li>
-                    <li class="nav-item"><a href="#">Contact</a></li>
-                </ul>
-                <div class="mobile-menu-toggle">
-                    <button id="mobile-menu-btn">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <div class="mobile-menu" id="mobile-menu">
-            <div class="container">
-                <ul class="mobile-nav-list">
-                    <li><a href="#">Home</a></li>
-                    <li class="has-submenu">
-                        <a href="#">Shop</a>
-                        <ul class="mobile-submenu">
-                            <li><a href="#">Women's Fashion</a></li>
-                            <li><a href="#">Men's Fashion</a></li>
-                            <li><a href="#">Kids' Fashion</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Beauty</a></li>
-                            <li><a href="#">Electronics</a></li>
-                            <li><a href="#">Home & Living</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu">
-                        <a href="#">Products</a>
-                        <ul class="mobile-submenu">
-                            <li><a href="#">New Arrivals</a></li>
-                            <li><a href="#">Best Sellers</a></li>
-                            <li><a href="#">On Sale</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Collections</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-slider" id="hero-slider">
-            <div class="hero-slide active">
-                <div class="hero-image" style="background-image: url('../../assets/images/new/backtoys.jpg');">
-                    <div class="container">
-                        <div class="hero-content">
-                            <h2>New Arrivals</h2>
-                            <h1>Spring Collection 2025</h1>
-                            <p>Elevate your style with our exclusive new collection.</p>
-                            <a href="#" class="btn btn-primary">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-slide">
-                                <div class="hero-image" style="background-image: url('../../assets/images/new/backbooks.jpg');">
-                    <div class="container">
-                        <div class="hero-content">
-                            <h2>Limited Offer</h2>
-                            <h1>Up to 50% Off</h1>
-                            <p>Premium quality products at unbeatable prices.</p>
-                            <a href="#" class="btn btn-primary">View Deals</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-slide">
-                <div class="hero-image" style="background-image: url('../../assets/images/new/backclothes.jpg');">
-                    <div class="container">
-                        <div class="hero-content">
-                            <h2>Elegance Exclusive</h2>
-                            <h1>Premium Collection</h1>
-                            <p>Discover luxury items for discerning tastes.</p>
-                            <a href="#" class="btn btn-primary">Explore</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="slider-controls">
-            <button class="slider-arrow prev" id="prev-slide"><i class="fas fa-chevron-left"></i></button>
-            <div class="slider-dots" id="slider-dots">
-                <span class="dot active" data-slide="0"></span>
-                <span class="dot" data-slide="1"></span>
-                <span class="dot" data-slide="2"></span>
-            </div>
-            <button class="slider-arrow next" id="next-slide"><i class="fas fa-chevron-right"></i></button>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="container">
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>Free Shipping</h3>
-                        <p>On all orders over $50</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-undo"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>Easy Returns</h3>
-                        <p>30 days return policy</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>Secure Payment</h3>
-                        <p>100% secure checkout</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <div class="feature-content">
-                        <h3>24/7 Support</h3>
-                        <p>Dedicated customer service</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Shop by Category</h2>
-                <p>Browse our most popular categories</p>
-            </div>
-            <div class="categories-grid">
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="../../assets/images/new/backclothes.jpg" alt="Women's Fashion">
-                        <div class="category-overlay">
-                            <a href="#" class="btn btn-outline">Shop Now</a>
-                        </div>
-                    </div>
-                    <div class="category-content">
-                        <h3>Women's Fashion</h3>
-                        <p>42 Products</p>
-                    </div>
-                </div>
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="../../assets/images/new/backboot.jpg" alt="Men's Fashion">
-                        <div class="category-overlay">
-                            <a href="#" class="btn btn-outline">Shop Now</a>
-                        </div>
-                    </div>
-                    <div class="category-content">
-                        <h3>Men's Fashion</h3>
-                        <p>38 Products</p>
-                    </div>
-                </div>
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="../../assets/images/new/backphone.jpg" alt="Accessories">
-                        <div class="category-overlay">
-                            <a href="#" class="btn btn-outline">Shop Now</a>
-                        </div>
-                    </div>
-                    <div class="category-content">
-                        <h3>Accessories</h3>
-                        <p>56 Products</p>
-                    </div>
-                </div>
-                <div class="category-card">
-                    <div class="category-image">
-                        <img src="../../assets/images/new/backelectronics.avif" alt="Electronics">
-                        <div class="category-overlay">
-                            <a href="#" class="btn btn-outline">Shop Now</a>
-                        </div>
-                    </div>
-                    <div class="category-content">
-                        <h3>Electronics</h3>
-                        <p>24 Products</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products Section -->
-    <section class="products-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Featured Products</h2>
-                <p>Handpicked for your style</p>
-            </div>
-            <div class="product-filter">
-                <ul class="filter-tabs" id="product-tabs">
-                    <li class="active" data-filter="all">All Products</li>
-                    <li data-filter="new">New Arrivals</li>
-                    <li data-filter="best">Best Sellers</li>
-                    <li data-filter="sale">On Sale</li>
-                </ul>
-            </div>
-            <div class="products-grid" id="products-grid">
-                <!-- Products will be loaded here via JS -->
-            </div>
-            <div class="load-more">
-                <button id="load-more-btn" class="btn btn-outline">Load More</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Banner Section -->
-    <section class="banner-section">
-        <div class="container">
-            <div class="banner-grid">
-                <div class="banner">
-                    <div class="banner-image">
-                        <img src="../../assets/images/new/banner1.jpeg" alt="Limited Time Offer">
-                    </div>
-                    <div class="banner-content">
-                        <h3>Limited Time Offer</h3>
-                        <h2>Up to 40% Off</h2>
-                        <p>On selected premium items</p>
-                        <a href="#" class="btn btn-primary">Shop Now</a>
-                    </div>
-                </div>
-                <div class="banner">
-                    <div class="banner-image">
-                        <img src="../../assets/images/new/banner2.jpeg" alt="New Collection">
-                    </div>
-                    <div class="banner-content">
-                        <h3>New Collection</h3>
-                        <h2>Spring 2025</h2>
-                        <p>Fresh styles just arrived</p>
-                        <a href="#" class="btn btn-primary">Discover</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Trending Products Section -->
-    <section class="products-section trending-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Trending Now</h2>
-                <p>What's popular this season</p>
-            </div>
-            <div class="trending-products" id="trending-products">
-                <!-- Products will be loaded here via JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="testimonials-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>What Our Customers Say</h2>
-                <p>Testimonials from our happy clients</p>
-            </div>
-            <div class="testimonials-slider" id="testimonials-slider">
-                <!-- Testimonials will be loaded here via JS -->
-            </div>
-            <div class="slider-dots testimonial-dots" id="testimonial-dots">
-                <!-- Dots will be generated via JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Newsletter Section -->
-    <section class="newsletter-section">
-        <div class="container">
-            <div class="newsletter-wrapper">
-                <div class="newsletter-content">
-                    <h2>Subscribe to Our Newsletter</h2>
-                    <p>Stay updated with our latest products and exclusive offers.</p>
-                </div>
-                <div class="newsletter-form">
-                    <form id="newsletter-form">
-                        <div class="form-group">
-                            <input type="email" id="newsletter-email" placeholder="Your email address" required>
-                            <button type="submit" class="btn btn-primary">Subscribe</button>
-                        </div>
-                        <div class="form-note">
-                            <label>
-                                <input type="checkbox" required>
-                                I agree to receive marketing emails from Elegance
-                            </label>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Instagram Feed Section -->
-    <section class="instagram-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Follow Us on Instagram</h2>
-                <p>@eleganceshop</p>
-            </div>
-            <div class="instagram-grid">
-                <a href="#" class="instagram-item">
-                    <img src="/api/placeholder/300/300" alt="Instagram Post">
-                    <div class="instagram-overlay">
-                        <i class="fab fa-instagram"></i>
-                    </div>
-                </a>
-                <a href="#" class="instagram-item">
-                    <img src="/api/placeholder/300/300" alt="Instagram Post">
-                    <div class="instagram-overlay">
-                        <i class="fab fa-instagram"></i>
-                    </div>
-                </a>
-                <a href="#" class="instagram-item">
-                    <img src="/api/placeholder/300/300" alt="Instagram Post">
-                    <div class="instagram-overlay">
-                        <i class="fab fa-instagram"></i>
-                    </div>
-                </a>
-                <a href="#" class="instagram-item">
-                    <img src="/api/placeholder/300/300" alt="Instagram Post">
-                    <div class="instagram-overlay">
-                        <i class="fab fa-instagram"></i>
-                    </div>
-                </a>
-                <a href="#" class="instagram-item">
-                    <img src="/api/placeholder/300/300" alt="Instagram Post">
-                    <div class="instagram-overlay">
-                        <i class="fab fa-instagram"></i>
-                    </div>
-                </a>
-                <a href="#" class="instagram-item">
-                    <img src="/api/placeholder/300/300" alt="Instagram Post">
-                    <div class="instagram-overlay">
-                        <i class="fab fa-instagram"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Brands Section -->
-    <section class="brands-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our Partners</h2>
-                <p>Top brands we work with</p>
-            </div>
-            <div class="brands-slider" id="brands-slider">
-                <div class="brand-item">
-                    <img src="/api/placeholder/200/100" alt="Brand Logo">
-                </div>
-                <div class="brand-item">
-                    <img src="/api/placeholder/200/100" alt="Brand Logo">
-                </div>
-                <div class="brand-item">
-                    <img src="/api/placeholder/200/100" alt="Brand Logo">
-                </div>
-                <div class="brand-item">
-                    <img src="/api/placeholder/200/100" alt="Brand Logo">
-                </div>
-                <div class="brand-item">
-                    <img src="/api/placeholder/200/100" alt="Brand Logo">
-                </div>
-                <div class="brand-item">
-                    <img src="/api/placeholder/200/100" alt="Brand Logo">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="footer-grid">
-                    <div class="footer-widget about-widget">
-                        <div class="footer-logo">
-                            <h2>Elegance</h2>
-                        </div>
-                        <p>Premium shopping experience for discerning customers. Quality products, exceptional service.</p>
-                        <div class="social-links">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                    </div>
-                    <div class="footer-widget">
-                        <h3>Shopping</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">New Arrivals</a></li>
-                            <li><a href="#">Best Sellers</a></li>
-                            <li><a href="#">Trending Now</a></li>
-                            <li><a href="#">Sale Items</a></li>
-                            <li><a href="#">All Collections</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-widget">
-                        <h3>Information</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">FAQ</a></li>
-                            <li><a href="#">Shipping & Returns</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-widget">
-                        <h3>Customer Service</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">Track Your Order</a></li>
-                            <li><a href="#">Wishlist</a></li>
-                            <li><a href="#">Help Center</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-widget contact-widget">
-                        <h3>Contact Us</h3>
-                        <ul class="contact-info">
-                            <li>
-                                <i class="fas fa-map-marker-alt"></i>
-                                <p>123 Fashion Street, New York, NY 10001, USA</p>
-                            </li>
-                            <li>
-                                <i class="fas fa-phone"></i>
-                                <p>+1 (555) 123-4567</p>
-                            </li>
-                            <li>
-                                <i class="fas fa-envelope"></i>
-                                <p>support@elegance.com</p>
-                            </li>
-                            <li>
-                                <i class="fas fa-clock"></i>
-                                <p>Mon-Fri: 9:00 AM - 8:00 PM</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="footer-bottom-wrapper">
-                    <div class="copyright">
-                        <p>&copy; 2025 Elegance. All Rights Reserved.</p>
-                    </div>
-                    <div class="payment-methods">
-                        <span>We Accept:</span>
-                        <div class="payment-icons">
-                            <i class="fab fa-cc-visa"></i>
-                            <i class="fab fa-cc-mastercard"></i>
-                            <i class="fab fa-cc-amex"></i>
-                            <i class="fab fa-cc-paypal"></i>
-                            <i class="fab fa-cc-discover"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Quick View Modal -->
-    <div class="modal" id="quick-view-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Product Quick View</h3>
-                    <button class="close-modal" id="close-quick-view">&times;</button>
-                </div>
-                <div class="modal-body" id="quick-view-content">
-                    <!-- Content will be loaded here via JS -->
-                </div>
-            </div>
-        </div>
+    <h2 style="text-align:center;">Firebase Charts</h2>
+    
+    <div class="chart-container">
+        <canvas id="barChart"></canvas>
+        <canvas id="lineChart"></canvas>
+        <canvas id="pieChart"></canvas>
     </div>
 
-    <!-- Add to Cart Notification -->
-    <div class="notification" id="cart-notification">
-        <div class="notification-content">
-            <i class="fas fa-check-circle"></i>
-            <p>Product added to cart successfully!</p>
-        </div>
-    </div>
+    <script type="module">
+        // Import Firebase services
+        import { db } from "../../database/config.js";
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-    <!-- Back to Top Button -->
-    <button id="back-to-top" class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+        async function getSellerAndOrderData() {
+            const sellersRef = collection(db, "sellers");
+            const sellersSnapshot = await getDocs(sellersRef);
+            
+            let monthlyRevenue = Array(12).fill(0);
+            let salesData = Array(12).fill(0);
+            let returnsData = Array(12).fill(0);
+            let categorySales = {};
 
-    <!-- Scripts -->
-    <script src="script.js"></script>
+            sellersSnapshot.forEach(doc => {
+                let data = doc.data();
+                if (data.createdAt && data.totalRevenue) {
+                    let createdAt = new Date(data.createdAt.seconds * 1000);
+                    let monthIndex = createdAt.getMonth();
+                    monthlyRevenue[monthIndex] += data.totalRevenue;
+                }
+            });
+
+            const ordersRef = collection(db, "orders");
+            const ordersSnapshot = await getDocs(ordersRef);
+
+            ordersSnapshot.forEach(doc => {
+                let data = doc.data();
+                if (data.createdAt && data.items) {
+                    let createdAt = new Date(data.createdAt.seconds * 1000);
+                    let monthIndex = createdAt.getMonth();
+
+                    data.items.forEach(item => {
+                        let category = item.category || "Other";
+                        let sales = item.salesCount || 0;
+                        let returns = item.returnsCount || 0;
+
+                        salesData[monthIndex] += sales;
+                        returnsData[monthIndex] += returns;
+
+                        categorySales[category] = (categorySales[category] || 0) + sales;
+                    });
+                }
+            });
+
+            updateCharts(monthlyRevenue, salesData, returnsData, categorySales);
+        }
+
+        function updateCharts(monthlyRevenue, salesData, returnsData, categorySales) {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            // Bar Chart - Monthly Revenue
+            new Chart(document.getElementById("barChart"), {
+                type: "bar",
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: "Monthly Revenue ($)",
+                        data: monthlyRevenue,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)"
+                    }]
+                }
+            });
+
+            // Line Chart - Sales & Returns Over Time
+            new Chart(document.getElementById("lineChart"), {
+                type: "line",
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: "Total Sales",
+                            data: salesData,
+                            borderColor: "blue",
+                            backgroundColor: "rgba(0, 0, 255, 0.2)",
+                            fill: true
+                        },
+                        {
+                            label: "Total Returns",
+                            data: returnsData,
+                            borderColor: "red",
+                            backgroundColor: "rgba(255, 0, 0, 0.2)",
+                            fill: true
+                        }
+                    ]
+                }
+            });
+
+            // Pie Chart - Sales Distribution by Category
+            new Chart(document.getElementById("pieChart"), {
+                type: "pie",
+                data: {
+                    labels: Object.keys(categorySales),
+                    datasets: [{
+                        label: "Sales by Category",
+                        data: Object.values(categorySales),
+                        backgroundColor: ["red", "blue", "green", "purple", "orange"]
+                    }]
+                }
+            });
+        }
+
+        getSellerAndOrderData();
+    </script>
+
 </body>
 </html>
