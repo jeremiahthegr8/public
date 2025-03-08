@@ -322,3 +322,29 @@ header h1 {
   background-color: var(--bg-white);
   font-weight: 600;
 }
+/* Seller Summary Section */
+.seller-summary {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.seller-summary .summary-item {
+  text-align: center;
+}
+
+.seller-summary .summary-item h3 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.seller-summary .summary-item p {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}

@@ -19,6 +19,10 @@ const categoryFilterEl = document.getElementById('category-filter');
 const tabButtons = document.querySelectorAll('.rating-tabs .tab');
 const gridViewBtn = document.getElementById('grid-view');
 const tableViewBtn = document.getElementById('table-view');
+// Summary elements
+const avgRatingEl = document.getElementById('avg-rating');
+const totalRatingsEl = document.getElementById('total-ratings');
+const totalIssuesEl = document.getElementById('total-issues');
 
 // Global state
 let allRatings = []; // Array to hold { ratingData, orderDetails } objects
@@ -54,6 +58,26 @@ function formatDate(timestamp) {
   return new Date(timestamp.seconds * 1000).toLocaleString();
 }
 
+// Function: update the seller summary with aggregate data.
+function updateSummary() {
+  if (allRatings.length === 0) {
+    avgRatingEl.textContent = '0.0';
+    totalRatingsEl.textContent = '0';
+    totalIssuesEl.textContent = '0';
+    return;
+  }
+  let sum = 0;
+  let issuesCount = 0;
+  allRatings.forEach(({ ratingData }) => {
+    sum += ratingData.rating;
+    if (ratingData.issue) issuesCount++;
+  });
+  const avg = (sum / allRatings.length).toFixed(1);
+  avgRatingEl.textContent = avg;
+  totalRatingsEl.textContent = allRatings.length;
+  totalIssuesEl.textContent = issuesCount;
+}
+
 // Function: render rating card for grid view (includes quantity)
 function renderRatingItem(ratingData, orderDetails) {
   const card = document.createElement('div');
@@ -63,7 +87,7 @@ function renderRatingItem(ratingData, orderDetails) {
   const productName = orderDetails.name || 'Item Name Not Available';
   const productImage = orderDetails.mainImageUrl || 'default-placeholder.png';
   const productCategory = orderDetails.category || 'Category Not Available';
-  // New: Display quantity from order details (assumes orderDetails.quantity exists)
+  // Display quantity from order details (assumes orderDetails.quantity exists)
   const quantity =
     orderDetails.quantity !== undefined ? orderDetails.quantity : 'N/A';
 
@@ -237,6 +261,7 @@ async function loadSellerRatings(sellerId) {
     if (querySnapshot.empty) {
       ratingsListEl.innerHTML =
         '<div class="no-rating"><i class="fas fa-comments"></i><p>No rating found.</p></div>';
+      updateSummary();
       return;
     }
     allRatings = [];
@@ -268,6 +293,8 @@ async function loadSellerRatings(sellerId) {
       }
       allRatings.push({ ratingData, orderDetails });
     }
+    // Update the seller summary after loading ratings.
+    updateSummary();
     applyFiltersAndSort();
   } catch (error) {
     console.error('Error loading seller ratings:', error);

@@ -1,196 +1,503 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Messages & Chat</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link rel="stylesheet" href="./messagepageforuser.css" />
-    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
-    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
-    <script type="module" src="./messagepageforuser.js" defer></script>
-    <script
-      type="module"
-      src="../../../components/usersidebar.js"
-      defer
-    ></script>
-  </head>
-  <body>
-    <!-- Sidebar Navigation -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Messaging | MarketPlace</title>
+  <style>
+    :root {
+      --primary: #4a6cf7;
+      --primary-dark: #3a56d4;
+      --secondary: #f5f7ff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #e5e7eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --white: #ffffff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    body {
+      background-color: #f9fafb;
+      color: var(--text);
+    }
+    
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    
+    .sidebar {
+      width: 280px;
+      background-color: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .header {
+      padding: 16px 20px;
+      background-color: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .search-box {
+      position: relative;
+      margin-top: 10px;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 10px 12px;
+      padding-left: 36px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+    
+    .conversations {
+      overflow-y: auto;
+      flex: 1;
+    }
+    
+    .conversation-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .conversation-item:hover {
+      background-color: #f5f7ff;
+    }
+    
+    .conversation-item.active {
+      background-color: #f0f4ff;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .conversation-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    
+    .seller-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    
+    .time {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    
+    .last-message {
+      font-size: 13px;
+      color: var(--text-light);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .unread-badge {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 5px;
+    }
+    
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    
+    .status-indicator.online {
+      background-color: var(--success);
+    }
+    
+    .status-indicator.offline {
+      background-color: var(--text-light);
+    }
+    
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--white);
+    }
+    
+    .chat-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .seller-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .seller-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--secondary);
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .seller-details h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .seller-details p {
+      font-size: 13px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .action-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 16px;
+      padding: 6px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    
+    .action-button:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    
+    .messages-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .message {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      position: relative;
+    }
+    
+    .message-time {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+    
+    .message.received {
+      align-self: flex-start;
+      background-color: var(--secondary);
+      border-bottom-left-radius: 4px;
+    }
+    
+    .message.sent {
+      align-self: flex-end;
+      background-color: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .message.sent .message-time {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .reply-container {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--white);
+    }
+    
+    .reply-container textarea {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 12px 16px;
+      font-size: 14px;
+      resize: none;
+      height: 48px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    
+    .reply-container textarea:focus {
+      border-color: var(--primary);
+    }
+    
+    .action-icon {
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+      font-size: 20px;
+    }
+    
+    .action-icon:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    
+    .send-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .send-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 20px;
+      text-align: center;
+      color: var(--text-light);
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: var(--border);
+    }
+    
+    .empty-state h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    
+    .empty-state p {
+      font-size: 14px;
+      max-width: 300px;
+      margin-bottom: 16px;
+    }
+    
+    .new-message-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .new-message-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: 60vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
     <div class="sidebar">
-      <div class="logo">
-        <span>Dashboard</span>
-      </div>
-      <div class="navigation">
-        <a href="../../../index.html" class="nav-link">
-          <i class="fas fa-home"></i> <span>Home</span>
-        </a>
-        <a href="../account/account.html" class="nav-link">
-          <i class="fas fa-user"></i> <span>Profile</span>
-        </a>
-        <a href="../wishlist/wishlist.html" class="nav-link">
-          <i class="fas fa-heart"></i> <span>Wishlist</span>
-        </a>
-        <a href="../mycart/mycart.html" class="nav-link">
-          <i class="fas fa-shopping-cart"></i> <span>Cart</span>
-        </a>
-        <a href="../OrderHistory/Orderhistory.html" class="nav-link">
-          <i class="fas fa-history"></i> <span>Orders</span>
-        </a>
-        <a href="../securitysettings/securitysettings.html" class="nav-link">
-          <i class="fas fa-shield-alt"></i> <span>Security</span>
-        </a>
-        <a href="../support/support.html" class="nav-link">
-          <i class="fas fa-question-circle"></i> <span>Support</span>
-        </a>
-        <a
-          href="../messagepageforuser/messagepageforuser.html"
-          class="nav-link active"
-        >
-          <i class="fas fa-envelope"></i> <span>Messages</span>
-        </a>
-        <a
-          href="../../sellerpages/bussinessprofile/bussinessprofile.html"
-          class="nav-link"
-        >
-          <i class="fas fa-store"></i> <span>Seller Portal</span>
-        </a>
-      </div>
-      <div class="sidebar-footer">
-        <a href="#" id="logout-btn" class="nav-link">
-          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-      <div class="top-bar">
-        <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
-        <div class="user-welcome"><h2>Messages & Chat</h2></div>
-        <div class="user-actions">
-          <a href="#" class="notification"
-            ><i class="fas fa-bell"></i><span class="badge">3</span></a
-          >
-          <div class="user-avatar">
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="User Avatar"
-            />
-          </div>
+      <div class="sidebar-header">
+        <div class="logo">MarketPlace</div>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search conversations...">
         </div>
       </div>
-
-      <!-- Chat Container -->
-      <div class="chat-container" id="chatContainer">
-        <!-- Chat List Panel -->
-        <div class="chat-list" id="chatList">
-          <div class="chat-item" data-id="seller1">
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="Seller ABC"
-              class="chat-avatar"
-            />
-            <div class="chat-info">
-              <span class="chat-name">Seller ABC</span>
-              <span class="chat-preview">Thanks for your order!</span>
-            </div>
-            <div class="chat-time">10:30 AM</div>
+      <div class="conversations">
+        <div class="conversation-item active">
+          <div class="conversation-header">
+            <span class="seller-name">TechGadgets</span>
+            <span class="time">10:23 AM</span>
           </div>
-          <div class="chat-item" data-id="seller2">
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="Seller XYZ"
-              class="chat-avatar"
-            />
-            <div class="chat-info">
-              <span class="chat-name">Seller XYZ</span>
-              <span class="chat-preview">Your item has shipped.</span>
-            </div>
-            <div class="chat-time">Yesterday</div>
+          <div class="last-message">
+            <span class="unread-badge">2</span>
+            Thanks for your order! Let me know if you have...
           </div>
-          <!-- Additional chat items... -->
         </div>
-
-        <!-- Chat Conversation Panel -->
-        <div class="chat-conversation" id="chatConversation">
-          <div class="chat-header" id="chatHeader">
-            <span class="back-btn" id="backBtn" style="display: none"
-              ><i class="fas fa-arrow-left"></i> Back</span
-            >
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="Seller Avatar"
-              class="chat-avatar"
-            />
-            <span class="chat-seller-name" id="chatSellerName"
-              >Select a chat</span
-            >
-            <span class="close-chat" id="closeChat"
-              ><i class="fas fa-times"></i
-            ></span>
+        <div class="conversation-item">
+          <div class="conversation-header">
+            <span class="seller-name">FashionHub</span>
+            <span class="time">Yesterday</span>
           </div>
-          <div class="chat-messages" id="chatMessages">
-            <p class="no-chat">No conversation selected.</p>
+          <div class="last-message">
+            Your package has been shipped. Tracking number: TRK2387655
           </div>
-          <div class="chat-input" id="chatInputArea">
-            <!-- Replying context (hidden by default) -->
-            <div
-              class="replying-context"
-              id="replyContext"
-              style="display: none"
-            >
-              <span id="replyText"></span>
-              <button id="cancelReply">&times;</button>
-            </div>
-            <div class="chat-input-row">
-              <input
-                type="text"
-                id="messageInput"
-                placeholder="Type a message..."
-              />
-              <button class="img-btn" id="uploadImgBtn">
-                <i class="fas fa-image"></i>
-              </button>
-              <button id="sendMessage">
-                <i class="fas fa-paper-plane"></i>
-              </button>
-            </div>
-            <!-- Hidden file input for images -->
-            <input type="file" id="imgUpload" accept="image/*" />
+        </div>
+        <div class="conversation-item">
+          <div class="conversation-header">
+            <span class="seller-name">HomeDecor</span>
+            <span class="time">Mar 6</span>
+          </div>
+          <div class="last-message">
+            I'll check if we have that in another color and get back to you.
+          </div>
+        </div>
+        <div class="conversation-item">
+          <div class="conversation-header">
+            <span class="seller-name">BookWorm</span>
+            <span class="time">Mar 5</span>
+          </div>
+          <div class="last-message">
+            We just received the new edition you were asking about!
+          </div>
+        </div>
+        <div class="conversation-item">
+          <div class="conversation-header">
+            <span class="seller-name">GourmetFoods</span>
+            <span class="time">Mar 3</span>
+          </div>
+          <div class="last-message">
+            Thank you for your feedback on our specialty coffee!
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Seller Details Modal (slides in from right) -->
-    <div class="modal-overlay" id="sellerModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Seller Details</h3>
-          <span class="modal-close" id="closeSellerModal"
-            ><i class="fas fa-times"></i
-          ></span>
+    
+    <div class="main">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="seller-info">
+            <div class="seller-avatar">TG</div>
+            <div class="seller-details">
+              <h3>TechGadgets</h3>
+              <p><span class="status-indicator online"></span> Online • Electronics</p>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="action-button">📞</button>
+            <button class="action-button">⋮</button>
+          </div>
         </div>
-        <div class="seller-details" id="sellerDetails">
-          <img src="" alt="Seller Profile" id="sellerModalPfp" />
-          <p><strong>Name:</strong> <span id="sellerModalName"></span></p>
-          <p><strong>Email:</strong> <span id="sellerModalEmail"></span></p>
-          <p><strong>Contact:</strong> <span id="sellerModalContact"></span></p>
-          <p>
-            <strong>Social:</strong>
-            <a href="#" target="_blank" id="sellerModalSocial">Visit Profile</a>
-          </p>
-          <p><strong>Rating:</strong> <span id="sellerModalRating"></span>/5</p>
+        
+        <div class="messages-container">
+          <div class="message received">
+            Hi there! Thanks for your interest in our Smart Watch Pro. How can I help you today?
+            <div class="message-time">10:15 AM</div>
+          </div>
+          
+          <div class="message sent">
+            Hello! I just purchased the Smart Watch Pro, but I'm having trouble connecting it to my phone. Can you help?
+            <div class="message-time">10:18 AM</div>
+          </div>
+          
+          <div class="message received">
+            I'm sorry to hear that! Let's troubleshoot together. What type of phone are you using, and have you installed our companion app?
+            <div class="message-time">10:20 AM</div>
+          </div>
+          
+          <div class="message received">
+            Also, please make sure Bluetooth is enabled on your phone and the watch is charged and powered on.
+            <div class="message-time">10:23 AM</div>
+          </div>
+        </div>
+        
+        <div class="reply-container">
+          <div class="action-icon">📎</div>
+          <textarea placeholder="Type your message..."></textarea>
+          <button class="send-button">➤</button>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 </html>

@@ -1,230 +1,231 @@
-// Simulated conversation data (with time and date, plus seller details)
-let conversations = {
-  seller1: {
-    sellerName: 'Seller ABC',
-    sellerAvatar: '../../assets/images/new/defaultpfp.png',
-    sellerEmail: 'abc@seller.com',
-    sellerContact: '123-456-7890',
-    sellerSocial: 'https://facebook.com/sellerabc',
-    sellerRating: 4.5,
-    messages: [
-      {
-        sender: 'Seller',
-        text: 'Thanks for your order!',
-        time: '10:30 AM',
-        date: 'Yesterday',
-      },
-      {
-        sender: 'You',
-        text: "You're welcome. When will it ship?",
-        time: '10:34 AM',
-        date: 'Yesterday',
-      },
-      {
-        sender: 'Seller',
-        text: 'It ships tomorrow.',
-        time: '11:00 AM',
-        date: 'Yesterday',
-      },
-    ],
-  },
-  seller2: {
-    sellerName: 'Seller XYZ',
-    sellerAvatar: '../../assets/images/new/defaultpfp.png',
-    sellerEmail: 'xyz@seller.com',
-    sellerContact: '987-654-3210',
-    sellerSocial: 'https://twitter.com/sellerxyz',
-    sellerRating: 4.0,
-    messages: [
-      {
-        sender: 'Seller',
-        text: 'Your item has shipped.',
-        time: 'Yesterday',
-        date: 'Yesterday',
-      },
-      {
-        sender: 'You',
-        text: 'Great, thanks!',
-        time: '4:00 PM',
-        date: 'Today',
-      },
-    ],
-  },
-};
+import { auth, db } from '../../database/config.js';
+import {
+  onAuthStateChanged,
+  signOut,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  addDoc,
+  serverTimestamp,
+  doc,
+  getDoc,
+  updateDoc,
+  getDocs,
+  limit,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
-const chatItems = document.querySelectorAll('.chat-item');
-const chatHeader = document.getElementById('chatHeader');
-const chatMessages = document.getElementById('chatMessages');
-const messageInput = document.getElementById('messageInput');
+// DOM Elements
+const chatListEl = document.getElementById('chat-list');
+const chatInterfaceSection = document.getElementById('chat-interface-section');
+const chatMessagesEl = document.getElementById('chat-messages');
+const messageInputEl = document.getElementById('message-input');
+const sendButtonEl = document.getElementById('send-button');
+const partnerNameEl = document.getElementById('partner-name');
+const partnerPhotoEl = document.getElementById('partner-photo');
+const backButtonEl = document.getElementById('back-button');
+const productReferenceContainer = document.getElementById('product-reference');
+
+// Global Variables
 let currentChatId = null;
-let replyingTo = null;
-let lastMessageDate = null;
-const replyContext = document.getElementById('replyContext');
-const replyText = document.getElementById('replyText');
-const cancelReply = document.getElementById('cancelReply');
+let productReferenceData = null;
+let localProductReferenceSent = false;
 
-// Function to append a date divider if needed
-function appendDateDivider(date) {
-  const dateDiv = document.createElement('div');
-  dateDiv.className = 'date-divider';
-  dateDiv.textContent = date;
-  chatMessages.appendChild(dateDiv);
+// Fetch chat details for the normal user
+async function fetchChatDetails(chatDoc, currentUserUid) {
+  const chatData = chatDoc.data();
+  const chatId = chatDoc.id;
+
+  const sellerId = chatData.sellerId;
+
+  // Fetch seller details
+  const sellerDoc = await getDoc(doc(db, 'users', sellerId));
+  const businessName = sellerDoc.exists()
+    ? sellerDoc.data().businessName || 'Unknown Business'
+    : 'Unknown Business';
+  const sellerPhoto = sellerDoc.exists()
+    ? sellerDoc.data().photoURL || '../../assets/images/new/defaultpfp.png'
+    : '../../assets/images/new/defaultpfp.png';
+
+  // Fetch product details
+  const productDoc = await getDoc(doc(db, 'items', chatData.productId));
+  const productName = productDoc.exists()
+    ? productDoc.data().itemName || 'Product'
+    : 'Product';
+
+  // Fetch the last message
+  const messagesRef = collection(db, 'chats', chatId, 'messages');
+  const messagesQuery = query(
+    messagesRef,
+    orderBy('timestamp', 'desc'),
+    limit(1)
+  );
+  const messagesSnapshot = await getDocs(messagesQuery);
+  const lastMessageData = messagesSnapshot.docs[0]?.data();
+  const lastMessage = lastMessageData?.text || 'No messages yet';
+  const lastMessageSender = lastMessageData?.senderId || null;
+
+  // Format the updatedAt timestamp
+  const updatedAt =
+    chatData.updatedAt && chatData.updatedAt.seconds
+      ? new Date(chatData.updatedAt.seconds * 1000).toLocaleString()
+      : '';
+
+  // Fetch unread message count
+  const unreadQuery = query(
+    messagesRef,
+    where('read', '==', false),
+    where('senderId', '==', sellerId)
+  );
+  const unreadSnapshot = await getDocs(unreadQuery);
+  const unreadCount = unreadSnapshot.size;
+
+  return {
+    chatId,
+    businessName,
+    sellerPhoto,
+    productName,
+    lastMessage,
+    lastMessageSender,
+    updatedAt,
+    unreadCount,
+  };
 }
 
-// Function to create and append message element with header (sender and time)
-function appendMessage(sender, text, replyRef, time, date, scroll = true) {
-  if (lastMessageDate !== date) {
-    appendDateDivider(date);
-    lastMessageDate = date;
+// Render the chat list
+function renderChatList(chats) {
+  chatListEl.innerHTML = '';
+  if (chats.length === 0) {
+    chatListEl.innerHTML = '<p>No chats available.</p>';
+    return;
   }
-  const msgDiv = document.createElement('div');
-  msgDiv.classList.add('message', sender === 'You' ? 'you' : 'seller');
-  // Message header with sender and time
-  const headerDiv = document.createElement('div');
-  headerDiv.className = 'message-header';
-  headerDiv.innerHTML = `<span class="sender-label">${sender}:</span> <span class="message-time">${time}</span>`;
-  msgDiv.appendChild(headerDiv);
-  // Message body
-  const bodyDiv = document.createElement('div');
-  bodyDiv.className = 'message-body';
-  bodyDiv.textContent = text;
-  msgDiv.appendChild(bodyDiv);
-  // Reply button (appears on hover)
-  const replyBtn = document.createElement('span');
-  replyBtn.classList.add('reply-btn');
-  replyBtn.innerHTML = '<i class="fas fa-reply"></i>';
-  replyBtn.title = 'Reply';
-  replyBtn.addEventListener('click', () => {
-    replyingTo = text;
-    replyContext.style.display = 'flex';
-    replyText.textContent = text;
+
+  const currentUserId = auth.currentUser.uid;
+  chats.forEach((chat) => {
+    const chatCard = document.createElement('div');
+    chatCard.classList.add('chat-card');
+
+    let prefix =
+      chat.lastMessageSender === currentUserId ? 'You: ' : 'Seller: ';
+
+    chatCard.innerHTML = `
+      <img src="${chat.sellerPhoto}" alt="${chat.businessName}">
+      <div class="chat-info">
+        <h3>${chat.businessName}</h3>
+        <p>${prefix}${chat.lastMessage}</p>
+        <p class="chat-timestamp">${chat.updatedAt}</p>
+      </div>
+      ${
+        chat.unreadCount > 0
+          ? `<span class="unread-count">${chat.unreadCount}</span>`
+          : ''
+      }
+    `;
+
+    chatCard.addEventListener('click', () => {
+      currentChatId = chat.chatId;
+      loadChat(chat.chatId);
+      chatInterfaceSection.style.display = 'block';
+    });
+
+    chatListEl.appendChild(chatCard);
   });
-  msgDiv.appendChild(replyBtn);
-  chatMessages.appendChild(msgDiv);
-  if (scroll) chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Load conversation when chat item is clicked
-chatItems.forEach((item) => {
-  item.addEventListener('click', () => {
-    chatItems.forEach((i) => i.classList.remove('active'));
-    item.classList.add('active');
-    const chatId = item.getAttribute('data-id');
-    currentChatId = chatId;
-    const conv = conversations[chatId];
-    // Update chat header with seller details
-    chatHeader.querySelector('.chat-avatar').src = conv.sellerAvatar;
-    document.getElementById('chatSellerName').textContent = conv.sellerName;
-    // Reset messages and lastMessageDate
-    chatMessages.innerHTML = '';
-    lastMessageDate = null;
-    conv.messages.forEach((msg) => {
-      appendMessage(
-        msg.sender,
-        msg.text,
-        msg.reply || null,
-        msg.time,
-        msg.date,
-        false
+// Load chat details and messages
+async function loadChat(chatId) {
+  const chatDoc = await getDoc(doc(db, 'chats', chatId));
+  if (!chatDoc.exists()) return;
+
+  const chatData = chatDoc.data();
+  const sellerId = chatData.sellerId;
+
+  // Fetch seller details
+  const sellerDoc = await getDoc(doc(db, 'users', sellerId));
+  if (sellerDoc.exists()) {
+    const sellerData = sellerDoc.data();
+    partnerNameEl.textContent = sellerData.businessName || 'Seller';
+    partnerPhotoEl.src =
+      sellerData.photoURL || '../../assets/images/new/defaultpfp.png';
+  }
+
+  // Fetch and render messages
+  const messagesRef = collection(db, 'chats', chatId, 'messages');
+  const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+  onSnapshot(messagesQuery, (snapshot) => {
+    chatMessagesEl.innerHTML = '';
+    snapshot.forEach((doc) => {
+      const message = doc.data();
+      const messageEl = document.createElement('div');
+      messageEl.classList.add(
+        'message',
+        message.senderId === auth.currentUser.uid ? 'sent' : 'received'
       );
+      messageEl.textContent = message.text;
+      chatMessagesEl.appendChild(messageEl);
     });
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    // For mobile: slide conversation to full screen
-    if (window.innerWidth < 768) {
-      document.getElementById('chatContainer').classList.add('mobile-active');
-    }
+    chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
   });
+}
+
+// Send message handler
+sendButtonEl.addEventListener('click', async () => {
+  const text = messageInputEl.value.trim();
+  if (!text || !currentChatId) return;
+
+  const messagesRef = collection(db, 'chats', currentChatId, 'messages');
+  await addDoc(messagesRef, {
+    text,
+    senderId: auth.currentUser.uid,
+    timestamp: serverTimestamp(),
+    read: false,
+  });
+
+  messageInputEl.value = '';
 });
 
-// Back button for mobile: show chat list again
-document.getElementById('backBtn').addEventListener('click', () => {
-  document.getElementById('chatContainer').classList.remove('mobile-active');
-});
-
-// Close chat for PC: clear conversation panel
-document.getElementById('closeChat').addEventListener('click', () => {
+// Back button functionality
+backButtonEl.addEventListener('click', () => {
+  chatInterfaceSection.style.display = 'none';
   currentChatId = null;
-  chatMessages.innerHTML = "<p class='no-chat'>No conversation selected.</p>";
-  document.getElementById('chatSellerName').textContent = 'Select a chat';
-  chatItems.forEach((i) => i.classList.remove('active'));
 });
 
-// Send text message
-const sendButton = document.getElementById('sendMessage');
-sendButton.addEventListener('click', () => {
-  const text = messageInput.value.trim();
-  if (text !== '' && currentChatId) {
-    // Use placeholder time/date for new messages
-    appendMessage('You', text, replyingTo, 'Now', 'Today', true);
-    conversations[currentChatId].messages.push({
-      sender: 'You',
-      text: text,
-      reply: replyingTo,
-      time: 'Now',
-      date: 'Today',
+// Logout Handler
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth)
+      .then(() => (window.location.href = '../../index.html'))
+      .catch((error) => console.error('Error signing out:', error));
+  });
+}
+
+// Listen for authentication state changes
+onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    const userNameEl = document.getElementById('user-name');
+    if (userNameEl) {
+      userNameEl.textContent = user.displayName || 'User';
+    }
+
+    // Query chats for the current user
+    const chatsRef = collection(db, 'chats');
+    const chatsQuery = query(
+      chatsRef,
+      where('buyerId', '==', user.uid),
+      orderBy('updatedAt', 'desc')
+    );
+    onSnapshot(chatsQuery, async (snapshot) => {
+      const chatDetailsPromises = snapshot.docs.map((doc) =>
+        fetchChatDetails(doc, user.uid)
+      );
+      const chatDetails = await Promise.all(chatDetailsPromises);
+      renderChatList(chatDetails);
     });
-    messageInput.value = '';
-    replyingTo = null;
-    replyContext.style.display = 'none';
+  } else {
+    window.location.href = '../../index.html';
   }
-});
-messageInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') sendButton.click();
-});
-
-// Image upload functionality
-const uploadImgBtn = document.getElementById('uploadImgBtn');
-const imgUpload = document.getElementById('imgUpload');
-uploadImgBtn.addEventListener('click', () => {
-  imgUpload.click();
-});
-imgUpload.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file && currentChatId) {
-    const reader = new FileReader();
-    reader.onload = function (ev) {
-      const imgHTML = `<img src="${ev.target.result}" style="max-width:100%; border-radius: var(--radius-sm);" />`;
-      appendMessage('You', '[Image]', replyingTo, 'Now', 'Today', true);
-      const lastMsg = chatMessages.lastElementChild;
-      lastMsg.innerHTML =
-        (replyingTo
-          ? `<div class="reply-ref">Replying to: ${replyingTo}</div>`
-          : '') +
-        imgHTML +
-        `<span class="reply-btn" title="Reply"><i class="fas fa-reply"></i></span>`;
-      conversations[currentChatId].messages.push({
-        sender: 'You',
-        text: '[Image]',
-        reply: replyingTo,
-        time: 'Now',
-        date: 'Today',
-      });
-      messageInput.value = '';
-      replyingTo = null;
-      replyContext.style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  }
-  imgUpload.value = '';
-});
-
-// Seller details modal functionality with slide-in animation
-const sellerModal = document.getElementById('sellerModal');
-const closeSellerModal = document.getElementById('closeSellerModal');
-document.getElementById('chatSellerName').addEventListener('click', () => {
-  if (currentChatId) {
-    const conv = conversations[currentChatId];
-    document.getElementById('sellerModalPfp').src = conv.sellerAvatar;
-    document.getElementById('sellerModalName').textContent = conv.sellerName;
-    document.getElementById('sellerModalEmail').textContent = conv.sellerEmail;
-    document.getElementById('sellerModalContact').textContent =
-      conv.sellerContact;
-    document.getElementById('sellerModalSocial').href = conv.sellerSocial;
-    document.getElementById('sellerModalRating').textContent =
-      conv.sellerRating;
-    sellerModal.style.display = 'flex';
-  }
-});
-closeSellerModal.addEventListener('click', () => {
-  sellerModal.style.display = 'none';
 });

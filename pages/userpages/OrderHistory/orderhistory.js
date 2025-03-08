@@ -41,9 +41,7 @@ function renderOrders(orders) {
     // Convert Firestore timestamp to a local date string if available
     let placedDate = 'N/A';
     if (order.createdAt && order.createdAt.seconds) {
-      placedDate = new Date(
-        order.createdAt.seconds * 1000
-      ).toLocaleDateString();
+      placedDate = new Date(order.createdAt.seconds * 1000).toLocaleDateString();
     }
 
     // Prepare a simple list of item names and quantities (adjust as needed)
@@ -58,8 +56,7 @@ function renderOrders(orders) {
         : 'No items';
 
     // Get product id from the first order item (if exists)
-    const productId =
-      order.items && order.items.length > 0 ? order.items[0].id : '';
+    const productId = order.items && order.items.length > 0 ? order.items[0].id : '';
 
     // Order status (default to pending if not set)
     const orderStatus = order.status ? order.status.toLowerCase() : 'pending';
@@ -88,20 +85,14 @@ function renderOrders(orders) {
       <div class="order-header">
         <h3>Order ID: ${order.orderId || 'N/A'}</h3>
         <p class="order-date">Placed on: ${placedDate}</p>
-        <span class="order-status" style="background-color: ${
-          style.bg
-        }; color: ${
-      style.text
-    }; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; margin-left: 8px;">
+        <span class="order-status" style="background-color: ${style.bg}; color: ${style.text}; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; margin-left: 8px;">
           ${orderStatus.toUpperCase()}
         </span>
       </div>
       <div class="order-body">
         <div class="order-details">
           <p>Item: ${itemsDetails}</p>
-          <p>Total: ${
-            order.totals ? formatCurrency(order.totals.total) : 'N/A'
-          }</p>
+          <p>Total: ${order.totals ? formatCurrency(order.totals.total) : 'N/A'}</p>
         </div>
         <div class="order-actions">
           ${
@@ -121,9 +112,7 @@ function renderOrders(orders) {
                         </button>`
                      : ''
                  }
-                 <button class="btn ${ratingClass} rate-order" data-order-id="${
-                  order.orderId
-                }" data-product-id="${productId}">
+                 <button class="btn ${ratingClass} rate-order" data-order-id="${order.orderId}" data-product-id="${productId}">
                    <i class="fas fa-star"></i> ${ratingLabel}
                  </button>
                 `
