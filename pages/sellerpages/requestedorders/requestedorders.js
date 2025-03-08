@@ -11,6 +11,7 @@ import {
   getDoc,
   addDoc,
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+import { increment } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
 // Global variable to store the seller's ID
 let currentSellerId = null;
@@ -191,14 +192,19 @@ function filterOrders(statusFilter) {
  * 2. The global orders collection: orders/{orderID}
  * 3. The buyer's orders subcollection: users/{buyerID}/orders/{orderID}
  */
+
 async function updateOrderStatus(orderId, newStatus) {
+  console.log(`Attempting to update order ${orderId} to status: ${newStatus}`);
   if (
     !confirm(
       `Are you sure you want to update order ${orderId} to ${newStatus}?`
     )
-  )
+  ) {
+    console.log('User canceled the update.');
     return;
+  }
   try {
+    // Get the order from the seller's orders subcollection.
     const sellerOrderRef = doc(
       db,
       'sellers',
@@ -209,13 +215,15 @@ async function updateOrderStatus(orderId, newStatus) {
     const orderSnap = await getDoc(sellerOrderRef);
     if (!orderSnap.exists()) {
       alert('Order not found.');
+      console.log(`Order ${orderId} not found in seller's orders`);
       return;
     }
     const orderData = orderSnap.data();
+    console.log('Order data retrieved:', orderData);
 
+    // References for global and buyer order documents.
     const globalOrderRef = doc(db, 'orders', orderId);
     const userOrderRef = doc(db, 'users', orderData.userId, 'orders', orderId);
-
     await Promise.all([
       updateDoc(sellerOrderRef, {
         status: newStatus,
@@ -230,13 +238,82 @@ async function updateOrderStatus(orderId, newStatus) {
         'shippingInfo.status': newStatus,
       }),
     ]);
+    console.log(
+      `Order ${orderId} status updated to ${newStatus} in all locations.`
+    );
 
+    if (newStatus.toLowerCase() === 'delivered') {
+      // For delivered orders: update salesCount, quantity, and revenue.
+      for (const item of orderData.items) {
+        const listingId = item.id;
+        if (!listingId) {
+          console.error('Missing listing id in order item:', item);
+          continue;
+        }
+        const qty = Number(item.quantity);
+        // Compute revenueDelta = price * quantity.
+        const revenueDelta = parseFloat(item.price) * qty;
+        console.log(
+          `Delivered: For listing id ${listingId}, quantity = ${qty}, revenueDelta = ${revenueDelta}`
+        );
+        const productRef = doc(db, 'listings', listingId);
+        console.log(
+          `Updating listing ${listingId}: incrementing salesCount by ${qty}, decrementing quantity by ${qty}, incrementing revenue by ${revenueDelta}`
+        );
+        await updateDoc(productRef, {
+          salesCount: increment(qty),
+          quantity: increment(-qty),
+          revenue: increment(revenueDelta),
+        });
+        const sellerRef = doc(db, 'sellers', currentSellerId);
+        console.log(
+          `Updating seller ${currentSellerId}: decrementing numberInStock by ${qty}, incrementing totalRevenue by ${revenueDelta}`
+        );
+        await updateDoc(sellerRef, {
+          numberInStock: increment(-qty),
+          totalRevenue: increment(revenueDelta),
+        });
+      }
+    } else if (newStatus.toLowerCase() === 'returned') {
+      // For returned orders: update returnsCount, quantity, and revenue.
+      for (const item of orderData.items) {
+        const listingId = item.id;
+        if (!listingId) {
+          console.error('Missing listing id in order item:', item);
+          continue;
+        }
+        const qty = Number(item.quantity);
+        const revenueDelta = parseFloat(item.price) * qty;
+        console.log(
+          `Returned: For listing id ${listingId}, quantity = ${qty}, revenueDelta = ${revenueDelta}`
+        );
+        const productRef = doc(db, 'listings', listingId);
+        console.log(
+          `Updating listing ${listingId}: incrementing returnsCount by ${qty}, incrementing quantity by ${qty}, decrementing revenue by ${revenueDelta}`
+        );
+        await updateDoc(productRef, {
+          returnsCount: increment(qty),
+          quantity: increment(qty),
+          revenue: increment(-revenueDelta),
+        });
+        const sellerRef = doc(db, 'sellers', currentSellerId);
+        console.log(
+          `Updating seller ${currentSellerId}: incrementing numberInStock by ${qty}, decrementing totalRevenue by ${revenueDelta}`
+        );
+        await updateDoc(sellerRef, {
+          numberInStock: increment(qty),
+          totalRevenue: increment(-revenueDelta),
+        });
+      }
+    }
     alert(`Order ${orderId} updated to ${newStatus}.`);
+    console.log(`Completed updating order ${orderId}.`);
   } catch (error) {
     console.error('Error updating order status:', error);
     alert('Failed to update order status.');
   }
 }
+
 
 // Attach event listeners to tab buttons for filtering orders by status
 function attachTabListeners() {

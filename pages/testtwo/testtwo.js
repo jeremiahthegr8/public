@@ -1,182 +1,132 @@
-import {
-  collection,
-  getDocs,
-} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
-import { db } from '../../database/config.js';
-document.addEventListener('DOMContentLoaded', function () {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-  const productsGrid = document.getElementById('products-grid');
-  const quickViewModal = document.getElementById('quick-view-modal');
-  const closeQuickViewBtn = document.getElementById('close-quick-view');
+// Sample Data
+const products = [
+  {
+    id: 1,
+    name: 'Product 1',
+    category: 'Electronics',
+    price: 99.99,
+    stock: 50,
+    status: 'Active',
+    image: 'https://via.placeholder.com/150',
+  },
+  {
+    id: 2,
+    name: 'Product 2',
+    category: 'Fashion',
+    price: 49.99,
+    stock: 0,
+    status: 'Out of Stock',
+    image: 'https://via.placeholder.com/150',
+  },
+];
 
-  function loadProducts() {
-    db.collection('listings')
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const product = { id: doc.id, ...doc.data() };
-          createProductCard(product);
-        });
-      });
-  }
-
-  function createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-
-    const cartItem = cart.find((item) => item.id === product.id);
-
-    card.innerHTML = `
-            <div class="product-image">
-                <img src="${product.mainImageUrl}" alt="${product.name}">
+// Render Product Listings
+function renderProducts() {
+  const container = document.getElementById('productListings');
+  container.innerHTML = products
+    .map(
+      (product) => `
+      <div class="col">
+        <div class="card h-100">
+          <img src="${product.image}" class="card-img-top" alt="${
+        product.name
+      }">
+          <div class="card-body">
+            <h5 class="card-title">${product.name}</h5>
+            <p class="card-text"><strong>Category:</strong> ${
+              product.category
+            }</p>
+            <p class="card-text"><strong>Price:</strong> $${product.price}</p>
+            <p class="card-text"><strong>Stock:</strong> ${product.stock}</p>
+            <p class="card-text"><strong>Status:</strong> <span class="badge ${
+              product.status === 'Active' ? 'bg-success' : 'bg-danger'
+            }">${product.status}</span></p>
+            <div class="d-grid gap-2">
+              <button class="btn btn-warning btn-sm">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="showConfirmationModal('delete', ${
+                product.id
+              })">Delete</button>
+              <button class="btn btn-secondary btn-sm" onclick="showConfirmationModal('toggle', ${
+                product.id
+              })">Toggle Visibility</button>
+              <button class="btn btn-info btn-sm" onclick="showSalesSummary(${
+                product.id
+              })">Sales Summary</button>
             </div>
-            <h3>${product.name}</h3>
-            <p>$${product.price}</p>
-            <div class="product-actions">
-                ${
-                  cartItem
-                    ? createCartControlHTML(product, cartItem.quantity)
-                    : `
-                    <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
-                `
-                }
-                <button class="wishlist-btn" data-id="${product.id}">
-                    <i class="far fa-heart ${
-                      wishlist.some((w) => w.id === product.id)
-                        ? 'fas active'
-                        : ''
-                    }"></i>
-                </button>
-            </div>
-        `;
+          </div>
+        </div>
+      </div>
+    `
+    )
+    .join('');
+}
 
-    card.querySelector('.product-image').addEventListener('click', function () {
-      showQuickView(product);
-    });
+// Show Sales Summary Page
+function showSalesSummary(productId) {
+  document.querySelector('main').classList.add('d-none');
+  document.getElementById('salesSummaryPage').classList.remove('d-none');
+  // Fetch and display sales data for the product (mock data for now)
+}
 
-    const cartActionElement = card.querySelector(
-      '.add-to-cart-btn, .cart-quantity-control'
-    );
-    if (cartActionElement) {
-      cartActionElement.addEventListener('click', function (e) {
-        if (e.target.classList.contains('add-to-cart-btn')) {
-          addToCart(product);
-        } else if (e.target.classList.contains('increment-btn')) {
-          incrementCartItem(product.id);
-        } else if (e.target.classList.contains('decrement-btn')) {
-          decrementCartItem(product.id);
-        }
-      });
-    }
+// Go Back to Listings
+function goBackToListings() {
+  document.getElementById('salesSummaryPage').classList.add('d-none');
+  document.querySelector('main').classList.remove('d-none');
+}
 
-    card.querySelector('.wishlist-btn').addEventListener('click', function (e) {
-      toggleWishlist(product, e.currentTarget.querySelector('i'));
-    });
+// Show Confirmation Modal
+function showConfirmationModal(action, productId) {
+  const modal = new bootstrap.Modal(
+    document.getElementById('confirmationModal')
+  );
+  const modalMessage = document.getElementById('modalMessage');
+  const confirmButton = document.getElementById('confirmAction');
 
-    productsGrid.appendChild(card);
+  if (action === 'delete') {
+    modalMessage.textContent =
+      'Are you sure you want to delete this product? This action cannot be undone.';
+    confirmButton.className = 'btn btn-danger';
+    confirmButton.textContent = 'Delete Product';
+  } else if (action === 'toggle') {
+    modalMessage.textContent =
+      'Are you sure you want to toggle the visibility of this product?';
+    confirmButton.className = 'btn btn-secondary';
+    confirmButton.textContent = 'Toggle Visibility';
   }
 
-  function createCartControlHTML(product, quantity) {
-    return `
-            <div class="cart-quantity-control" data-id="${product.id}">
-                <button class="decrement-btn">-</button>
-                <span class="quantity">${quantity}</span>
-                <button class="increment-btn">+</button>
-            </div>
-        `;
-  }
+  confirmButton.onclick = () => {
+    // Perform action (e.g., delete or toggle visibility)
+    modal.hide();
+  };
 
-  function addToCart(product) {
-    const existingProductIndex = cart.findIndex(
-      (item) => item.id === product.id
-    );
+  modal.show();
+}
 
-    if (existingProductIndex === -1) {
-      cart.push({ ...product, quantity: 1 });
-    }
-    saveCart();
-    updateProductCartDisplay(product);
-  }
-
-  function incrementCartItem(productId) {
-    const cartItemIndex = cart.findIndex((item) => item.id === productId);
-
-    if (cartItemIndex > -1) {
-      cart[cartItemIndex].quantity += 1;
-      saveCart();
-      updateProductCartDisplay(cart[cartItemIndex]);
-    }
-  }
-
-  function decrementCartItem(productId) {
-    const cartItemIndex = cart.findIndex((item) => item.id === productId);
-
-    if (cartItemIndex > -1) {
-      if (cart[cartItemIndex].quantity > 1) {
-        cart[cartItemIndex].quantity -= 1;
-      } else {
-        cart.splice(cartItemIndex, 1);
-      }
-      saveCart();
-      updateProductCartDisplay({ id: productId });
-    }
-  }
-
-  function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }
-
-  function updateProductCartDisplay(product) {
-    const productCards = document.querySelectorAll('.product-card');
-
-    productCards.forEach((container) => {
-      const cartActionElement = container.querySelector(
-        `[data-id="${product.id}"]`
-      );
-
-      if (cartActionElement) {
-        const parentElement = cartActionElement.closest('.product-actions');
-
-        if (cart.find((item) => item.id === product.id)) {
-          const cartItem = cart.find((item) => item.id === product.id);
-          parentElement.innerHTML = createCartControlHTML(
-            product,
-            cartItem.quantity
-          );
-        } else {
-          parentElement.innerHTML = `
-                        <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
-                    `;
-        }
-      }
-    });
-  }
-
-  function toggleWishlist(product, icon) {
-    const existingProductIndex = wishlist.findIndex(
-      (item) => item.id === product.id
-    );
-
-    if (existingProductIndex > -1) {
-      wishlist.splice(existingProductIndex, 1);
-      icon.classList.remove('fas', 'active');
-      icon.classList.add('far');
-    } else {
-      wishlist.push(product);
-      icon.classList.remove('far');
-      icon.classList.add('fas', 'active');
-    }
-    saveWishlist();
-  }
-
-  function saveWishlist() {
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-  }
-
-  closeQuickViewBtn.addEventListener('click', function () {
-    quickViewModal.style.display = 'none';
-  });
-
-  loadProducts();
+// Initialize Chart.js
+const ctx = document.getElementById('salesChart').getContext('2d');
+const salesChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'Sales',
+        data: [12, 19, 3, 5, 2, 3],
+        borderColor: 'var(--primary-color)',
+        borderWidth: 2,
+        fill: false,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
 });
+
+// Initial Render
+renderProducts();

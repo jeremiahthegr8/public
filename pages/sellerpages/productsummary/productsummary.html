@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Analytics Summary</title>
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    /* Header */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    .back-button {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      cursor: pointer;
+      background-color: transparent;
+    }
+    .product-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .product-name {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .product-meta {
+      font-size: 14px;
+      color: #777;
+      margin-top: 4px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-left: 8px;
+      color: #fff;
+    }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .time-select, .export-btn {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .time-select i, .export-btn i {
+      margin-right: 6px;
+    }
+    /* Overview & Metrics Section */
+    .overview-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .overview-card {
+      background-color: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex: 1;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .overview-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      background-color: #eaeaea;
+    }
+    .overview-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .overview-details .name {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .overview-details .price,
+    .overview-details .stock {
+      font-size: 14px;
+      color: #777;
+    }
+    .metrics-cards {
+      flex: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .metric-card {
+      background-color: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex: 1 1 calc(20% - 20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: 20px;
+    }
+    .icon-sales { background-color: #3b82f6; }
+    .icon-revenue { background-color: #10b981; }
+    .icon-aov { background-color: #f59e0b; }
+    .icon-returns { background-color: #ef4444; }
+    .icon-rating { background-color: #fbbf24; }
+    .icon-stock { background-color: #3b82f6; }
+    .metric-card .label {
+      font-size: 14px;
+      color: #777;
+    }
+    .metric-card .value {
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    /* Charts Section */
+    .charts-section {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 16px;
+    }
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .tab {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      background-color: transparent;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .tab.active {
+      background-color: #e5e7eb;
+      color: #111;
+    }
+    .chart-container {
+      position: relative;
+      height: 400px;
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .overview-metrics {
+        flex-direction: column;
+      }
+      .metric-card {
+        flex: 1 1 100%;
+      }
+      .header-right {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header class="header">
+      <div class="header-left">
+        <div class="back-button" id="backButton" title="Go Back">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="product-info">
+          <div class="product-name" id="headerProductName">Product Name</div>
+          <div class="product-meta">
+            <span id="headerCategory">Category</span>
+            <span class="status-badge" id="headerStatus">Active</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <select class="time-select" id="timePeriod">
+          <option value="7">Last 7 days</option>
+          <option value="30" selected>Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+        </select>
+        <button class="export-btn" id="exportBtn">
+          <i class="fas fa-download"></i> Export
+        </button>
+      </div>
+    </header>
+
+    <!-- Overview & Metrics Section -->
+    <section class="overview-metrics">
+      <!-- Product Overview Card -->
+      <div class="overview-card">
+        <img id="overviewImage" src="" alt="Product Thumbnail">
+        <div class="overview-details">
+          <div class="name" id="overviewName">Product Name</div>
+          <div class="price" id="overviewPrice">$0.00</div>
+          <div class="stock" id="overviewStock">Stock: 0</div>
+        </div>
+      </div>
+      <!-- Metrics Cards -->
+      <div class="metrics-cards">
+        <div class="metric-card" id="cardSales">
+          <div class="metric-icon icon-sales">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <div class="label">Total Sales</div>
+          <div class="value" id="totalSales">0</div>
+        </div>
+        <div class="metric-card" id="cardRevenue">
+          <div class="metric-icon icon-revenue">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="label">Revenue</div>
+          <div class="value" id="totalRevenue">$0.00</div>
+        </div>
+        <div class="metric-card" id="cardAOV">
+          <div class="metric-icon icon-aov">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="label">Avg. Order Value</div>
+          <div class="value" id="avgOrderValue">$0.00</div>
+        </div>
+        <div class="metric-card" id="cardReturns">
+          <div class="metric-icon icon-returns">
+            <i class="fas fa-undo-alt"></i>
+          </div>
+          <div class="label">Returns</div>
+          <div class="value" id="totalReturns">0</div>
+        </div>
+        <div class="metric-card" id="cardRating">
+          <div class="metric-icon icon-rating">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="label">Rating</div>
+          <div class="value" id="totalRating">0</div>
+        </div>
+        <div class="metric-card" id="cardStock">
+          <div class="metric-icon" id="stockIcon">
+            <i class="fas fa-warehouse"></i>
+          </div>
+          <div class="label">Stock</div>
+          <div class="value" id="totalStock">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section">
+      <div class="tabs">
+        <div class="tab active" data-tab="sales" id="tabSales">Sales</div>
+        <div class="tab" data-tab="revenue" id="tabRevenue">Revenue</div>
+        <div class="tab" data-tab="trend" id="tabTrend">Trend</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="mainChart"></canvas>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    // Import Firestore functions
+    import { db } from '../../../database/config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+    import { increment } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+
+    // Global variables
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    if (!productId) {
+      alert('No product ID provided.');
+      window.location.href = '../listings/listings.html';
+    }
+    const LOW_STOCK_THRESHOLD = 10;
+    let globalSalesHistory = []; // save fetched salesHistory
+
+    /**
+     * Fetches product data from Firestore.
+     */
+    async function fetchProduct() {
+      try {
+        const productDoc = await getDoc(doc(db, 'listings', productId));
+        if (!productDoc.exists()) {
+          alert('Product not found.');
+          window.location.href = '../listings/listings.html';
+          return;
+        }
+        return productDoc.data();
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        alert('Error fetching product data.');
+      }
+    }
+
+    /**
+     * Filters and processes salesHistory data based on a period (in days).
+     * If no history is available, returns an aggregate fallback.
+     */
+    function processSalesHistory(salesHistory, periodDays, aggregateSales, aggregateRevenue, aggregateReturns) {
+      let filteredHistory = salesHistory || [];
+      if (periodDays) {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - periodDays);
+        filteredHistory = filteredHistory.filter(entry => new Date(entry.date.seconds * 1000) >= cutoff);
+      }
+      if (filteredHistory.length === 0) {
+        return {
+          labels: ["Aggregate"],
+          revenueData: [aggregateRevenue || 0],
+          unitsData: [aggregateSales || 0],
+          returnsData: [aggregateReturns || 0]
+        };
+      }
+      filteredHistory.sort((a, b) => a.date.seconds - b.date.seconds);
+      const labels = [];
+      const revenueData = [];
+      const unitsData = [];
+      const returnsData = [];
+      filteredHistory.forEach(entry => {
+        const date = new Date(entry.date.seconds * 1000);
+        labels.push((date.getMonth() + 1) + "/" + date.getDate());
+        revenueData.push(entry.revenue || 0);
+        unitsData.push(entry.unitsSold || 0);
+        // Assume returns field exists; if not, default to 0.
+        returnsData.push(entry.returns || 0);
+      });
+      return { labels, revenueData, unitsData, returnsData };
+    }
+
+    /**
+     * Renders product information.
+     */
+    function renderProductInfo(data) {
+      document.getElementById('headerProductName').textContent = data.name;
+      document.getElementById('headerCategory').textContent = data.category;
+      const headerStatus = document.getElementById('headerStatus');
+      headerStatus.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+      if (data.status === "active") {
+        headerStatus.style.backgroundColor = "#10b981";
+      } else if (data.status === "out of stock") {
+        headerStatus.style.backgroundColor = "#f59e0b";
+      } else {
+        headerStatus.style.backgroundColor = "#9ca3af";
+      }
+      document.getElementById('overviewImage').src = data.mainImageUrl;
+      document.getElementById('overviewName').textContent = data.name;
+      document.getElementById('overviewPrice').textContent = "$" + Number(data.price).toFixed(2);
+      document.getElementById('overviewStock').textContent = "Stock: " + data.quantity;
+    }
+
+    /**
+     * Renders product summary metrics.
+     */
+    function renderProductSummary(data, processed) {
+      const totalSales = Number(data.salesCount) || 0;
+      const totalRevenue = Number(data.revenue) || 0;
+      const avgOrderValue = totalSales ? totalRevenue / totalSales : 0;
+      const returns = Number(data.returnsCount) || 0;
+      const rating = Number(data.rating) || 0;
+      const stock = Number(data.quantity) || 0;
+
+      document.getElementById('totalSales').textContent = totalSales;
+      document.getElementById('totalRevenue').textContent = "$" + totalRevenue;
+      document.getElementById('avgOrderValue').textContent = "$" + avgOrderValue.toFixed(2);
+      document.getElementById('totalReturns').textContent = returns;
+      document.getElementById('totalRating').textContent = rating;
+      document.getElementById('totalStock').textContent = stock;
+
+      const stockIcon = document.getElementById('stockIcon');
+      if (stock < LOW_STOCK_THRESHOLD) {
+        stockIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        stockIcon.style.backgroundColor = "#ef4444";
+      } else {
+        stockIcon.innerHTML = '<i class="fas fa-warehouse"></i>';
+        stockIcon.style.backgroundColor = "#3b82f6";
+      }
+    }
+
+    /**
+     * Creates a new Chart.js chart instance.
+     * @param {object} processed - Processed salesHistory data.
+     * @param {string} chartType - "bar" or "line".
+     * @param {string} viewType - For bar charts, either "sales" or "revenue". For line chart, it shows two lines.
+     */
+    function createChart(processed, chartType, viewType) {
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      let config;
+      if (chartType === "bar") {
+        config = {
+          type: "bar",
+          data: {
+            labels: processed.labels,
+            datasets: [{
+              label: viewType === "sales" ? "Units Sold" : "Revenue",
+              data: viewType === "sales" ? processed.unitsData : processed.revenueData,
+              backgroundColor: viewType === "sales" ? "#3CCFCF" : "#10b981",
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.dataset.label + ": " + context.parsed.y;
+                  }
+                }
+              }
+            }
+          }
+        };
+      } else if (chartType === "line") {
+        config = {
+          type: "line",
+          data: {
+            labels: processed.labels,
+            datasets: [
+              {
+                label: "Units Sold",
+                data: processed.unitsData,
+                borderColor: "#3CCFCF",
+                backgroundColor: "rgba(60, 207, 207, 0.2)",
+                fill: false,
+                tension: 0.3
+              },
+              {
+                label: "Returns",
+                data: processed.returnsData,
+                borderColor: "#ef4444",
+                backgroundColor: "rgba(239, 68, 68, 0.2)",
+                fill: false,
+                tension: 0.3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { 
+              y: { beginAtZero: true },
+              x: { title: { display: true, text: "Date" } }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.dataset.label + ": " + context.parsed.y;
+                  }
+                }
+              }
+            }
+          }
+        };
+      }
+      return new Chart(ctx, config);
+    }
+
+    let mainChart; // global chart instance
+    let currentChartType = "bar"; // "bar" or "line"
+    let currentViewType = "sales"; // for bar charts: "sales" or "revenue"
+
+    /**
+     * Updates the chart based on selected tab and time period.
+     */
+    async function updateAnalytics() {
+      const data = await fetchProduct();
+      if (!data) return;
+      renderProductInfo(data);
+      // Save salesHistory globally for filtering.
+      globalSalesHistory = data.salesHistory || [];
+      // Get selected time period from dropdown (in days).
+      const periodDays = Number(document.getElementById('timePeriod').value);
+      // Process salesHistory using aggregate values from product if no daily data exists.
+      const processed = processSalesHistory(globalSalesHistory, periodDays, Number(data.salesCount), Number(data.revenue), Number(data.returnsCount));
+      renderProductSummary(data, processed);
+
+      // If a chart already exists, destroy it before re-creating.
+      if (mainChart) {
+        mainChart.destroy();
+      }
+      // Create chart based on currentChartType and currentViewType.
+      if (currentChartType === "bar") {
+        mainChart = createChart(processed, "bar", currentViewType);
+      } else if (currentChartType === "line") {
+        mainChart = createChart(processed, "line", "trend");
+      }
+    }
+
+    async function initAnalytics() {
+      await updateAnalytics();
+    }
+
+    // Tab switching logic
+    document.getElementById('tabSales').addEventListener('click', () => {
+      currentChartType = "bar";
+      currentViewType = "sales";
+      document.getElementById('tabSales').classList.add("active");
+      document.getElementById('tabRevenue').classList.remove("active");
+      document.getElementById('tabTrend').classList.remove("active");
+      updateAnalytics();
+    });
+    document.getElementById('tabRevenue').addEventListener('click', () => {
+      currentChartType = "bar";
+      currentViewType = "revenue";
+      document.getElementById('tabRevenue').classList.add("active");
+      document.getElementById('tabSales').classList.remove("active");
+      document.getElementById('tabTrend').classList.remove("active");
+      updateAnalytics();
+    });
+    document.getElementById('tabTrend').addEventListener('click', () => {
+      currentChartType = "line";
+      // For the line chart, we show both sales and returns.
+      document.getElementById('tabTrend').classList.add("active");
+      document.getElementById('tabSales').classList.remove("active");
+      document.getElementById('tabRevenue').classList.remove("active");
+      updateAnalytics();
+    });
+
+    // Time period filter changes
+    document.getElementById('timePeriod').addEventListener('change', () => {
+      updateAnalytics();
+    });
+
+    // Back button
+    document.getElementById('backButton').addEventListener('click', () => {
+      window.location.href = '../listings/listings.html';
+    });
+
+    // Export button (stub)
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      alert("Export functionality not implemented.");
+    });
+
+    // Initialize the analytics page
+    initAnalytics();
+  </script>
+</body>
+</html>

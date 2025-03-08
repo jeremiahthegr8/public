@@ -33,7 +33,6 @@ function getStatusStyle(status) {
   }
 }
 
-// Render the orders into the .order-history-grid container
 function renderOrders(orders) {
   const grid = document.querySelector('.order-history-grid');
   grid.innerHTML = ''; // Clear any existing content
@@ -51,17 +50,30 @@ function renderOrders(orders) {
     const itemsDetails =
       order.items && Array.isArray(order.items)
         ? order.items
-            .map((item) => `${item.name} (x${item.quantity})`)
+            .map((item) => {
+              const name = item.itemName || item.name || 'N/A';
+              return `${name} (x${item.quantity})`;
+            })
             .join(', ')
         : 'No items';
+
+    // Get product id from the first order item (if exists)
+    const productId =
+      order.items && order.items.length > 0 ? order.items[0].id : '';
 
     // Order status (default to pending if not set)
     const orderStatus = order.status ? order.status.toLowerCase() : 'pending';
     const style = getStatusStyle(orderStatus);
 
-    // Create a new order item element.
+    // Determine the label for the rating button and the class to apply
+    const ratingLabel =
+      order.rating != null && order.rating > 0 ? 'Edit Rating' : 'Rate Order';
+    const ratingClass =
+      ratingLabel === 'Edit Rating' ? 'btn-edit-rating' : 'btn-rate-order';
+
+    // Create a new order item element and store product id as a data attribute.
     const orderElement = document.createElement('div');
-    orderElement.className = 'order-item';
+    orderElement.classList.add('order-item');
     orderElement.setAttribute('data-status', orderStatus);
     orderElement.setAttribute('data-order-id', order.orderId || '');
     orderElement.setAttribute('data-seller-id', order.sellerId || '');
@@ -69,10 +81,12 @@ function renderOrders(orders) {
       'data-created-at',
       order.createdAt && order.createdAt.seconds ? order.createdAt.seconds : ''
     );
+    // Add the product (listing) id
+    orderElement.setAttribute('data-product-id', productId);
 
     orderElement.innerHTML = `
       <div class="order-header">
-        <h3>Order #${order.orderId || 'N/A'}</h3>
+        <h3>Order ID: ${order.orderId || 'N/A'}</h3>
         <p class="order-date">Placed on: ${placedDate}</p>
         <span class="order-status" style="background-color: ${
           style.bg
@@ -92,18 +106,27 @@ function renderOrders(orders) {
         <div class="order-actions">
           ${
             orderStatus === 'pending'
-              ? `<button class="btn btn-secondary cancel-order" data-order-id="${order.orderId}"><i class="fas fa-times"></i> Cancel Order</button>`
+              ? `<button class="btn btn-secondary cancel-order" data-order-id="${order.orderId}">
+                   <i class="fas fa-times"></i> Cancel Order
+                 </button>`
               : ''
           }
           ${
-            orderStatus === 'delivered'
-              ? `<button class="btn btn-primary request-return" data-order-id="${order.orderId}"><i class="fas fa-undo"></i> Request Return</button>
-                 <button class="btn btn-secondary rate-order" data-order-id="${order.orderId}"><i class="fas fa-star"></i> Rate Order</button>`
-              : ''
-          }
-          ${
-            orderStatus === 'returned requested'
-              ? `<button class="btn btn-secondary rate-order" data-order-id="${order.orderId}"><i class="fas fa-star"></i> Rate Order</button>`
+            orderStatus === 'delivered' || orderStatus === 'returned requested'
+              ? `
+                 ${
+                   orderStatus === 'delivered'
+                     ? `<button class="btn btn-primary request-return" data-order-id="${order.orderId}">
+                          <i class="fas fa-undo"></i> Request Return
+                        </button>`
+                     : ''
+                 }
+                 <button class="btn ${ratingClass} rate-order" data-order-id="${
+                  order.orderId
+                }" data-product-id="${productId}">
+                   <i class="fas fa-star"></i> ${ratingLabel}
+                 </button>
+                `
               : ''
           }
         </div>
@@ -114,6 +137,8 @@ function renderOrders(orders) {
 
   attachOrderActions();
 }
+
+
 
 // Cancel order function: Only pending orders can be cancelled.
 async function cancelOrder(orderElement) {
@@ -199,6 +224,7 @@ async function requestReturn(orderElement) {
 }
 
 // Attach event listeners for order action buttons
+// Attach event listeners for order action buttons
 function attachOrderActions() {
   document.querySelectorAll('.cancel-order').forEach((button) => {
     button.addEventListener('click', () => {
@@ -216,12 +242,18 @@ function attachOrderActions() {
 
   document.querySelectorAll('.rate-order').forEach((button) => {
     button.addEventListener('click', () => {
-      const orderId = button.getAttribute('data-order-id');
-      alert('Rate order functionality here! (Order ID: ' + orderId + ')');
-      window.location.href = '../rateproduct/rateproduct.html';
+      // Retrieve the product id and order id from the order element's data attributes
+      const orderElement = button.closest('.order-item');
+      const productId = orderElement.getAttribute('data-product-id');
+      const orderId = orderElement.getAttribute('data-order-id');
+      console.log(`Passing product id ${productId} and order id ${orderId} to the ratings page.`);
+      // Redirect to the ratings page with both product id and order id as query parameters
+window.location.href = `../rateproduct/rateproduct.html?productId=${productId}&orderId=${orderId}`;
     });
   });
 }
+
+
 
 // Attach tab filtering functionality
 function attachTabFiltering() {

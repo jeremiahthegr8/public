@@ -181,3 +181,37 @@
 .cancel-order {
   border: 1px solid #ff4d4d;
 }
+/* Button for editing rating (gold) */
+.btn-edit-rating {
+  background-color: gold;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 5px 0;
+  transition: background-color 0.2s;
+}
+.btn-edit-rating:hover {
+  background-color: darkgoldenrod;
+}
+
+/* Button for rating product (green) */
+.btn-rate-order {
+  background-color: green;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 5px 0;
+  transition: background-color 0.2s;
+}
+.btn-rate-order:hover {
+  background-color: darkgreen;
+}
+.request-return{
+  max-height: 60px;
+}

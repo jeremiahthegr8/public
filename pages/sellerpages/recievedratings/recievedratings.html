@@ -12,11 +12,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+    <!-- Merged styles for ratings and main content -->
     <link rel="stylesheet" href="./recievedratings.css" />
     <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
+    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../../../components/usersidebar.js" defer></script>
-    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
   </head>
   <body>
     <!-- Sidebar Navigation -->
@@ -40,16 +41,10 @@
         <a href="../requestedorders/requestedorders.html" class="nav-link">
           <i class="fas fa-shopping-bag"></i> <span>Orders</span>
         </a>
-        <a
-          href="../recievedratings/recievedratings.html"
-          class="nav-link active"
-        >
+        <a href="../recievedratings/recievedratings.html" class="nav-link active">
           <i class="fas fa-star"></i> <span>Ratings & Complaints</span>
         </a>
-        <a
-          href="../messagepageforseller/messagepageforseller.html"
-          class="nav-link"
-        >
+        <a href="../messagepageforseller/messagepageforseller.html" class="nav-link">
           <i class="fas fa-envelope"></i> <span>Messages</span>
         </a>
         <!-- Additional Recommended Links -->
@@ -75,18 +70,22 @@
         </div>
         <div class="user-welcome">
           <h2>Ratings & Complaints</h2>
-          <p>Review feedback from your buyers.</p>
+          <p>Review ratings from your buyers.</p>
         </div>
       </div>
 
-      <!-- Feedback Tabs -->
-      <div class="feedback-tabs">
+      <!-- New Filter Tabs: Complaints and by Star Ratings -->
+      <div class="rating-tabs">
         <button class="tab active" data-type="all">All</button>
-        <button class="tab" data-type="rating">Ratings</button>
-        <button class="tab" data-type="complaint">Complaints</button>
+        <button class="tab" data-type="complaints">Complaints</button>
+        <button class="tab" data-type="5">5 Stars</button>
+        <button class="tab" data-type="4">4 Stars</button>
+        <button class="tab" data-type="3">3 Stars</button>
+        <button class="tab" data-type="2">2 Stars</button>
+        <button class="tab" data-type="1">1 Star</button>
       </div>
 
-      <!-- Sorting Options (only visible for Ratings) -->
+      <!-- Sorting Options -->
       <div class="sorting-options" id="sorting-options">
         <label for="sort-select">Sort by:</label>
         <select id="sort-select">
@@ -97,20 +96,33 @@
         </select>
       </div>
 
+      <!-- Advanced Filter Options -->
+      <div class="filter-options">
+        <input type="text" id="search-input" placeholder="Search ratings..." />
+        <select id="category-filter">
+          <option value="all">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Home">Home</option>
+        </select>
+        <div class="view-toggle">
+          <button id="grid-view" class="active">
+            <i class="fas fa-th"></i> Grid
+          </button>
+          <button id="table-view">
+            <i class="fas fa-table"></i> Table
+          </button>
+        </div>
+      </div>
+
       <!-- Feedback List -->
-      <div class="feedback-list">
-        <div class="no-feedback">
+      <div class="rating-list">
+        <div class="no-rating">
           <i class="fas fa-comments"></i>
-          <p>No feedback found.</p>
+          <p>No rating found.</p>
         </div>
       </div>
     </div>
-
-    <!-- Firebase Scripts (Modular) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <!-- Main Script -->
     <script type="module" src="./recievedratings.js"></script>
   </body>
 </html>

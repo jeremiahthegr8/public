@@ -326,44 +326,6 @@ select {
   color: #4a66f5;
   text-decoration: none;
 }
-
-.previous-reviews {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.review-item {
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.review-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.review-product {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.review-rating {
-  display: flex;
-  gap: 3px;
-  margin-bottom: 5px;
-}
-
-.review-rating .star {
-  font-size: 14px;
-}
-
-.review-date {
-  font-size: 12px;
-  color: #666;
-}
-
 .rating-tips {
   display: flex;
   flex-direction: column;
@@ -395,4 +357,86 @@ select {
   .report-options {
     grid-template-columns: 1fr;
   }
+}
+/* Sidebar Ratings List Container */
+.sidebar-ratings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Individual Sidebar Rating Item */
+.sidebar-rating-item {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+.sidebar-rating-item:hover {
+  transform: translateY(-2px);
+}
+
+/* Header Row: Image, Name, and Stars */
+.sidebar-rating-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.sidebar-rating-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.sidebar-rating-productname {
+  flex: 1;
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-rating-stars {
+  display: flex;
+  gap: 3px;
+}
+.sidebar-star {
+  font-size: 16px;
+  color: #ddd;
+}
+.sidebar-star.active {
+  color: #ffb800;
+}
+
+/* Footer Row: Review Text on Left, Date on Right */
+.sidebar-rating-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.sidebar-rating-text {
+  font-size: 14px;
+  color: #555;
+  flex: 1;
+  margin-right: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-rating-date {
+  font-size: 12px;
+  color: #999;
+  white-space: nowrap;
+}
+.sidebarratinganddatecontainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
 }
