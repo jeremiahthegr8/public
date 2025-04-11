@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Everything in DB</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Log Everything in Your Firestore DB</h1>
+  <p>Open your browser console to view the logs.</p>
+  
+  <script type="module">
+    // Import Firebase modules using your provided snippet
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js';
+    import { getAuth } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+    import { getStorage } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-storage.js';
+    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBq2uLaMnzulkAhKKWIg-NfxDIlbe3dYZA',
+      authDomain: 'ecommerce-d50ed.firebaseapp.com',
+      projectId: 'ecommerce-d50ed',
+      storageBucket: 'ecommerce-d50ed',
+      messagingSenderId: '580091660083',
+      appId: '1:580091660083:web:c79752f4158514c0a92046',
+      measurementId: 'G-Z8HYBY4WBP',
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const analytics = getAnalytics(app);
+    
+    console.log("[INIT] Firebase initialized. Firestore instance:", db);
+
+    // Function to log every document in a given collection
+    async function logCollection(collectionName) {
+      console.log(`[LOG] Logging collection: ${collectionName}`);
+      const collRef = collection(db, collectionName);
+      try {
+        const snapshot = await getDocs(collRef);
+        if (snapshot.empty) {
+          console.log(`[LOG] No documents found in collection: ${collectionName}`);
+        } else {
+          snapshot.forEach(doc => {
+            console.log(`[LOG] Document ID: ${doc.id}`, doc.data());
+          });
+        }
+      } catch (error) {
+        console.error(`[ERROR] Failed to log collection "${collectionName}":`, error);
+      }
+    }
+
+    // List the collections you want to log
+    const collectionsToLog = ["chats", "sellers", "items"];
+
+    async function logEverything() {
+      for (const collName of collectionsToLog) {
+        await logCollection(collName);
+      }
+      console.log("[LOG] Finished logging all specified collections.");
+    }
+
+// Assuming 'db' is already initialized
+const chatsRef = collection(db, 'chats');
+const snapshot = await getDocs(chatsRef);
+if (snapshot.empty) {
+  console.log("No documents found in chats collection");
+} else {
+  snapshot.forEach(doc => {
+    console.log("Document ID:", doc.id, "Data:", doc.data());
+  });
+}
+
+    // Run the logging function
+    logEverything().catch(err => console.error("[ERROR] Logging encountered an error:", err));
+  </script>
+</body>
+</html>
