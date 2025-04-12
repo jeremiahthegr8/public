@@ -295,12 +295,51 @@
     .reply-btn {
       display: none !important;
     }
+    
+    .back-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f0f4ff;
+  color: #4a6cf7;
+  font-weight: 600;
+  border: 2px solid #4a6cf7;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  margin-top: 4%;
+  margin-left: 2%;
+}
+.back-button:hover {
+  background-color: #4a6cf7;
+  color: white;
+}
+
   </style>
 </head>
 <body>
   <div class="container">
     <!-- Sidebar with Realtime Conversations -->
     <div class="sidebar">
+       <div class="goback">
+          <a href="../bussinessprofile/bussinessprofile.html" class="back-button">
+            <svg
+              style="vertical-align: middle; margin-right: 8px"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 1-.5.5H3.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 0 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z"
+              />
+            </svg>
+            Back
+          </a>
+        </div>
       <div class="sidebar-header">
         <div class="logo">MarketPlace</div>
         <div class="search-box">

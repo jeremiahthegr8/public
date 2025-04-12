@@ -8,18 +8,21 @@
       --success: #10b981;
       --white: #ffffff;
     }
-    /* Main Content Area */
-.main-content {
-  flex: 1;
-  margin-left: 280px;
-  padding: var(--spacing-xl);
-  transition: all 0.3s ease;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #f9fafb;
+      color: var(--text);
+    }
     .container {
       display: flex;
       height: 100vh;
     }
-    .sidebarz {
+    .sidebar {
       width: 280px;
       background-color: var(--white);
       border-right: 1px solid var(--border);
@@ -63,6 +66,7 @@
     .conversations {
       overflow-y: auto;
       flex: 1;
+      padding: 8px;
     }
     .conversation-item {
       padding: 14px 16px;
@@ -112,6 +116,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      position: relative;
     }
     .chat-container {
       flex: 1;
@@ -119,6 +124,15 @@
       flex-direction: column;
       overflow: hidden;
       background-color: var(--white);
+    }
+    /* When no chat is selected, center a prompt message */
+    .no-chat-selected {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      font-size: 24px;
+      color: var(--text-light);
     }
     .chat-header {
       padding: 14px 20px;
@@ -154,19 +168,6 @@
       color: var(--text-light);
       display: flex;
       align-items: center;
-    }
-    .status-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 6px;
-    }
-    .status-indicator.online {
-      background-color: var(--success);
-    }
-    .status-indicator.offline {
-      background-color: var(--text-light);
     }
     .messages-container {
       flex: 1;
@@ -204,7 +205,6 @@
       color: var(--text-light);
       margin-top: 4px;
     }
-    /* Product reference preview within a message */
     .product-reference {
       border: 1px solid var(--border);
       padding: 4px;
@@ -215,25 +215,13 @@
       font-size: 12px;
       color: var(--text-light);
     }
-    /* Reply reference preview */
     .message-reference {
       border-left: 3px solid var(--primary);
       padding-left: 8px;
       margin-bottom: 4px;
       font-size: 12px;
-      color: #999; /* Slightly lighter */
+      color: #999;
       background-color: #f7f7f7;
-    }
-    /* Hide reply arrow by default; show on hover */
-    .reply-btn {
-      visibility: hidden;
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      font-size: 16px;
-    }
-    .message:hover .reply-btn {
-      visibility: visible;
     }
     .reply-container {
       padding: 16px 20px;
@@ -242,18 +230,26 @@
       align-items: center;
       gap: 10px;
       background-color: var(--white);
-      position: relative;
     }
-    .reply-container .reference-preview {
-      position: absolute;
-      top: -60px;
-      left: 20px;
-      right: 20px;
-      background: var(--secondary);
-      border-left: 3px solid var(--primary);
+    .action-icon {
+      color: var(--text-light);
+      cursor: pointer;
       padding: 8px;
-      font-size: 13px;
-      color: var(--text);
+      border-radius: 50%;
+      transition: background-color 0.2s;
+      font-size: 20px;
+    }
+    .action-icon:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    
+    .reply-container {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+      gap: 10px;
+      background-color: var(--white);
     }
     .reply-container textarea {
       flex: 1;
@@ -297,43 +293,48 @@
     .send-button:hover {
       background-color: var(--primary-dark);
     }
+    .send-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .send-button:hover {
+      background-color: var(--primary-dark);
+    }
     .empty-state {
       text-align: center;
       color: var(--text-light);
     }
-    /* Modal styles with slide-in from right */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: var(--white);
+    .loading {
+      text-align: center;
       padding: 20px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      transform: translateX(100%);
-      animation: slideIn 0.3s forwards;
+      font-size: 16px;
+      color: var(--text-light);
     }
-    @keyframes slideIn {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .modal-close {
-      cursor: pointer;
-      font-size: 20px;
-    }
+    .back-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f0f4ff;
+  color: #4a6cf7;
+  font-weight: 600;
+  border: 2px solid #4a6cf7;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  margin-top: 4%;
+  margin-left: 2%;
+}
+.back-button:hover {
+  background-color: #4a6cf7;
+  color: white;
+}
