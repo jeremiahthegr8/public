@@ -1,191 +1,750 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Messages & Chat</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link rel="stylesheet" href="./messagepageforseller.css" />
-    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
-    <link rel="stylesheet" href="../../../assets/styles/usersidebar.css" />
-    <script type="module" src="./messagepageforseller.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../../components/usersidebar.js" defer></script>
-  </head>
-  <body>
-    <!-- Sidebar Navigation -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seller Messaging | MarketPlace</title>
+  <style>
+    :root {
+      --primary: #4a6cf7;
+      --primary-dark: #3a56d4;
+      --secondary: #f5f7ff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #e5e7eb;
+      --success: #10b981;
+      --white: #ffffff;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #f9fafb;
+      color: var(--text);
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    /* Sidebar Styles */
+    .sidebar {
+      width: 280px;
+      background-color: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .search-box {
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 12px;
+      padding-left: 36px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+    .conversations {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .conversation-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .conversation-item:hover {
+      background-color: #f5f7ff;
+    }
+    .conversation-item.active {
+      background-color: #f0f4ff;
+      border-left: 3px solid var(--primary);
+    }
+    .conversation-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .buyer-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .time {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    .last-message {
+      font-size: 13px;
+      color: var(--text-light);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .unread-badge {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-right: 5px;
+    }
+    .loading, .empty-state {
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      color: var(--text-light);
+    }
+    /* Main Chat Area Styles */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0; /* Ensures children can flex properly */
+      background-color: var(--white);
+    }
+    /* Overlay shown when no chat is selected */
+    .no-chat-selected {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      font-size: 24px;
+      color: var(--text-light);
+    }
+    /* Chat header & reply/input area are hidden by default */
+    .chat-header,
+    .reply-container {
+      display: none;
+    }
+    .chat-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      justify-content: space-between;
+    }
+    .buyer-info {
+      display: flex;
+      align-items: center;
+    }
+    .buyer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--secondary);
+      margin-right: 12px;
+      overflow: hidden;
+    }
+    .buyer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .buyer-details h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .buyer-details p {
+      font-size: 13px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+    }
+    .messages-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
+    }
+    .message {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      position: relative;
+    }
+    .message.sent {
+      align-self: flex-end;
+      background-color: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .message.sent .message-time {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .message.received {
+      align-self: flex-start;
+      background-color: var(--secondary);
+      border-bottom-left-radius: 4px;
+    }
+    .message-time {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+    .product-reference {
+      border: 1px solid var(--border);
+      padding: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+    .message-reference {
+      border-left: 3px solid var(--primary);
+      padding-left: 8px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: #999;
+      background-color: #f7f7f7;
+    }
+    .reply-container {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+      gap: 10px;
+      background-color: var(--white);
+    }
+    .reply-container textarea {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 12px 16px;
+      font-size: 14px;
+      resize: none;
+      height: 48px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .reply-container textarea:focus {
+      border-color: var(--primary);
+    }
+    .action-icon {
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+      font-size: 20px;
+    }
+    .action-icon:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    .send-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .send-button:hover {
+      background-color: var(--primary-dark);
+    }
+    /* Hide reply button for now */
+    .reply-btn {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar with Realtime Conversations -->
     <div class="sidebar">
-      <div class="logo">
-        <span>Seller Dashboard</span>
-      </div>
-      <div class="navigation">
-        <a href="../../userpages/account/account.html" class="nav-link">
-          <i class="fas fa-home"></i> <span>Go Back</span>
-        </a>
-        <a href="../bussinessprofile/bussinessprofile.html" class="nav-link">
-          <i class="fas fa-user"></i> <span>Business Profile</span>
-        </a>
-        <a href="../listings/listings.html" class="nav-link">
-          <i class="fas fa-list"></i> <span>Your Listings</span>
-        </a>
-        <a href="../addnewlisting/addnewlisting.html" class="nav-link">
-          <i class="fas fa-plus-circle"></i> <span>Add New Listings</span>
-        </a>
-        <a href="../requestedorders/requestedorders.html" class="nav-link">
-          <i class="fas fa-shopping-bag"></i> <span>Orders</span>
-        </a>
-        <a href="../recievedratings/recievedratings.html" class="nav-link">
-          <i class="fas fa-star"></i> <span>Ratings & Complaints</span>
-        </a>
-        <a
-          href="../messagepageforseller/messagepageforseller.html"
-          class="nav-link active"
-        >
-          <i class="fas fa-envelope"></i> <span>Messages</span>
-        </a>
-        <!-- Additional Recommended Links -->
-        <a href="../analytics/analytics.html" class="nav-link">
-          <i class="fas fa-chart-line"></i> <span>Analytics</span>
-        </a>
-        <a href="../sellersettings/sellersettings.html" class="nav-link">
-          <i class="fas fa-cog"></i> <span>Settings</span>
-        </a>
-      </div>
-      <div class="sidebar-footer">
-        <a href="#" id="logout-btn" class="nav-link">
-          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-      <div class="top-bar">
-        <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
-        <div class="user-welcome"><h2>Messages & Chat</h2></div>
-        <div class="user-actions">
-          <a href="#" class="notification"
-            ><i class="fas fa-bell"></i><span class="badge">3</span></a
-          >
-          <div class="user-avatar">
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="User Avatar"
-            />
-          </div>
+      <div class="sidebar-header">
+        <div class="logo">MarketPlace</div>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search conversations..." />
         </div>
       </div>
-
-      <!-- Chat Container -->
+      <div class="conversations" id="chatList">
+        <p class="loading" id="chatListLoading">Loading chats...</p>
+      </div>
+    </div>
+    <!-- Main Chat Area -->
+    <div class="main">
       <div class="chat-container" id="chatContainer">
-        <!-- Chat List Panel -->
-        <div class="chat-list" id="chatList">
-          <div class="chat-item" data-id="seller1">
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="Seller ABC"
-              class="chat-avatar"
-            />
-            <div class="chat-info">
-              <span class="chat-name">Seller ABC</span>
-              <span class="chat-preview">Thanks for your order!</span>
-            </div>
-            <div class="chat-time">10:30 AM</div>
-          </div>
-          <div class="chat-item" data-id="seller2">
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="Seller XYZ"
-              class="chat-avatar"
-            />
-            <div class="chat-info">
-              <span class="chat-name">Seller XYZ</span>
-              <span class="chat-preview">Your item has shipped.</span>
-            </div>
-            <div class="chat-time">Yesterday</div>
-          </div>
-          <!-- Additional chat items... -->
+        <!-- Overlay when no chat is selected -->
+        <div class="no-chat-selected" id="noChatSelected">
+          Select a conversation
         </div>
-
-        <!-- Chat Conversation Panel -->
-        <div class="chat-conversation" id="chatConversation">
-          <div class="chat-header" id="chatHeader">
-            <span class="back-btn" id="backBtn" style="display: none"
-              ><i class="fas fa-arrow-left"></i> Back</span
-            >
-            <img
-              src="../../../assets/images/new/defaultpfp.png"
-              alt="Seller Avatar"
-              class="chat-avatar"
-            />
-            <span class="chat-seller-name" id="chatSellerName"
-              >Select a chat</span
-            >
-            <span class="close-chat" id="closeChat"
-              ><i class="fas fa-times"></i
-            ></span>
-          </div>
-          <div class="chat-messages" id="chatMessages">
-            <p class="no-chat">No conversation selected.</p>
-          </div>
-          <div class="chat-input" id="chatInputArea">
-            <!-- Replying context (hidden by default) -->
-            <div
-              class="replying-context"
-              id="replyContext"
-              style="display: none"
-            >
-              <span id="replyText"></span>
-              <button id="cancelReply">&times;</button>
+        <!-- Chat header & input area (initially hidden) -->
+        <div class="chat-header" id="chatHeader">
+          <div class="buyer-info" id="buyerInfo">
+            <div class="buyer-avatar" id="buyerAvatar">
+              <img src="../../../assets/images/new/defaultpfp.png" alt="Buyer Avatar" />
             </div>
-            <div class="chat-input-row">
-              <input
-                type="text"
-                id="messageInput"
-                placeholder="Type a message..."
-              />
-              <button class="img-btn" id="uploadImgBtn">
-                <i class="fas fa-image"></i>
-              </button>
-              <button id="sendMessage">
-                <i class="fas fa-paper-plane"></i>
-              </button>
+            <div class="buyer-details">
+              <h3 id="buyerName">Buyer Name</h3>
+              <p id="buyerStatus"><span class="status-indicator offline"></span> Offline</p>
             </div>
-            <!-- Hidden file input for images -->
-            <input type="file" id="imgUpload" accept="image/*" />
           </div>
+        </div>
+        <div class="messages-container" id="chatMessages">
+          <div class="empty-state">
+            <p>No conversation selected.</p>
+          </div>
+        </div>
+        <div class="reply-container" id="chatInputArea">
+          <div class="action-icon" id="uploadImgBtn">📎</div>
+          <textarea id="messageInput" placeholder="Type your message..."></textarea>
+          <button class="send-button" id="sendMessage">➤</button>
+          <input type="file" id="imgUpload" accept="image/*" style="display: none;" />
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Seller Details Modal (slides in from right) -->
-    <div class="modal-overlay" id="sellerModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Seller Details</h3>
-          <span class="modal-close" id="closeSellerModal"
-            ><i class="fas fa-times"></i
-          ></span>
-        </div>
-        <div class="seller-details" id="sellerDetails">
-          <img src="" alt="Seller Profile" id="sellerModalPfp" />
-          <p><strong>Name:</strong> <span id="sellerModalName"></span></p>
-          <p><strong>Email:</strong> <span id="sellerModalEmail"></span></p>
-          <p><strong>Contact:</strong> <span id="sellerModalContact"></span></p>
-          <p>
-            <strong>Social:</strong>
-            <a href="#" target="_blank" id="sellerModalSocial">Visit Profile</a>
-          </p>
-          <p><strong>Rating:</strong> <span id="sellerModalRating"></span>/5</p>
-        </div>
-      </div>
-    </div>
-  </body>
+  <!-- Firebase Chat Script for Sellers -->
+  <script type="module">
+    import { auth, db } from '../../../database/config.js';
+    import {
+      collection,
+      query,
+      orderBy,
+      addDoc,
+      serverTimestamp,
+      onSnapshot,
+      doc,
+      getDoc,
+      setDoc,
+      getDocs,
+      limit,
+      where,
+      writeBatch,
+      increment,
+      updateDoc
+    } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+
+    // Global seller ID retrieved from the user document.
+    let sellerID = null;
+
+    // --- DOM Elements ---
+    const chatListEl = document.getElementById('chatList');
+    const chatListLoadingEl = document.getElementById('chatListLoading');
+    const chatHeaderEl = document.getElementById('chatHeader');
+    const chatMessagesEl = document.getElementById('chatMessages');
+    const noChatSelectedEl = document.getElementById('noChatSelected');
+    const messageInputEl = document.getElementById('messageInput');
+    const sendButtonEl = document.getElementById('sendMessage');
+    const uploadImgBtn = document.getElementById('uploadImgBtn');
+    const imgUploadEl = document.getElementById('imgUpload');
+    const searchInputEl = document.getElementById('searchInput');
+
+    const buyerAvatarEl = document.getElementById('buyerAvatar');
+    const buyerNameEl = document.getElementById('buyerName');
+    const buyerStatusEl = document.getElementById('buyerStatus');
+
+    // Global chat state
+    let currentChatId = null;  // Format: buyerID_sellerID
+    let replyingTo = null; // { sender, text }
+    let lastMessageDate = null;
+    let currentChatUnsubscribe = null;
+
+    // ------------------- Utility Functions -------------------
+    function clearMessages() {
+      console.log('[LOG] Clearing messages');
+      chatMessagesEl.innerHTML = '';
+      lastMessageDate = null;
+    }
+
+    function appendDateDivider(date) {
+      const divider = document.createElement('div');
+      divider.className = 'date-divider';
+      divider.style.textAlign = 'center';
+      divider.style.margin = '10px 0';
+      divider.style.fontSize = '12px';
+      divider.style.color = '#888';
+      divider.textContent = date;
+      console.log('[LOG] Adding date divider:', date);
+      chatMessagesEl.appendChild(divider);
+    }
+
+    // Append a message, including any optional reply or product reference.
+    function appendMessage(sender, text, replyData, productReference, time, date, scroll = true) {
+      console.log('[LOG] Appending message:', { sender, text, time, date, replyData });
+      if (lastMessageDate !== date) {
+        appendDateDivider(date);
+        lastMessageDate = date;
+      }
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', sender === 'You' ? 'sent' : 'received');
+
+      const headerDiv = document.createElement('div');
+      headerDiv.style.fontSize = '12px';
+      headerDiv.style.marginBottom = '4px';
+      headerDiv.innerHTML = `<strong>${sender}:</strong> <span>${time}</span>`;
+      msgDiv.appendChild(headerDiv);
+
+      if (replyData) {
+        const refDiv = document.createElement('div');
+        refDiv.className = 'message-reference';
+        refDiv.innerHTML = `<strong>${sender}:</strong> ${replyData.text}`;
+        msgDiv.appendChild(refDiv);
+      }
+
+      const bodyDiv = document.createElement('div');
+      bodyDiv.textContent = text;
+      msgDiv.appendChild(bodyDiv);
+
+      chatMessagesEl.appendChild(msgDiv);
+      if (scroll) chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+    }
+
+    // ------------------- Notification Functions -------------------
+    async function ensureNotificationDoc() {
+      const notifDocRef = doc(db, 'sellerNotifications', sellerID);
+      const notifDocSnap = await getDoc(notifDocRef);
+      if (!notifDocSnap.exists()) {
+        console.log('[NOTIF] Creating notification doc for seller.');
+        await setDoc(notifDocRef, { totalUnread: 0 });
+      }
+    }
+
+    function subscribeToNotifications() {
+      const notifDocRef = doc(db, 'sellerNotifications', sellerID);
+      onSnapshot(notifDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const totalUnread = docSnap.data().totalUnread;
+          console.log('[NOTIF] Overall unread count:', totalUnread);
+        }
+      });
+    }
+
+    // ------------------- Realtime Conversation List -------------------
+    function subscribeToChatList() {
+      onSnapshot(collection(db, 'chats'), async (snapshot) => {
+        const sellerChats = [];
+        snapshot.forEach((docSnap) => {
+          const parts = docSnap.id.split('_');
+          if (parts[1] === sellerID) {
+            sellerChats.push({ chatId: docSnap.id, ...docSnap.data(), buyerId: parts[0] });
+          }
+        });
+        console.log('[RENDER] Realtime seller chats found:', sellerChats);
+        renderChatListRealtime(sellerChats);
+      });
+    }
+
+    async function renderChatListRealtime(sellerChats) {
+      chatListEl.innerHTML = '';
+      if (sellerChats.length === 0) {
+        chatListEl.innerHTML = "<p class='empty-state'>You have no chats.</p>";
+        noChatSelectedEl.innerHTML = "<p class='empty-state'>You have no chats.</p>";
+      } else {
+        for (const chat of sellerChats) {
+          try {
+            const buyerDoc = await getDoc(doc(db, 'users', chat.buyerId));
+            const buyerData = buyerDoc.exists() ? buyerDoc.data() : {};
+            const messagesRef = collection(db, 'chats', chat.chatId, 'messages');
+            const lastMsgQuery = query(messagesRef, orderBy('timestamp', 'desc'), limit(1));
+            const lastMsgSnapshot = await getDocs(lastMsgQuery);
+            let lastMessageText = "";
+            lastMsgSnapshot.forEach(doc => {
+              lastMessageText = doc.data().text;
+            });
+            const unreadQuery = query(messagesRef, where('read', '==', false), where('senderId', '!=', sellerID));
+            const unreadSnapshot = await getDocs(unreadQuery);
+            let unreadCount = unreadSnapshot.size;
+            const convItem = document.createElement('div');
+            convItem.className = 'conversation-item';
+            convItem.setAttribute('data-id', chat.buyerId);
+            convItem.innerHTML = `
+              <div class="conversation-header">
+                <span class="buyer-name">${buyerData.FullName || 'Buyer'}</span>
+                <span class="time">${ lastMessageText ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now' }</span>
+              </div>
+              <div class="last-message">
+                ${ lastMessageText || "No messages yet." } ${ unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : "" }
+              </div>
+            `;
+            convItem.addEventListener('click', () => {
+              document.querySelectorAll('.conversation-item').forEach(item => item.classList.remove('active'));
+              convItem.classList.add('active');
+              loadConversation(chat.buyerId);
+            });
+            chatListEl.appendChild(convItem);
+          } catch (err) {
+            console.error('[RENDER ERROR] Error fetching buyer for chat:', err);
+          }
+        }
+      }
+    }
+
+    // ------------------- Chat Conversation Functions -------------------
+    async function loadConversation(buyerId) {
+      console.log('[LOAD] loadConversation called with buyerId:', buyerId);
+      const chatId = `${buyerId}_${sellerID}`;
+      currentChatId = chatId;
+      console.log('[LOAD] Constructed chatId:', chatId);
+      
+      // Reveal chat header and input area; hide the "Select a conversation" overlay.
+      chatHeaderEl.style.display = 'flex';
+      document.getElementById('chatInputArea').style.display = 'flex';
+      noChatSelectedEl.style.display = 'none';
+      
+      // Remove any leftover empty state from messages container
+      const emptyState = chatMessagesEl.querySelector('.empty-state');
+      if(emptyState) emptyState.remove();
+
+      // Ensure the chat document exists.
+      const chatDocRef = doc(db, 'chats', chatId);
+      const chatDocSnap = await getDoc(chatDocRef);
+      if (!chatDocSnap.exists()) {
+        console.log('[LOAD] Chat document does not exist. Creating it.');
+        await setDoc(chatDocRef, { dummyField: sellerID });
+      } else {
+        console.log('[LOAD] Chat document already exists.');
+      }
+      
+      // Fetch buyer info.
+      try {
+        const buyerDoc = await getDoc(doc(db, 'users', buyerId));
+        if (!buyerDoc.exists()) {
+          console.log('[ERROR] Buyer not found for buyerId:', buyerId);
+        }
+        const buyerData = buyerDoc.exists() ? buyerDoc.data() : {};
+        console.log('[LOAD] Buyer data:', buyerData);
+        buyerAvatarEl.innerHTML = `<img src="${buyerData.profilePicUrl || '../../../assets/images/new/defaultpfp.png'}" alt="Buyer Avatar" />`;
+        buyerNameEl.textContent = buyerData.FullName || 'Buyer';
+        buyerStatusEl.innerHTML = `<span class="status-indicator online"></span> Online`;
+      } catch (err) {
+        console.error('[ERROR] Error fetching buyer info:', err);
+      }
+      
+      // Set up realtime listener for messages.
+      try {
+        const messagesRef = collection(db, 'chats', chatId, 'messages');
+        if (currentChatUnsubscribe) {
+          currentChatUnsubscribe();
+        }
+        currentChatUnsubscribe = onSnapshot(
+          query(messagesRef, orderBy('timestamp', 'asc')),
+          async (snapshot) => {
+            console.log('[SNAPSHOT] Messages updated. Count:', snapshot.size);
+            clearMessages();
+            let unreadCountInThisChat = 0;
+            snapshot.forEach((docSnap) => {
+              const msg = docSnap.data();
+              if (!msg.read && msg.senderId !== sellerID) {
+                unreadCountInThisChat++;
+              }
+            });
+            if (unreadCountInThisChat > 0) {
+              const batch = writeBatch(db);
+              snapshot.forEach((docSnap) => {
+                const msg = docSnap.data();
+                if (!msg.read && msg.senderId !== sellerID) {
+                  batch.update(docSnap.ref, { read: true });
+                }
+              });
+              await batch.commit();
+              console.log(`[NOTIF] Marked ${unreadCountInThisChat} messages as read in chat ${chatId}`);
+              const notifDocRef = doc(db, 'sellerNotifications', sellerID);
+              await updateDoc(notifDocRef, { totalUnread: increment(-unreadCountInThisChat) });
+            }
+            snapshot.forEach((docSnap) => {
+              const msg = docSnap.data();
+              const time = msg.timestamp
+                ? new Date(msg.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : 'Now';
+              const date = msg.timestamp
+                ? new Date(msg.timestamp.seconds * 1000).toLocaleDateString()
+                : 'Today';
+              appendMessage(
+                msg.senderId === sellerID ? 'You' : 'Buyer',
+                msg.text,
+                msg.reply || null,
+                msg.productReference || null,
+                time,
+                date,
+                false
+              );
+            });
+            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+          },
+          (error) => {
+            console.error('[SNAPSHOT ERROR] Error in message snapshot:', error);
+          }
+        );
+      } catch (err) {
+        console.error('[ERROR] Error setting up messages listener:', err);
+      }
+    }
+
+    // ------------------- Search Functionality -------------------
+    searchInputEl.addEventListener('input', () => {
+      const queryStr = searchInputEl.value.toLowerCase();
+      const items = document.querySelectorAll('.conversation-item');
+      items.forEach(item => {
+        if (item.innerText.toLowerCase().includes(queryStr)) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+
+    // ------------------- Initialization for Seller Chat Page -------------------
+    onAuthStateChanged(auth, async (user) => {
+      console.log('[AUTH] onAuthStateChanged triggered. User:', user);
+      if (user && user.emailVerified) {
+        console.log('[AUTH] User signed in and verified:', user.uid);
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            sellerID = userDoc.data().sellerID;
+            console.log('[AUTH] Seller ID retrieved:', sellerID);
+          } else {
+            console.error('[AUTH ERROR] No user document found for seller.');
+            return;
+          }
+        } catch (err) {
+          console.error('[AUTH ERROR] Error retrieving seller info:', err);
+          return;
+        }
+        await ensureNotificationDoc();
+        subscribeToNotifications();
+        subscribeToChatList();
+      } else {
+        console.log('[AUTH] User not signed in or email not verified. Redirecting.');
+        window.location.href = '../../index.html';
+      }
+    });
+
+    // ------------------- Send Message Function -------------------
+    async function sendMessage() {
+      const text = messageInputEl.value.trim();
+      console.log('[SEND] sendMessage called with text:', text);
+      if (!text || !currentChatId) {
+        console.log('[SEND] Aborting send. Missing text or currentChatId:', { text, currentChatId });
+        return;
+      }
+      const messagesRef = collection(db, 'chats', currentChatId, 'messages');
+      const messageData = {
+        text,
+        senderId: sellerID,
+        timestamp: serverTimestamp(),
+        read: false,
+        reply: replyingTo || null,
+      };
+      console.log('[SEND] Sending message:', messageData);
+      try {
+        await addDoc(messagesRef, messageData);
+        console.log('[SEND] Message sent successfully');
+      } catch (error) {
+        console.error('[SEND ERROR] Error sending message:', error);
+      }
+      messageInputEl.value = '';
+      replyingTo = null;
+      // Hide any reply preview if visible
+      replyContext.style.display = 'none';
+    }
+
+    sendButtonEl.addEventListener('click', sendMessage);
+    messageInputEl.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // ------------------- Image Upload Functionality -------------------
+    uploadImgBtn.addEventListener('click', () => {
+      console.log('[UPLOAD] Upload image button clicked');
+      imgUploadEl.click();
+    });
+    imgUploadEl.addEventListener('change', () => {
+      const file = imgUploadEl.files[0];
+      console.log('[UPLOAD] Image file selected:', file);
+      if (file && currentChatId) {
+        const reader = new FileReader();
+        reader.onload = async function (ev) {
+          console.log('[UPLOAD] FileReader loaded. Preparing to send image message.');
+          const messagesRef = collection(db, 'chats', currentChatId, 'messages');
+          try {
+            await addDoc(messagesRef, {
+              text: '[Image]',
+              senderId: sellerID,
+              timestamp: serverTimestamp(),
+              read: false,
+              reply: replyingTo || null,
+            });
+            console.log('[UPLOAD] Image message sent successfully');
+          } catch (error) {
+            console.error('[UPLOAD ERROR] Error sending image message:', error);
+          }
+          messageInputEl.value = '';
+          replyingTo = null;
+          replyContext.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+      imgUploadEl.value = '';
+    });
+
+    // ------------------- Logout Handler -------------------
+    document.getElementById('logout-btn')?.addEventListener('click', () => {
+      console.log('[LOGOUT] Logout button clicked');
+      signOut(auth)
+        .then(() => {
+          console.log('[LOGOUT] User signed out');
+          window.location.href = '../../index.html';
+        })
+        .catch((error) => console.error('[LOGOUT ERROR] Error signing out:', error));
+    });
+  </script>
+</body>
 </html>
