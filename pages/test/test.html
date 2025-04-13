@@ -1,555 +1,881 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Messages & Chat</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link rel="stylesheet" href="./messagepageforuser.css" />
-    <link rel="stylesheet" href="../../assets/styles/animation.css" />
-    <link rel="stylesheet" href="../../assets/styles/usersidebar.css" />
-  </head>
-  <body>
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-      <div class="logo">
-        <span>Dashboard</span>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopEasy - Online Shopping</title>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #333;
+      --bg-color: #f9f9f9;
+      --card-bg: #fff;
+      --border-color: #ddd;
+      --spacing: 16px;
+      --font-family: "Arial", sans-serif;
+    }
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--secondary-color);
+    }
+    * { box-sizing: border-box; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing);
+    }
+    /* Header */
+    header {
+      background-color: var(--primary-color);
+      padding: var(--spacing);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .search-container {
+      flex-grow: 1;
+      margin: 0 var(--spacing);
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .search-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--secondary-color);
+      cursor: pointer;
+    }
+    .cart-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .cart-count {
+      background-color: white;
+      color: var(--primary-color);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+    /* Main Content */
+    main {
+      padding: var(--spacing) 0;
+    }
+    .filter-section {
+      background-color: var(--card-bg);
+      padding: var(--spacing);
+      border-radius: 4px;
+      margin-bottom: var(--spacing);
+      border: 1px solid var(--border-color);
+    }
+    .filter-title {
+      margin-top: 0;
+      margin-bottom: var(--spacing);
+      font-size: 18px;
+    }
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing);
+    }
+    .filter-select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: white;
+      min-width: 150px;
+    }
+    .price-range {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-input {
+      width: 80px;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+    .main-content {
+      display: flex;
+      gap: var(--spacing);
+    }
+    .sidebar {
+      width: 250px;
+      background-color: var(--card-bg);
+      padding: var(--spacing);
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      height: fit-content;
+    }
+    .sidebar-title {
+      margin-top: 0;
+      margin-bottom: var(--spacing);
+      font-size: 16px;
+    }
+    .filter-group {
+      margin-bottom: var(--spacing);
+    }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .star-rating {
+      color: gold;
+    }
+    .products-container {
+      flex-grow: 1;
+    }
+    .sort-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing);
+    }
+    .sort-select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+    .view-options {
+      display: flex;
+      gap: 8px;
+    }
+    .view-button {
+      padding: 8px;
+      background-color: white;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .view-button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--spacing);
+    }
+    .product-card {
+      background-color: var(--card-bg);
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .product-image {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      background-color: white;
+      display: block;
+      padding: var(--spacing);
+    }
+    .product-info {
+      padding: var(--spacing);
+    }
+    .product-title {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      font-weight: normal;
+      height: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    .product-price {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .product-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .add-to-cart {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      flex-grow: 1;
+      font-weight: bold;
+    }
+    .wishlist-button {
+      background-color: white;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--spacing);
+      gap: 8px;
+    }
+    .page-button {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .page-button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    .list-view .products-grid { display: block; }
+    .list-view .product-card { display: flex; margin-bottom: var(--spacing); }
+    .list-view .product-image { width: 200px; height: 200px; }
+    .list-view .product-info { flex-grow: 1; }
+    .list-view .product-title { height: auto; font-size: 18px; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+    .toast.show { opacity: 1; }
+    @media (max-width: 768px) {
+      .main-content { flex-direction: column; }
+      .sidebar { width: 100%; margin-bottom: var(--spacing); }
+      .list-view .product-card { flex-direction: column; }
+      .list-view .product-image { width: 100%; }
+    }
+    .product-attributes {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 8px;
+}
+
+.product-attributes div {
+  display: inline-block;
+  margin-right: 8px;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+    .attribute-group {
+  margin-bottom: var(--spacing);
+}
+
+.attribute-title {
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.nested-attributes {
+  margin-left: 16px;
+}
+
+.attribute-checkbox {
+  margin-right: 8px;
+}
+  </style>
+  <!--
+    Ensure you include your Firebase SDK and your own config script here.
+    For example:
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="/path/to/your/firebaseConfig.js"></script>
+  -->
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">ShopEasy</div>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search products..." id="searchInput" />
+        <button class="search-button" id="searchBtn">🔍</button>
       </div>
-      <div class="navigation">
-        <a href="../../../index.html" class="nav-link">
-          <i class="fas fa-home"></i> <span>Home</span>
-        </a>
-        <a href="../account/account.html" class="nav-link">
-          <i class="fas fa-user"></i> <span>Profile</span>
-        </a>
-        <a href="../wishlist/wishlist.html" class="nav-link">
-          <i class="fas fa-heart"></i> <span>Wishlist</span>
-        </a>
-        <a href="../mycart/mycart.html" class="nav-link">
-          <i class="fas fa-shopping-cart"></i> <span>Cart</span>
-        </a>
-        <a href="../OrderHistory/Orderhistory.html" class="nav-link">
-          <i class="fas fa-history"></i> <span>Orders</span>
-        </a>
-        <a href="../securitysettings/securitysettings.html" class="nav-link">
-          <i class="fas fa-shield-alt"></i> <span>Security</span>
-        </a>
-        <a href="../support/support.html" class="nav-link">
-          <i class="fas fa-question-circle"></i> <span>Support</span>
-        </a>
-        <a href="../messagepageforuser/messagepageforuser.html" class="nav-link active">
-          <i class="fas fa-envelope"></i> <span>Messages</span>
-        </a>
-        <a href="../../sellerpages/bussinessprofile/bussinessprofile.html" class="nav-link">
-          <i class="fas fa-store"></i> <span>Seller Portal</span>
-        </a>
+      <div class="cart-container" id="cartBtn">
+        🛒 <span class="cart-count">0</span>
       </div>
-      <div class="sidebar-footer">
-        <a href="#" id="logout-btn" class="nav-link">
-          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-        </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="filter-section">
+      <h3 class="filter-title">Quick Filters</h3>
+      <div class="filter-options">
+        <select class="filter-select" id="categoryFilter">
+          <option value="">All Categories</option>
+          <option value="electronics">Electronics</option>
+          <option value="clothing">Clothing</option>
+          <option value="home">Home &amp; Kitchen</option>
+          <option value="books">Books</option>
+        </select>
+        <div class="price-range">
+          <label for="minPrice">Price:</label>
+          <input type="number" class="price-input" id="minPrice" placeholder="Min" />
+          <span>to</span>
+          <input type="number" class="price-input" id="maxPrice" placeholder="Max" />
+          <button class="filter-select" id="applyPriceFilter">Apply</button>
+        </div>
       </div>
     </div>
 
-    <!-- Main Content Area -->
     <div class="main-content">
-      <div class="top-bar">
-        <div class="hamburger-menu">
-          <i class="fas fa-bars"></i>
-        </div>
-        <div class="user-welcome">
-          <h2>Messages & Chat</h2>
-        </div>
-        <div class="user-actions">
-          <a href="#" class="notification">
-            <i class="fas fa-bell"></i><span class="badge">3</span>
-          </a>
-          <div class="user-avatar">
-            <img src="../../assets/images/new/defaultpfp.png" alt="User Avatar" />
-          </div>
-        </div>
-      </div>
+      <aside class="sidebar">
+        <h3 class="sidebar-title">Filter By</h3>
+        <!-- Category/Subcategory Filter -->
+  <div class="filter-group">
+    <h4 class="sidebar-title">Category</h4>
+    <select class="filter-select" id="mainCategory">
+      <option value="">All Categories</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+      <option value="home">Home & Kitchen</option>
+      <option value="beauty">Beauty</option>
+      <option value="sports">Sports</option>
+    </select>
+    
+    <select class="filter-select mt-1" id="subCategory" disabled>
+      <option value="">All Subcategories</option>
+    </select>
+  </div>
 
-      <!-- Chat Container -->
-      <div class="chat-container" id="chatContainer">
-        <!-- Chat List Panel -->
-        <div class="chat-list" id="chatList">
-          <!-- Chat list items will be rendered here -->
+  <!-- Dynamic Attributes Filter -->
+  <div class="filter-group" id="attributesFilter">
+    <h4 class="sidebar-title">Attributes</h4>
+    <div id="attributesContainer"></div>
+  </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Customer Rating</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="rating-filter" value="4" />
+              <span class="star-rating">★★★★★</span> & up
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="rating-filter" value="3" />
+              <span class="star-rating">★★★★</span> & up
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="rating-filter" value="2" />
+              <span class="star-rating">★★★</span> & up
+            </label>
+          </div>
         </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Category</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="techmaster" /> TechMaster
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="fashionista" /> Fashionista
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="homeessentials" /> HomeEssentials
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="bookhaven" /> BookHaven
+            </label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Availability</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="inStockFilter" /> In Stock
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" /> Deals &amp; Discounts
+            </label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Shipping</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" /> Free Shipping
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" /> Same Day Delivery
+            </label>
+          </div>
+        </div>
+      </aside>
 
-        <!-- Chat Conversation Panel -->
-        <div class="chat-conversation" id="chatConversation">
-          <div class="chat-header" id="chatHeader">
-            <span class="back-btn" id="backBtn" style="display: none">
-              <i class="fas fa-arrow-left"></i> Back
-            </span>
-            <!-- Chat avatar will be updated with seller's photo -->
-            <img src="../../assets/images/new/defaultpfp.png" alt="Seller Avatar" class="chat-avatar" />
-            <span class="chat-seller-name" id="chatSellerName">Select a chat</span>
-            <span class="close-chat" id="closeChat"><i class="fas fa-times"></i></span>
+      <div class="products-container">
+        <div class="sort-container">
+          <div class="results-count">
+            Showing <span id="productCount">0</span> results
           </div>
-          <div class="chat-messages" id="chatMessages">
-            <p class="no-chat">No conversation selected.</p>
-          </div>
-          <div class="chat-input" id="chatInputArea">
-            <!-- Replying context (hidden by default) -->
-            <div class="replying-context" id="replyContext" style="display: none">
-              <span id="replyText"></span>
-              <button id="cancelReply">&times;</button>
+          <div class="sort-options">
+            <select class="sort-select" id="sortSelect">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+              <option value="newest">Newest Arrivals</option>
+            </select>
+            <div class="view-options">
+              <button class="view-button active" id="gridViewBtn">□□□</button>
+              <button class="view-button" id="listViewBtn">≡</button>
             </div>
-            <div class="chat-input-row">
-              <input type="text" id="messageInput" placeholder="Type a message..." />
-              <button class="img-btn" id="uploadImgBtn">
-                <i class="fas fa-image"></i>
-              </button>
-              <button id="sendMessage">
-                <i class="fas fa-paper-plane"></i>
-              </button>
-            </div>
-            <!-- Hidden file input for images -->
-            <input type="file" id="imgUpload" accept="image/*" />
           </div>
+        </div>
+        <div class="products-grid" id="productsGrid">
+          <!-- Products will be populated here dynamically -->
+        </div>
+        <div class="pagination" id="pagination">
+          <button class="page-button active">1</button>
+          <button class="page-button">2</button>
+          <button class="page-button">3</button>
+          <button class="page-button">→</button>
         </div>
       </div>
     </div>
+  </main>
 
-    <!-- Seller Details Modal (slides in from right) -->
-    <div class="modal-overlay" id="sellerModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Seller Details</h3>
-          <span class="modal-close" id="closeSellerModal"><i class="fas fa-times"></i></span>
-        </div>
-        <div class="seller-details" id="sellerDetails">
-          <img src="" alt="Seller Profile" id="sellerModalPfp" />
-          <p><strong>Name:</strong> <span id="sellerModalName"></span></p>
-          <p><strong>Email:</strong> <span id="sellerModalEmail"></span></p>
-          <p><strong>Contact:</strong> <span id="sellerModalContact"></span></p>
-          <p>
-            <strong>Social:</strong>
-            <a href="#" target="_blank" id="sellerModalSocial">Visit Profile</a>
-          </p>
-          <p><strong>Rating:</strong> <span id="sellerModalRating"></span>/5</p>
-        </div>
-      </div>
-    </div>
+  <div class="toast" id="toast">Added to cart!</div>
 
-    <!-- Inline Module Script for Chat Functionality with Debug Logging -->
-    <script type="module">
-      import { auth, db } from '../../database/config.js';
-      import {
-        collection,
-        query,
-        orderBy,
-        addDoc,
-        serverTimestamp,
-        onSnapshot,
-        doc,
-        getDoc,
-        updateDoc,
-        getDocs,
-      } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
-      import {
-        onAuthStateChanged,
-        signOut,
-      } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+  <script type="module">
+    
+// shop.js
+import { auth, db } from '../../../database/config.js';
+import {
+  onAuthStateChanged,
+  signOut,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
-      // --- URL Parameter Processing ---
-      const urlParams = new URLSearchParams(window.location.search);
-      const sellerIdParam = urlParams.get('sellerId'); // Passed from redirect link
-      const listingIdParam = urlParams.get('listingId'); // Listing/product ID if provided
-      console.log('URL parameters:', { sellerIdParam, listingIdParam });
 
-      // --- DOM Elements ---
-      const chatListEl = document.getElementById('chatList');
-      const chatHeader = document.getElementById('chatHeader');
-      const chatMessagesEl = document.getElementById('chatMessages');
-      const messageInputEl = document.getElementById('messageInput');
-      const sendButtonEl = document.getElementById('sendMessage');
-      const uploadImgBtn = document.getElementById('uploadImgBtn');
-      const imgUploadEl = document.getElementById('imgUpload');
-      const replyContext = document.getElementById('replyContext');
-      const replyText = document.getElementById('replyText');
-      const cancelReplyBtn = document.getElementById('cancelReply');
-      const backBtn = document.getElementById('backBtn');
-      const closeChatBtn = document.getElementById('closeChat');
-      const chatInputArea = document.getElementById('chatInputArea');
-
-      // Seller modal elements
-      const sellerModal = document.getElementById('sellerModal');
-      const closeSellerModal = document.getElementById('closeSellerModal');
-
-      // --- Global Chat State & Product Reference ---
-      let currentChatId = null;
-      let replyingTo = null;
-      let lastMessageDate = null;
-      let currentChatUnsubscribe = null; // For Firestore onSnapshot listener
-
-      // For product reference details (if arriving via listing)
-      let productReferenceData = null;
-      let localProductReferenceSent = false;
-
-      // --- Utility Functions ---
-      function appendDateDivider(date) {
-        const divider = document.createElement('div');
-        divider.className = 'date-divider';
-        divider.textContent = date;
-        chatMessagesEl.appendChild(divider);
+    let products = [];       // To hold listings fetched from Firestore.
+    let userCart = {};       // { productId: quantity }
+    let userWishlist = [];   // [ productId, ... ]
+    let currentUser = null;
+    let cartCount = 0;
+    
+    // Query selectors
+    const productsGrid = document.getElementById('productsGrid');
+    const cartCountElement = document.querySelector('.cart-count');
+    const toast = document.getElementById('toast');
+    const productCountElement = document.getElementById('productCount');
+    
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const applyPriceFilter = document.getElementById('applyPriceFilter');
+    const inStockFilter = document.getElementById('inStockFilter');
+    const sortSelect = document.getElementById('sortSelect');
+    const brandFilters = document.querySelectorAll('.category-filter');
+    const ratingFilters = document.querySelectorAll('.rating-filter');
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+    const productsContainer = document.querySelector('.products-container');
+    
+    // Render star rating
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      let starsHTML = '';
+      for (let i = 0; i < fullStars; i++) { starsHTML += '★'; }
+      if (halfStar) { starsHTML += '★'; }
+      while (starsHTML.length < 5) { starsHTML += '☆'; }
+      return starsHTML;
+    }
+    
+    // Render products using the current UI
+    function renderProducts(productsToRender) {
+      productsGrid.innerHTML = "";
+      if (productsToRender.length === 0) {
+        productsGrid.innerHTML = "<p>No products found matching your criteria.</p>";
+        productCountElement.textContent = "0";
+        return;
       }
-
-      function appendMessage(sender, text, replyRef, time, date, scroll = true) {
-        console.log('Appending message:', { sender, text, time, date });
-        if (lastMessageDate !== date) {
-          appendDateDivider(date);
-          lastMessageDate = date;
-        }
-        const msgDiv = document.createElement('div');
-        msgDiv.classList.add('message', sender === 'You' ? 'you' : 'seller');
-
-        // Message header with sender and time
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'message-header';
-        headerDiv.innerHTML = `<span class="sender-label">${sender}:</span>
-                               <span class="message-time">${time}</span>`;
-        msgDiv.appendChild(headerDiv);
-
-        // Message body
-        const bodyDiv = document.createElement('div');
-        bodyDiv.className = 'message-body';
-        bodyDiv.textContent = text;
-        msgDiv.appendChild(bodyDiv);
-
-        // Reply button (appears on hover)
-        const replyBtn = document.createElement('span');
-        replyBtn.classList.add('reply-btn');
-        replyBtn.innerHTML = '<i class="fas fa-reply"></i>';
-        replyBtn.title = 'Reply';
-        replyBtn.addEventListener('click', () => {
-          replyingTo = text;
-          replyContext.style.display = 'flex';
-          replyText.textContent = text;
-          console.log('Replying to message:', text);
+      productsToRender.forEach(product => {
+        const productCard = document.createElement("div");
+        productCard.className = "product-card";
+        productCard.innerHTML = `
+          <img src="${product.mainImageUrl
+ || '/api/placeholder/220/220'}" alt="${product.name}" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-rating">
+              <span class="star-rating">${renderStars(product.rating)}</span>
+              <span>${product.rating} (${product.ratingCount || 0})</span>
+            </div>
+            <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+            <div class="product-buttons">
+              <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+              <button class="wishlist-button" data-id="${product.id}">♡</button>
+            </div>
+            ${product.quantity < 1 ? '<p style="color: red; margin-top: 8px;">Out of Stock</p>' : ""}
+          </div>
+        `;
+        // When clicking on the card (but not on the buttons), redirect to product details page.
+        productCard.addEventListener('click', function(e) {
+          if (e.target.closest('.add-to-cart') || e.target.closest('.wishlist-button')) return;
+          // Redirect to the product details page (implement the details page later)
+          window.location.href = `productDetails.html?id=${product.id}`;
         });
-        msgDiv.appendChild(replyBtn);
-
-        chatMessagesEl.appendChild(msgDiv);
-        if (scroll) chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-      }
-
-      function clearMessages() {
-        console.log('Clearing messages');
-        chatMessagesEl.innerHTML = '';
-        lastMessageDate = null;
-      }
-
-      // --- Chat Conversation Functions ---
-      // Loads (or creates) a conversation between the current user and the seller.
-      async function loadConversation(sellerId) {
-        const currentUserUid = auth.currentUser.uid;
-        // Create a unique chat ID based on both IDs.
-        const chatId = `${currentUserUid}_${sellerId}`;
-        currentChatId = chatId;
-        console.log('Loading conversation for seller:', sellerId, 'Chat ID:', chatId);
-        chatInputArea.style.display = 'block';
-
-        // Fetch seller info from global sellers collection.
-        const sellerDoc = await getDoc(doc(db, 'sellers', sellerId));
-        if (!sellerDoc.exists()) {
-          console.log('Seller not found for sellerId:', sellerId);
-        }
-        const sellerData = sellerDoc.exists() ? sellerDoc.data() : {};
-        console.log('Seller data:', sellerData);
-        // Update the chat header with the seller's profile.
-        chatHeader.querySelector('.chat-avatar').src =
-          sellerData.profilePicUrl || '../../assets/images/new/defaultpfp.png';
-        document.getElementById('chatSellerName').textContent =
-          sellerData.businessName || 'Seller';
-
-        // Set up a real-time listener for messages.
-        const messagesRef = collection(db, 'chats', chatId, 'messages');
-        if (currentChatUnsubscribe) {
-          console.log('Unsubscribing from previous listener');
-          currentChatUnsubscribe();
-        }
-        currentChatUnsubscribe = onSnapshot(
-          query(messagesRef, orderBy('timestamp', 'asc')),
-          (snapshot) => {
-            console.log('onSnapshot - messages updated, count:', snapshot.size);
-            clearMessages();
-            snapshot.forEach((docSnap) => {
-              const msg = docSnap.data();
-              const time = msg.timestamp
-                ? new Date(msg.timestamp.seconds * 1000).toLocaleTimeString()
-                : 'Now';
-              const date = msg.timestamp
-                ? new Date(msg.timestamp.seconds * 1000).toLocaleDateString()
-                : 'Today';
-              appendMessage(
-                msg.senderId === currentUserUid ? 'You' : 'Seller',
-                msg.text,
-                msg.reply || null,
-                time,
-                date,
-                false
-              );
-            });
-            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-          }
-        );
-      }
-
-      // Renders the chat list. If a sellerId is provided via URL, load that conversation.
-      // Otherwise, query all chats that the current user is a part of.
-      async function renderChatList() {
-        const currentUserUid = auth.currentUser.uid;
-        if (sellerIdParam) {
-          console.log('renderChatList: sellerIdParam exists', sellerIdParam);
-          // Fetch seller info from global sellers collection.
-          const sellerDoc = await getDoc(doc(db, 'sellers', sellerIdParam));
-          console.log('Fetched sellerDoc:', sellerDoc.exists() ? sellerDoc.data() : "no seller data");
-          const sellerData = sellerDoc.exists() ? sellerDoc.data() : {};
-          const chatItem = document.createElement('div');
-          chatItem.className = 'chat-item active';
-          chatItem.setAttribute('data-id', sellerIdParam);
-          chatItem.innerHTML = `
-            <img src="${
-              sellerData.profilePicUrl || '../../assets/images/new/defaultpfp.png'
-            }" alt="${sellerData.businessName || 'Seller'}" class="chat-avatar" />
-            <div class="chat-info">
-              <span class="chat-name">${sellerData.businessName || 'Seller'}</span>
-            </div>
-            <div class="chat-time">Now</div>
-          `;
-          chatItem.addEventListener('click', () => {
-            console.log('Chat item clicked for seller', sellerIdParam);
-            loadConversation(sellerIdParam);
-          });
-          chatListEl.innerHTML = '';
-          chatListEl.appendChild(chatItem);
-        } else {
-          console.log('renderChatList: No sellerIdParam, querying all chats for current user');
-          const chatsRef = collection(db, 'chats');
-          const querySnapshot = await getDocs(chatsRef);
-          let userChats = [];
-          querySnapshot.forEach((docSnap) => {
-            if (docSnap.id.startsWith(currentUserUid + '_')) {
-              userChats.push({ chatId: docSnap.id, ...docSnap.data() });
-            }
-          });
-          console.log('User chats found:', userChats);
-          if (userChats.length === 0) {
-            chatListEl.innerHTML = "<p class='no-chat'>You have no chats.</p>";
-            chatMessagesEl.innerHTML = "<p class='no-chat'>You have no chats.</p>";
-            chatInputArea.style.display = 'none';
-          } else {
-            chatListEl.innerHTML = '';
-            for (const chat of userChats) {
-              const parts = chat.chatId.split('_');
-              const sellerId = parts[1]; // Chat id format: currentUserUid_sellerId
-              console.log('Rendering chat for sellerId:', sellerId);
-              const sellerDoc = await getDoc(doc(db, 'sellers', sellerId));
-              const sellerData = sellerDoc.exists() ? sellerDoc.data() : {};
-              const chatItem = document.createElement('div');
-              chatItem.className = 'chat-item';
-              chatItem.setAttribute('data-id', sellerId);
-              chatItem.innerHTML = `
-                <img src="${
-                  sellerData.profilePicUrl || '../../assets/images/new/defaultpfp.png'
-                }" alt="${sellerData.businessName || 'Seller'}" class="chat-avatar" />
-                <div class="chat-info">
-                  <span class="chat-name">${sellerData.businessName || 'Seller'}</span>
-                  <span class="chat-preview">Tap to view conversation</span>
-                </div>
-                <div class="chat-time">Now</div>
-              `;
-              chatItem.addEventListener('click', () => {
-                console.log('Chat item clicked for seller', sellerId);
-                loadConversation(sellerId);
-              });
-              chatListEl.appendChild(chatItem);
-            }
-          }
-        }
-      }
-
-      // --- Navigation & Event Listeners ---
-      backBtn.addEventListener('click', () => {
-        console.log('Back button clicked');
-        document.getElementById('chatContainer').classList.remove('mobile-active');
+    
+        productsGrid.appendChild(productCard);
       });
-
-      closeChatBtn.addEventListener('click', () => {
-        console.log('Close chat clicked');
-        currentChatId = null;
-        clearMessages();
-        document.getElementById('chatSellerName').textContent = 'Select a chat';
-        chatMessagesEl.innerHTML = "<p class='no-chat'>Select a chat</p>";
-        chatInputArea.style.display = 'none';
-        document.querySelectorAll('.chat-item').forEach((item) => item.classList.remove('active'));
-      });
-
-      // Send text message – if a listing id is provided and this is the first message in this instance,
-      // attach the product reference details.
-      sendButtonEl.addEventListener('click', async () => {
-        const text = messageInputEl.value.trim();
-        if (!text || !currentChatId) {
-          console.log('Send aborted: missing text or currentChatId');
-          return;
-        }
-        const currentUserUid = auth.currentUser.uid;
-        const messagesRef = collection(db, 'chats', currentChatId, 'messages');
-
-        // Build the basic message payload.
-        const messageData = {
-          text,
-          senderId: currentUserUid,
-          timestamp: serverTimestamp(),
-          read: false,
-          reply: replyingTo || null,
-        };
-
-        if (listingIdParam && productReferenceData && !localProductReferenceSent) {
-          console.log('Attaching product reference to first message:', productReferenceData);
-          messageData.productReference = productReferenceData;
-          localProductReferenceSent = true;
-        } else {
-          console.log('Sending normal message:', messageData);
-        }
-
-        try {
-          await addDoc(messagesRef, messageData);
-          console.log('Message sent successfully');
-        } catch (error) {
-          console.error('Error sending message:', error);
-        }
-        messageInputEl.value = '';
-        replyingTo = null;
-        replyContext.style.display = 'none';
-      });
-
-      // Send on Enter key press.
-      messageInputEl.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          console.log('Enter key pressed in message input');
-          sendButtonEl.click();
-        }
-      });
-
-      // Image upload functionality.
-      uploadImgBtn.addEventListener('click', () => {
-        console.log('Upload image button clicked');
-        imgUploadEl.click();
-      });
-      imgUploadEl.addEventListener('change', () => {
-        const file = imgUploadEl.files[0];
-        if (file && currentChatId) {
-          console.log('Image file selected:', file);
-          const reader = new FileReader();
-          reader.onload = async function (ev) {
-            const currentUserUid = auth.currentUser.uid;
-            const messagesRef = collection(db, 'chats', currentChatId, 'messages');
-            try {
-              await addDoc(messagesRef, {
-                text: '[Image]',
-                senderId: currentUserUid,
-                timestamp: serverTimestamp(),
-                read: false,
-                reply: replyingTo || null,
-              });
-              console.log('Image message sent successfully');
-            } catch (error) {
-              console.error('Error sending image message:', error);
-            }
-            messageInputEl.value = '';
-            replyingTo = null;
-            replyContext.style.display = 'none';
-          };
-          reader.readAsDataURL(file);
-        }
-        imgUploadEl.value = '';
-      });
-
-      // Cancel reply action.
-      cancelReplyBtn.addEventListener('click', () => {
-        console.log('Cancel reply clicked');
-        replyingTo = null;
-        replyContext.style.display = 'none';
-      });
-
-      // Seller details modal functionality.
-      document.getElementById('chatSellerName').addEventListener('click', async () => {
-        if (currentChatId) {
-          console.log('Opening seller details modal for sellerId:', sellerIdParam);
-          const sellerDoc = await getDoc(doc(db, 'sellers', sellerIdParam));
-          const sellerData = sellerDoc.exists() ? sellerDoc.data() : {};
-          document.getElementById('sellerModalPfp').src =
-            sellerData.profilePicUrl || '../../assets/images/new/defaultpfp.png';
-          document.getElementById('sellerModalName').textContent =
-            sellerData.businessName || 'Seller';
-          document.getElementById('sellerModalEmail').textContent =
-            sellerData.email || 'No email provided';
-          document.getElementById('sellerModalContact').textContent =
-            sellerData.phone || 'No contact provided';
-          document.getElementById('sellerModalSocial').href =
-            sellerData.facebook || '#';
-          document.getElementById('sellerModalRating').textContent =
-            typeof sellerData.rating === 'number'
-              ? sellerData.rating.toFixed(1)
-              : 'N/A';
-          sellerModal.style.display = 'flex';
-        }
-      });
-      closeSellerModal.addEventListener('click', () => {
-        console.log('Closing seller modal');
-        sellerModal.style.display = 'none';
-      });
-
-      // --- Initialization ---
-      onAuthStateChanged(auth, async (user) => {
-        if (user && user.emailVerified) {
-          console.log('User signed in:', user.uid);
-          if (listingIdParam) {
-            console.log('ListingId provided, fetching product details for listingId:', listingIdParam);
-            const productDoc = await getDoc(doc(db, 'items', listingIdParam));
-            if (productDoc.exists()) {
-              const productData = productDoc.data();
-              productReferenceData = {
-                productName: productData.itemName || 'Product',
-                productImage: productData.imageURL || '../../assets/images/new/defaultpfp.png',
-              };
-              console.log('Product reference data set:', productReferenceData);
+      productCountElement.textContent = productsToRender.length;
+      
+      // Attach Add to Cart events
+      document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener("click", async function(e) {
+          // Prevent card click event from firing
+          e.stopPropagation();
+          e.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const product = products.find(p => p.id === productId);
+          if (product && product.inStock) {
+            // If user is logged in, call your Firebase addToCart logic:
+            if (currentUser) {
+              await addToCart(product);
             } else {
-              console.log('No product found for listingId:', listingIdParam);
+              // Optionally redirect to sign in page
+              window.location.href = "SignIn.html";
+              return;
             }
+            cartCount++;
+            cartCountElement.textContent = cartCount;
+            showToast(`Added ${product.name} to cart!`);
           }
-          // Render chat list (either for a specific seller or for all chats)
-          await renderChatList();
-          // If sellerId is provided in URL, automatically load that conversation.
-          if (sellerIdParam) {
-            console.log('Loading conversation for sellerId from URL:', sellerIdParam);
-            loadConversation(sellerIdParam);
+        });
+      });
+      // Attach Wishlist events
+      document.querySelectorAll('.wishlist-button').forEach(button => {
+        button.addEventListener("click", async function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const product = products.find(p => p.id === productId);
+          if (currentUser) {
+            await toggleWishlist(product);
+          } else {
+            window.location.href = "SignIn.html";
           }
+        });
+      });
+    }
+    
+    // Example Firebase addToCart function (adjust based on your previous logic)
+    async function addToCart(product) {
+      try {
+        const cartDocRef = doc(db, "users", currentUser.uid, "cart", product.id);
+        await setDoc(cartDocRef, { quantity: 1 });
+        userCart[product.id] = 1;
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+      }
+    }
+    
+    // Example Firebase toggleWishlist function
+    async function toggleWishlist(product) {
+      try {
+        const wishlistDocRef = doc(db, "users", currentUser.uid, "wishlist", product.id);
+        if (userWishlist.includes(product.id)) {
+          await deleteDoc(wishlistDocRef);
+          userWishlist = userWishlist.filter(id => id !== product.id);
         } else {
-          console.log('User not signed in or email not verified.');
-          window.location.href = '../../index.html';
+          await setDoc(wishlistDocRef, { addedAt: new Date() });
+          userWishlist.push(product.id);
+        }
+      } catch (error) {
+        console.error("Error toggling wishlist:", error);
+      }
+    }
+    
+    // Show a temporary toast message
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+    
+    // Filter products based on multiple criteria
+    function filterProducts() {
+      let filtered = [...products];
+     // Replace the brand filters logic with:
+const mainCategory = document.getElementById('mainCategory');
+const subCategory = document.getElementById('subCategory');
+const attributesContainer = document.getElementById('attributesContainer');
+
+// Category change handler
+mainCategory.addEventListener('change', () => {
+  const category = mainCategory.value;
+  subCategory.disabled = !category;
+  subCategory.innerHTML = '<option value="">All Subcategories</option>';
+  attributesContainer.innerHTML = '';
+  
+  if (category && categoriesData[category]) {
+    categoriesData[category].forEach(sub => {
+      const option = document.createElement('option');
+      option.value = sub;
+      option.textContent = sub;
+      subCategory.appendChild(option);
+    });
+  }
+  
+  renderProducts(filterProducts());
+});
+
+// Subcategory change handler
+subCategory.addEventListener('change', () => {
+  attributesContainer.innerHTML = '';
+  const subcat = subCategory.value;
+  
+  if (subcat && subcategoryAttributes[subcat]) {
+    const attributes = subcategoryAttributes[subcat];
+    attributes.forEach(attr => {
+      const group = document.createElement('div');
+      group.className = 'attribute-group';
+      group.innerHTML = `
+        <div class="attribute-title">${attr}</div>
+        <div class="nested-attributes">
+          <input type="text" 
+                 class="attribute-input" 
+                 placeholder="Enter ${attr}"
+                 data-attribute="${attr}"
+                 data-subcategory="${subcat}">
+        </div>
+      `;
+      attributesContainer.appendChild(group);
+    });
+  }
+  
+  renderProducts(filterProducts());
+});
+
+// Update filterProducts function
+function filterProducts() {
+  let filtered = [...products];
+  
+  // Category/Subcategory filter
+  const mainCat = mainCategory.value;
+  const subCat = subCategory.value;
+  
+  if (mainCat) {
+    filtered = filtered.filter(p => p.category === mainCat);
+    if (subCat) {
+      filtered = filtered.filter(p => p.subcategory === subCat);
+      
+      // Attribute filtering
+      const attributeInputs = document.querySelectorAll('.attribute-input');
+      attributeInputs.forEach(input => {
+        const attr = input.dataset.attribute;
+        const value = input.value.trim().toLowerCase();
+        
+        if (value) {
+          filtered = filtered.filter(p => 
+            p.attributes[attr]?.toLowerCase().includes(value)
+          );
         }
       });
+    }
+  }
+  
+  // Existing other filters (price, rating, etc)
+  // ... keep existing price and rating filtering logic ...
+  
+  return filtered;
+}
 
-      // Logout handler.
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        signOut(auth)
-          .then(() => {
-            console.log('User signed out');
-            window.location.href = '../../index.html';
-          })
-          .catch((error) => console.error('Error signing out:', error));
+// Update your product rendering to include attributes
+function renderProducts(productsToRender) {
+  // ... existing rendering code ...
+  // Add attributes display in product card
+  const attributesHTML = Object.entries(product.attributes || {})
+    .map(([key, value]) => `<div>${key}: ${value}</div>`)
+    .join('');
+  
+  productCard.innerHTML = `
+    ...
+    <div class="product-attributes">${attributesHTML}</div>
+    ...
+  `;
+}
+      // Price filter
+      const minPrice = parseFloat(minPriceInput.value) || 0;
+      const maxPrice = parseFloat(maxPriceInput.value) || Number.MAX_VALUE;
+      filtered = filtered.filter(product => parseFloat(product.price) >= minPrice && parseFloat(product.price) <= maxPrice);
+      // In Stock filter
+      if (inStockFilter.checked) {
+        filtered = filtered.filter(product => product.quantity > 0);
+      }
+      // Category filters
+      const selectedBrands = Array.from(brandFilters)
+        .filter(el => el.checked)
+        .map(el => el.value);
+      if (selectedBrands.length > 0) {
+        filtered = filtered.filter(product => selectedBrands.includes(product.brand));
+      }
+      // Rating filters
+      const selectedRatings = Array.from(ratingFilters)
+        .filter(el => el.checked)
+        .map(el => parseFloat(el.value));
+      if (selectedRatings.length > 0) {
+        const minRating = Math.min(...selectedRatings);
+        filtered = filtered.filter(product => product.rating >= minRating);
+      }
+      // Sort filter
+      sortProducts(filtered, sortSelect.value);
+      return filtered;
+    }
+    
+    // Sorting functionality
+    function sortProducts(array, sortType) {
+      switch(sortType) {
+        case "price-low":
+          array.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+          break;
+        case "price-high":
+          array.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+          break;
+        case "rating":
+          array.sort((a, b) => b.rating - a.rating);
+          break;
+        case "newest":
+          array.reverse(); // Adjust if you have a date field
+          break;
+        default:
+          break; // featured – leave in original order
+      }
+    }
+    
+    // Event listeners for filtering/searching
+    searchBtn.addEventListener("click", () => {
+      renderProducts(filterProducts());
+    });
+    searchInput.addEventListener("keyup", (e) => {
+      if(e.key === "Enter") { renderProducts(filterProducts()); }
+    });
+    categoryFilter.addEventListener("change", () => { renderProducts(filterProducts()); });
+    applyPriceFilter.addEventListener("click", () => { renderProducts(filterProducts()); });
+    inStockFilter.addEventListener("change", () => { renderProducts(filterProducts()); });
+    brandFilters.forEach(filter => { filter.addEventListener("change", () => { renderProducts(filterProducts()); }); });
+    ratingFilters.forEach(filter => { filter.addEventListener("change", () => { renderProducts(filterProducts()); }); });
+    sortSelect.addEventListener("change", () => { 
+      let filtered = filterProducts();
+      renderProducts(filtered);
+    });
+    
+    // View toggle functionality
+    gridViewBtn.addEventListener("click", function() {
+      productsContainer.classList.remove("list-view");
+      gridViewBtn.classList.add("active");
+      listViewBtn.classList.remove("active");
+    });
+    listViewBtn.addEventListener("click", function() {
+      productsContainer.classList.add("list-view");
+      listViewBtn.classList.add("active");
+      gridViewBtn.classList.remove("active");
+    });
+    
+    // Pagination (demo only)
+    document.querySelectorAll(".page-button").forEach(button => {
+      button.addEventListener("click", function() {
+        document.querySelectorAll(".page-button").forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
-    </script>
-  </body>
+    });
+    
+    // Fetch products from Firestore and update UI
+    async function fetchProducts() {
+      try {
+        const listingsSnapshot = await getDocs(collection(db, "listings"));
+        products = listingsSnapshot.docs.map(docSnap => {
+          return { id: docSnap.id, ...docSnap.data() };
+        });
+        renderProducts(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+    
+    // Auth state listener to manage user data and cart/wishlist
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        // Optionally, fetch the user's cart and wishlist from Firestore
+        // and update the UI accordingly.
+        // For brevity, we assume empty cart/wishlist if not implemented.
+      } else {
+        userCart = {};
+        userWishlist = [];
+      }
+      // Fetch products after setting auth state so that add-to-cart and wishlist 
+      // functions know if a user is logged in.
+      await fetchProducts();
+    });
+  </script>
+</body>
 </html>

@@ -1,6 +1,3 @@
-// main.js
-
-// Import Firebase configuration and Firestore functions
 import { app, auth, db, storage, analytics } from './database/config.js';
 import {
   collection,
