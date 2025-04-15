@@ -1,336 +1,352 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discover Products</title>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../../components/haederdissapear.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles/homepageanimation.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link href="./shop.css" rel="stylesheet" />
-    <link href="../../../assets/styles/animation.css" rel="stylesheet" />
-    <link href="../../../assets/styles/header.css" rel="stylesheet" />
-    <script type="module" src="./shop.js" defer></script>
+    <link rel="stylesheet" href="./shop.css" />
+    <title>ShopEasy - Online Shopping</title>
   </head>
   <body>
-    <header class="header">
-      <div class="header-container">
-        <div class="logo">
-          <a href="../../../index.html">E-Shop</a>
-        </div>
-        <div class="search-bar">
-          <input
-            type="text"
-            placeholder="Search products..."
-            id="searchInput"
-          />
-          <button id="searchBtn"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="user-menu">
-          <a href="../account/account.html" class="sixty-nine account-link"
-            ><i class="fas fa-user"></i> Profile</a
-          >
-          <div class="seventy-one">
-            <a href="../wishlist/wishlist.html" class="sixty-nine"
-              ><i class="fas fa-heart"></i> Wishlist</a
-            >
-            <a href="../mycart/mycart.html" class="sixty-nine"
-              ><i class="fas fa-shopping-cart"></i> Cart</a
-            >
+    <!-- Original Header Section -->
+    <header>
+      <div class="header-top">
+        <div class="container">
+          <div class="top-bar">
+            <div class="contact-info">
+              <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+              <span><i class="fas fa-envelope"></i> support@elegance.com</span>
+            </div>
+            <div class="top-nav">
+              <ul>
+                <li><a href="#">Store Locator</a></li>
+                <li><a href="#">Track Order</a></li>
+                <li class="currency-selector">
+                  <select id="currency-select">
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
+                    <option value="gbp">GBP</option>
+                  </select>
+                </li>
+              </ul>
+            </div>
           </div>
-          <a href="../SignUp/SignUp.html" class="seventy signup-link"
-            >Sign In</a
-          >
-          <a href="#" class="seventy logout-btn" style="display: none"
-            >Logout</a
-          >
+        </div>
+      </div>
+      <div class="main-header">
+        <div class="container">
+          <div class="header-wrapper">
+            <div class="logo">
+              <a href="../../../index.html">
+                <h1>Elegance</h1>
+              </a>
+            </div>
+            <div class="search-bar">
+              <form action="#" method="get">
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  id="search-input"
+                />
+                <button type="submit"><i class="fas fa-search"></i></button>
+              </form>
+            </div>
+            <div class="header-actions">
+              <!-- Main Header Account Link -->
+              <div class="action-item">
+                <a href="../wishlist/wishlist.html" id="wishlist-toggle">
+                  <i class="fas fa-heart"></i>
+                  <span>Wishlist</span>
+                  <span class="whishlistcount">0</span>
+                </a>
+              </div>
+              <div class="action-item">
+                <a href="../mycart/mycart.html" id="cart-toggle">
+                  <i class="fas fa-shopping-cart"></i>
+                  <span>Cart</span>
+                  <span class="cartcount">0</span>
+                </a>
+                <div class="dropdown-menu cart-dropdown">
+                  <div class="cart-items" id="cart-items">
+                    <p class="empty-cart">Your cart is empty</p>
+                  </div>
+                  <div class="cart-footer">
+                    <div class="cart-total">
+                      <span>Total:</span>
+                      <span id="cart-total">$0.00</span>
+                    </div>
+                    <div class="cart-actions">
+                      <a href="../mycart/mycart.html" class="btn btn-outline"
+                        >View Cart</a
+                      >
+                      <a
+                        href="../Checkout/Checkout.html"
+                        class="btn btn-primary"
+                        >Checkout</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- In Main Header -->
+              <div class="action-item" id="account-container-main">
+                <a href="../account/account.html" id="account-toggle">
+                  <i class="fas fa-user"></i>
+                  <span id="account-text">Account</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>
 
-    <div class="container">
-      <div class="flex">
-        <!-- Sidebar for Filters -->
-        <div class="sidebar">
-          <h2>Filters</h2>
-          <div>
-            <h3>Category</h3>
-            <ul>
-              <li>
-                <input
-                  id="electronics"
-                  name="category"
-                  type="checkbox"
-                  value="electronics"
-                />
-                <label for="electronics"> Electronics </label>
-              </li>
-              <li>
-                <input
-                  id="fashion"
-                  name="category"
-                  type="checkbox"
-                  value="fashion"
-                />
-                <label for="fashion"> Fashion </label>
-              </li>
-              <li>
-                <input id="home" name="category" type="checkbox" value="home" />
-                <label for="home"> Home </label>
-              </li>
-              <li>
-                <input
-                  id="beauty"
-                  name="category"
-                  type="checkbox"
-                  value="beauty"
-                />
-                <label for="beauty"> Beauty </label>
-              </li>
-            </ul>
+    <!-- Sentinel element (acts as a trigger for the sticky header) -->
+    <div class="header-sentinel"></div>
+
+    <!-- Sticky Header Clone -->
+    <header class="sticky-header">
+      <div class="container">
+        <div class="header-wrapper">
+          <div class="logo">
+            <a href="../../../index.html">
+              <h1>Elegance</h1>
+            </a>
           </div>
-          <div>
-            <h3>Price Range</h3>
-            <input max="1000" min="0" type="range" value="500" />
-          </div>
-          <div>
-            <h3>Rating</h3>
-            <ul>
-              <li>
-                <input
-                  id="4stars"
-                  name="rating"
-                  type="checkbox"
-                  value="4stars"
-                />
-                <label for="4stars"> 4 stars &amp; up </label>
-              </li>
-              <li>
-                <input
-                  id="3stars"
-                  name="rating"
-                  type="checkbox"
-                  value="3stars"
-                />
-                <label for="3stars"> 3 stars &amp; up </label>
-              </li>
-              <li>
-                <input
-                  id="2stars"
-                  name="rating"
-                  type="checkbox"
-                  value="2stars"
-                />
-                <label for="2stars"> 2 stars &amp; up </label>
-              </li>
-              <li>
-                <input id="1star" name="rating" type="checkbox" value="1star" />
-                <label for="1star"> 1 star &amp; up </label>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Brand</h3>
-            <ul>
-              <li>
-                <input
-                  id="brand1"
-                  name="brand"
-                  type="checkbox"
-                  value="brand1"
-                />
-                <label for="brand1"> Brand 1 </label>
-              </li>
-              <li>
-                <input
-                  id="brand2"
-                  name="brand"
-                  type="checkbox"
-                  value="brand2"
-                />
-                <label for="brand2"> Brand 2 </label>
-              </li>
-              <li>
-                <input
-                  id="brand3"
-                  name="brand"
-                  type="checkbox"
-                  value="brand3"
-                />
-                <label for="brand3"> Brand 3 </label>
-              </li>
-              <li>
-                <input
-                  id="brand4"
-                  name="brand"
-                  type="checkbox"
-                  value="brand4"
-                />
-                <label for="brand4"> Brand 4 </label>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Availability</h3>
-            <ul>
-              <li>
-                <input
-                  id="inStock"
-                  name="availability"
-                  type="checkbox"
-                  value="inStock"
-                />
-                <label for="inStock"> In Stock </label>
-              </li>
-              <li>
-                <input
-                  id="outOfStock"
-                  name="availability"
-                  type="checkbox"
-                  value="outOfStock"
-                />
-                <label for="outOfStock"> Out of Stock </label>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- Main Content -->
-        <div class="main-content">
-          <div class="grid">
-            <!-- Product Item -->
-            <div class="product-item">
-              <img
-                alt="Image of a high-quality electronic gadget with sleek design"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/2wac3n1m5fll7TH1Jcns9MTYa2Lae9Z-a1U7i0P8O2o.jpg"
-                width="300"
+          <div class="search-bar">
+            <form action="#" method="get">
+              <input
+                type="text"
+                placeholder="Search for products..."
+                id="search-input"
               />
-              <h3>Product Title 1</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$199.99</p>
-              <p class="stock">In Stock: 20</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star-half-alt"> </i>
-                <span class="count"> (120) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
+              <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+          </div>
+          <div class="header-actions">
+            <!-- Sticky Header Account Link -->
+            <div class="action-item">
+              <a href="../wishlist/wishlist.html" id="wishlist-toggle">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+                <span class="whishlistcount">0</span>
+              </a>
+            </div>
+            <div class="action-item">
+              <a href="../mycart/mycart.html" id="cart-toggle">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+                <span class="cartcount">0</span>
+              </a>
+              <div class="dropdown-menu cart-dropdown">
+                <div class="cart-items" id="cart-items">
+                  <p class="empty-cart">Your cart is empty</p>
+                </div>
+                <div class="cart-footer">
+                  <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0.00</span>
+                  </div>
+                  <div class="cart-actions">
+                    <a href="../mycart/mycart.html" class="btn btn-outline"
+                      >View Cart</a
+                    >
+                    <a href="../Checkout/Checkout.html" class="btn btn-primary"
+                      >Checkout</a
+                    >
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- Repeat for each product item -->
-            <div class="product-item">
-              <img
-                alt="Image of a stylish fashion item with vibrant colors"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/SztJzzYyR_rceHfgQQ-PmqofkureoAwntULngu845Yo.jpg"
-                width="300"
-              />
-              <h3>Product Title 2</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$49.99</p>
-              <p class="stock">In Stock: 50</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star-half-alt"> </i>
-                <span class="count"> (80) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
-            </div>
-            <div class="product-item">
-              <img
-                alt="Image of a modern home appliance with advanced features"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/_AwgBFGUwtKbnGcE-EfoNHCAe0Rcs9DZDEABg1aNItM.jpg"
-                width="300"
-              />
-              <h3>Product Title 3</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$299.99</p>
-              <p class="stock">In Stock: 10</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <span class="count"> (200) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
-            </div>
-            <div class="product-item">
-              <img
-                alt="Image of a beauty product with elegant packaging"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/I21wQ5aQmdzpjW4dTJcffffzKMkUXjn2OegVXe_L8TY.jpg"
-                width="300"
-              />
-              <h3>Product Title 4</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$19.99</p>
-              <p class="stock">In Stock: 100</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star-half-alt"> </i>
-                <i class="fas fa-star"> </i>
-                <span class="count"> (50) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
+            <!-- In Sticky Header -->
+            <div class="action-item" id="account-container-sticky">
+              <a href="../account/account.html" id="account-toggle">
+                <i class="fas fa-user"></i>
+                <span id="account-text">Account</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
+
+    <main class="container">
+      <div class="filter-section">
+        <h3 class="filter-title">Quick Filters</h3>
+        <div class="filter-options">
+          <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="clothing">Clothing</option>
+            <option value="home">Home &amp; Kitchen</option>
+            <option value="books">Books</option>
+          </select>
+          <div class="price-range">
+            <label for="minPrice">Price:</label>
+            <input
+              type="number"
+              class="price-input"
+              id="minPrice"
+              placeholder="Min"
+            />
+            <span>to</span>
+            <input
+              type="number"
+              class="price-input"
+              id="maxPrice"
+              placeholder="Max"
+            />
+            <button class="filter-select" id="applyPriceFilter">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <aside class="sidebar">
+          <h3 class="sidebar-title">Filter By</h3>
+          <!-- Category/Subcategory Filter -->
+          <div class="filter-group">
+            <h4 class="sidebar-title">Category</h4>
+            <select class="filter-select" id="mainCategory">
+              <option value="">All Categories</option>
+              <option value="electronics">Electronics</option>
+              <option value="clothing">Clothing</option>
+              <option value="home">Home & Kitchen</option>
+              <option value="beauty">Beauty</option>
+              <option value="sports">Sports</option>
+            </select>
+
+            <select class="filter-select mt-1" id="subCategory" disabled>
+              <option value="">All Subcategories</option>
+            </select>
+          </div>
+
+          <!-- Dynamic Attributes Filter -->
+          <div class="filter-group" id="attributesFilter">
+            <h4 class="sidebar-title">Attributes</h4>
+            <div id="attributesContainer"></div>
+          </div>
+          <div class="filter-group">
+            <h4 class="sidebar-title">Customer Rating</h4>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" class="rating-filter" value="4" />
+                <span class="star-rating">★★★★★</span> & up
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" class="rating-filter" value="3" />
+                <span class="star-rating">★★★★</span> & up
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" class="rating-filter" value="2" />
+                <span class="star-rating">★★★</span> & up
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="sidebar-title">Category</h4>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  class="category-filter"
+                  value="techmaster"
+                />
+                TechMaster
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  class="category-filter"
+                  value="fashionista"
+                />
+                Fashionista
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  class="category-filter"
+                  value="homeessentials"
+                />
+                HomeEssentials
+              </label>
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  class="category-filter"
+                  value="bookhaven"
+                />
+                BookHaven
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="sidebar-title">Availability</h4>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="inStockFilter" /> In Stock
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" /> Deals &amp; Discounts
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h4 class="sidebar-title">Shipping</h4>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" /> Free Shipping
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" /> Same Day Delivery
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        <div class="products-container">
+          <div class="sort-container">
+            <div class="results-count">
+              Showing <span id="productCount">0</span> results
+            </div>
+            <div class="sort-options">
+              <select class="sort-select" id="sortSelect">
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="newest">Newest Arrivals</option>
+              </select>
+              <div class="view-options">
+                <button class="view-button active" id="gridViewBtn">□□□</button>
+                <button class="view-button" id="listViewBtn">≡</button>
+              </div>
+            </div>
+          </div>
+          <div class="products-grid" id="productsGrid">
+            <!-- Products will be populated here dynamically -->
+          </div>
+          <div class="pagination" id="pagination">
+            <button class="page-button active">1</button>
+            <button class="page-button">2</button>
+            <button class="page-button">3</button>
+            <button class="page-button">→</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="toast" id="toast">Added to cart!</div>
+
+    <script type="module" src="./shop.js"></script>
   </body>
 </html>

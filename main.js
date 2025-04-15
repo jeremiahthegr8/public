@@ -337,23 +337,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const wishlistBtn = document.querySelector('.wishlist-btn');
     if (wishlistBtn && currentUser) {
       wishlistBtn.addEventListener('click', async () => {
+      console.log('Wishlist button clicked for product:', product.id);
+      try {
         // Check if the product is already in the wishlist
         const wishlistDocRef = doc(
-          db,
-          'users',
-          currentUser.uid,
-          'wishlist',
-          product.id
+        db,
+        'users',
+        currentUser.uid,
+        'wishlist',
+        product.id
         );
         const docSnap = await getDoc(wishlistDocRef);
         const wasAdded = !docSnap.exists();
+        console.log(
+        `Product ${product.id} is ${
+          wasAdded ? 'not in' : 'already in'
+        } the wishlist. Toggling...`
+        );
+
         await toggleWishlist(db, currentUser, product);
+        console.log(
+        `Product ${product.id} ${
+          wasAdded ? 'added to' : 'removed from'
+        } wishlist.`
+        );
+
         // Update aggregated wishlist counter: increment if added, decrement if removed
         await updateDoc(doc(db, 'users', currentUser.uid), {
-          wishlistCount: increment(wasAdded ? 1 : -1),
+        wishlistCount: increment(wasAdded ? 1 : -1),
         });
+        console.log(
+        `Wishlist counter ${
+          wasAdded ? 'incremented' : 'decremented'
+        } for user: ${currentUser.uid}`
+        );
+
         await updateUserCounters();
+        console.log('User counters updated.');
+
         updateWishlistIcon(product);
+        console.log('Wishlist icon updated.');
+      } catch (error) {
+        console.error('Error toggling wishlist:', error);
+      }
       });
     }
   }
@@ -452,6 +478,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateWishlistIcon(product);
   }
+
+  // This is for removeBtn click event.
+  const removeBtn = document.querySelector('.cart-remove');
+  if (removeBtn) {
+    removeBtn.addEventListener('click', async () => {
+      const cartDocRef = doc(
+        db,
+        'users',
+        currentUser.uid,
+        'cart',
+        product.id
+      );
+      await removeFromCart(db, currentUser, product);
+      await updateDoc(doc(db, 'users', currentUser.uid), {
+        cartCount: increment(-quantity),
+      });
+      updateProductActions(product);
+      updateUserCounters();
+      const cartNotification = document.getElementById('cart-notification');
+      cartNotification.style.display = 'block';
+      setTimeout(() => {
+        cartNotification.style.display = 'none';
+      }, 3000);
+    });
+  }
+
 
   // This function updates the wishlist icon based on the current state.
   async function updateWishlistIcon(product) {

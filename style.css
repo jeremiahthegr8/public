@@ -1215,7 +1215,8 @@ product-details{
   background: white;
   border: 1px solid #ddd;
   cursor: pointer;
-}.testimonials-section {
+}
+.testimonials-section {
   background: #f8fafc;
   padding: 60px 0;
   text-align: center;

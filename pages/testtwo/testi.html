@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopEasy - Online Shopping</title>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #333;
+      --bg-color: #f9f9f9;
+      --card-bg: #fff;
+      --border-color: #ddd;
+      --spacing: 16px;
+      --font-family: "Arial", sans-serif;
+    }
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--secondary-color);
+    }
+    * { box-sizing: border-box; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing);
+    }
+    /* Header */
+    header {
+      background-color: var(--primary-color);
+      padding: var(--spacing);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .search-container {
+      flex-grow: 1;
+      margin: 0 var(--spacing);
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .search-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--secondary-color);
+      cursor: pointer;
+    }
+    .cart-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .cart-count {
+      background-color: white;
+      color: var(--primary-color);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+    /* Main Content */
+    main {
+      padding: var(--spacing) 0;
+    }
+    .filter-section {
+      background-color: var(--card-bg);
+      padding: var(--spacing);
+      border-radius: 4px;
+      margin-bottom: var(--spacing);
+      border: 1px solid var(--border-color);
+    }
+    .filter-title {
+      margin-top: 0;
+      margin-bottom: var(--spacing);
+      font-size: 18px;
+    }
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing);
+    }
+    .filter-select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: white;
+      min-width: 150px;
+    }
+    .price-range {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-input {
+      width: 80px;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+    .main-content {
+      display: flex;
+      gap: var(--spacing);
+    }
+    .sidebar {
+      width: 250px;
+      background-color: var(--card-bg);
+      padding: var(--spacing);
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      height: fit-content;
+    }
+    .sidebar-title {
+      margin-top: 0;
+      margin-bottom: var(--spacing);
+      font-size: 16px;
+    }
+    .filter-group {
+      margin-bottom: var(--spacing);
+    }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .star-rating {
+      color: gold;
+    }
+    .products-container {
+      flex-grow: 1;
+    }
+    .sort-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing);
+    }
+    .sort-select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+    .view-options {
+      display: flex;
+      gap: 8px;
+    }
+    .view-button {
+      padding: 8px;
+      background-color: white;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .view-button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--spacing);
+    }
+:root {
+  --card-bg: #fff;
+  --border-color: #e0e0e0;
+  --primary-color: #2563eb; /* Tailwind's blue-600 */
+  --primary-hover: #1d4ed8;
+  --spacing: 16px;
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Poppins", sans-serif;
+}
+
+.product-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  background-color: #f9f9f9;
+  padding: var(--spacing);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.product-info {
+  padding: var(--spacing);
+}
+
+.product-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: #111827;
+  line-height: 1.4;
+  height: 44px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-category {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 12px;
+  height: 42px;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #f59e0b;
+  margin-bottom: 10px;
+  gap: 4px;
+}
+
+.star-rating {
+  font-size: 16px;
+}
+
+.product-price {
+  font-weight: 700;
+  font-size: 18px;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+.product-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.add-to-cart {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  flex-grow: 1;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.add-to-cart:hover {
+  background-color: var(--primary-hover);
+}
+
+.wishlist-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.wishlist-button:hover {
+  background-color: #e5e7eb;
+}
+
+.out-of-stock {
+  color: #dc2626;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--spacing);
+      gap: 8px;
+    }
+    .page-button {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .page-button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    .list-view .products-grid { display: block; }
+    .list-view .product-card { display: flex; margin-bottom: var(--spacing); }
+    .list-view .product-image { width: 200px; height: 200px; }
+    .list-view .product-info { flex-grow: 1; }
+    .list-view .product-title { height: auto; font-size: 18px; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+    .toast.show { opacity: 1; }
+    @media (max-width: 768px) {
+      .main-content { flex-direction: column; }
+      .sidebar { width: 100%; margin-bottom: var(--spacing); }
+      .list-view .product-card { flex-direction: column; }
+      .list-view .product-image { width: 100%; }
+    }
+    .product-attributes {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 8px;
+}
+
+.product-attributes div {
+  display: inline-block;
+  margin-right: 8px;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+    .attribute-group {
+  margin-bottom: var(--spacing);
+}
+
+.attribute-title {
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.nested-attributes {
+  margin-left: 16px;
+}
+
+.attribute-checkbox {
+  margin-right: 8px;
+}
+  </style>
+  <!--
+    Ensure you include your Firebase SDK and your own config script here.
+    For example:
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="/path/to/your/firebaseConfig.js"></script>
+  -->
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">ShopEasy</div>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search products..." id="searchInput" />
+        <button class="search-button" id="searchBtn">🔍</button>
+      </div>
+      <div class="cart-container" id="cartBtn">
+        🛒 <span class="cart-count">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="filter-section">
+      <h3 class="filter-title">Quick Filters</h3>
+      <div class="filter-options">
+        <select class="filter-select" id="categoryFilter">
+          <option value="">All Categories</option>
+          <option value="electronics">Electronics</option>
+          <option value="clothing">Clothing</option>
+          <option value="home">Home &amp; Kitchen</option>
+          <option value="books">Books</option>
+        </select>
+        <div class="price-range">
+          <label for="minPrice">Price:</label>
+          <input type="number" class="price-input" id="minPrice" placeholder="Min" />
+          <span>to</span>
+          <input type="number" class="price-input" id="maxPrice" placeholder="Max" />
+          <button class="filter-select" id="applyPriceFilter">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <aside class="sidebar">
+        <h3 class="sidebar-title">Filter By</h3>
+        <!-- Category/Subcategory Filter -->
+  <div class="filter-group">
+    <h4 class="sidebar-title">Category</h4>
+    <select class="filter-select" id="mainCategory">
+      <option value="">All Categories</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+      <option value="home">Home & Kitchen</option>
+      <option value="beauty">Beauty</option>
+      <option value="sports">Sports</option>
+    </select>
+    
+    <select class="filter-select mt-1" id="subCategory" disabled>
+      <option value="">All Subcategories</option>
+    </select>
+  </div>
+
+  <!-- Dynamic Attributes Filter -->
+  <div class="filter-group" id="attributesFilter">
+    <h4 class="sidebar-title">Attributes</h4>
+    <div id="attributesContainer"></div>
+  </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Customer Rating</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="rating-filter" value="4" />
+              <span class="star-rating">★★★★★</span> & up
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="rating-filter" value="3" />
+              <span class="star-rating">★★★★</span> & up
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="rating-filter" value="2" />
+              <span class="star-rating">★★★</span> & up
+            </label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Category</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="techmaster" /> TechMaster
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="fashionista" /> Fashionista
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="homeessentials" /> HomeEssentials
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="category-filter" value="bookhaven" /> BookHaven
+            </label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Availability</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="inStockFilter" /> In Stock
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" /> Deals &amp; Discounts
+            </label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4 class="sidebar-title">Shipping</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" /> Free Shipping
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" /> Same Day Delivery
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <div class="products-container">
+        <div class="sort-container">
+          <div class="results-count">
+            Showing <span id="productCount">0</span> results
+          </div>
+          <div class="sort-options">
+            <select class="sort-select" id="sortSelect">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+              <option value="newest">Newest Arrivals</option>
+            </select>
+            <div class="view-options">
+              <button class="view-button active" id="gridViewBtn">□□□</button>
+              <button class="view-button" id="listViewBtn">≡</button>
+            </div>
+          </div>
+        </div>
+        <div class="products-grid" id="productsGrid">
+          <!-- Products will be populated here dynamically -->
+        </div>
+        <div class="pagination" id="pagination">
+          <button class="page-button active">1</button>
+          <button class="page-button">2</button>
+          <button class="page-button">3</button>
+          <button class="page-button">→</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">Added to cart!</div>
+
+  <script type="module">
+    
+// shop.js
+import { auth, db } from '../../../database/config.js';
+import {
+  onAuthStateChanged,
+  signOut,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+    setDoc,
+    deleteDoc,
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+
+
+    let products = [];       // To hold listings fetched from Firestore.
+    let userCart = {};       // { productId: quantity }
+    let userWishlist = [];   // [ productId, ... ]
+    let currentUser = null;
+    let cartCount = 0;
+    
+    // Query selectors
+    const productsGrid = document.getElementById('productsGrid');
+    const cartCountElement = document.querySelector('.cart-count');
+    const toast = document.getElementById('toast');
+    const productCountElement = document.getElementById('productCount');
+    
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const applyPriceFilter = document.getElementById('applyPriceFilter');
+    const inStockFilter = document.getElementById('inStockFilter');
+    const sortSelect = document.getElementById('sortSelect');
+    const brandFilters = document.querySelectorAll('.category-filter');
+    const ratingFilters = document.querySelectorAll('.rating-filter');
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+    const productsContainer = document.querySelector('.products-container');
+    
+    // Render star rating
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      let starsHTML = '';
+      for (let i = 0; i < fullStars; i++) { starsHTML += '★'; }
+      if (halfStar) { starsHTML += '★'; }
+      while (starsHTML.length < 5) { starsHTML += '☆'; }
+      return starsHTML;
+    }
+    
+    // Render products using the current UI
+    function renderProducts(productsToRender) {
+      productsGrid.innerHTML = "";
+      if (productsToRender.length === 0) {
+        productsGrid.innerHTML = "<p>No products found matching your criteria.</p>";
+        productCountElement.textContent = "0";
+        return;
+      }
+      productsToRender.forEach(product => {
+        const productCard = document.createElement("div");
+        productCard.className = "product-card";
+        productCard.innerHTML = `
+          <img src="${product.mainImageUrl
+ || '/api/placeholder/220/220'}" alt="${product.name}" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-category">${product.category}</div>
+                        <p class="product-description">${product.description}</p>
+            <div class="product-rating">
+              <span class="star-rating">${renderStars(product.rating)}</span>
+              <span>${product.rating} (${product.ratingCount || 0}) reviews </span>
+            </div>
+            <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
+            <div class="product-buttons">
+              <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+              <button class="wishlist-button" data-id="${product.id}">♡</button>
+            </div>
+            ${product.quantity < 1 ? '<p style="color: red; margin-top: 8px;">Out of Stock</p>' : ""}
+          </div>
+        `;
+        // When clicking on the card (but not on the buttons), redirect to product details page.
+        productCard.addEventListener('click', function(e) {
+          if (e.target.closest('.add-to-cart') || e.target.closest('.wishlist-button')) return;
+          // Redirect to the product details page (implement the details page later)
+          window.location.href = `productDetails.html?id=${product.id}`;
+        });
+    
+        productsGrid.appendChild(productCard);
+      });
+      productCountElement.textContent = productsToRender.length;
+      
+      // Attach Add to Cart events
+      document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener("click", async function(e) {
+          // Prevent card click event from firing
+          e.stopPropagation();
+          e.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const product = products.find(p => p.id === productId);
+          if (product && product.inStock) {
+            // If user is logged in, call your Firebase addToCart logic:
+            if (currentUser) {
+              await addToCart(product);
+            } else {
+              // Optionally redirect to sign in page
+              window.location.href = "SignIn.html";
+              return;
+            }
+            cartCount++;
+            cartCountElement.textContent = cartCount;
+            showToast(`Added ${product.name} to cart!`);
+          }
+        });
+      });
+      // Attach Wishlist events
+      document.querySelectorAll('.wishlist-button').forEach(button => {
+        button.addEventListener("click", async function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          const productId = this.getAttribute("data-id");
+          const product = products.find(p => p.id === productId);
+          if (currentUser) {
+            await toggleWishlist(product);
+          } else {
+            window.location.href = "SignIn.html";
+          }
+        });
+      });
+    }
+    
+    // Example Firebase addToCart function (adjust based on your previous logic)
+    async function addToCart(product) {
+      try {
+        const cartDocRef = doc(db, "users", currentUser.uid, "cart", product.id);
+        await setDoc(cartDocRef, { quantity: 1 });
+        userCart[product.id] = 1;
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+      }
+    }
+    
+    // Example Firebase toggleWishlist function
+    async function toggleWishlist(product) {
+      try {
+        const wishlistDocRef = doc(db, "users", currentUser.uid, "wishlist", product.id);
+        if (userWishlist.includes(product.id)) {
+          await deleteDoc(wishlistDocRef);
+          userWishlist = userWishlist.filter(id => id !== product.id);
+        } else {
+          await setDoc(wishlistDocRef, { addedAt: new Date() });
+          userWishlist.push(product.id);
+        }
+      } catch (error) {
+        console.error("Error toggling wishlist:", error);
+      }
+    }
+    
+    // Show a temporary toast message
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+    
+    // Filter products based on multiple criteria
+    function filterProducts() {
+      let filtered = [...products];
+     // Replace the brand filters logic with:
+const mainCategory = document.getElementById('mainCategory');
+const subCategory = document.getElementById('subCategory');
+const attributesContainer = document.getElementById('attributesContainer');
+
+// Category change handler
+mainCategory.addEventListener('change', () => {
+  const category = mainCategory.value;
+  subCategory.disabled = !category;
+  subCategory.innerHTML = '<option value="">All Subcategories</option>';
+  attributesContainer.innerHTML = '';
+  
+  if (category && categoriesData[category]) {
+    categoriesData[category].forEach(sub => {
+      const option = document.createElement('option');
+      option.value = sub;
+      option.textContent = sub;
+      subCategory.appendChild(option);
+    });
+  }
+  
+  renderProducts(filterProducts());
+});
+
+// Subcategory change handler
+subCategory.addEventListener('change', () => {
+  attributesContainer.innerHTML = '';
+  const subcat = subCategory.value;
+  
+  if (subcat && subcategoryAttributes[subcat]) {
+    const attributes = subcategoryAttributes[subcat];
+    attributes.forEach(attr => {
+      const group = document.createElement('div');
+      group.className = 'attribute-group';
+      group.innerHTML = `
+        <div class="attribute-title">${attr}</div>
+        <div class="nested-attributes">
+          <input type="text" 
+                 class="attribute-input" 
+                 placeholder="Enter ${attr}"
+                 data-attribute="${attr}"
+                 data-subcategory="${subcat}">
+        </div>
+      `;
+      attributesContainer.appendChild(group);
+    });
+  }
+  
+  renderProducts(filterProducts());
+});
+
+// Update filterProducts function
+function filterProducts() {
+  let filtered = [...products];
+  
+  // Category/Subcategory filter
+  const mainCat = mainCategory.value;
+  const subCat = subCategory.value;
+  
+  if (mainCat) {
+    filtered = filtered.filter(p => p.category === mainCat);
+    if (subCat) {
+      filtered = filtered.filter(p => p.subcategory === subCat);
+      
+      // Attribute filtering
+      const attributeInputs = document.querySelectorAll('.attribute-input');
+      attributeInputs.forEach(input => {
+        const attr = input.dataset.attribute;
+        const value = input.value.trim().toLowerCase();
+        
+        if (value) {
+          filtered = filtered.filter(p => 
+            p.attributes[attr]?.toLowerCase().includes(value)
+          );
+        }
+      });
+    }
+  }
+  
+  // Existing other filters (price, rating, etc)
+  // ... keep existing price and rating filtering logic ...
+  
+  return filtered;
+}
+
+// Update your product rendering to include attributes
+function renderProducts(productsToRender) {
+  // ... existing rendering code ...
+  // Add attributes display in product card
+  const attributesHTML = Object.entries(product.attributes || {})
+    .map(([key, value]) => `<div>${key}: ${value}</div>`)
+    .join('');
+  
+  productCard.innerHTML = `
+    ...
+    <div class="product-attributes">${attributesHTML}</div>
+    ...
+  `;
+}
+      // Price filter
+      const minPrice = parseFloat(minPriceInput.value) || 0;
+      const maxPrice = parseFloat(maxPriceInput.value) || Number.MAX_VALUE;
+      filtered = filtered.filter(product => parseFloat(product.price) >= minPrice && parseFloat(product.price) <= maxPrice);
+      // In Stock filter
+      if (inStockFilter.checked) {
+        filtered = filtered.filter(product => product.quantity > 0);
+      }
+      // Category filters
+      const selectedBrands = Array.from(brandFilters)
+        .filter(el => el.checked)
+        .map(el => el.value);
+      if (selectedBrands.length > 0) {
+        filtered = filtered.filter(product => selectedBrands.includes(product.brand));
+      }
+      // Rating filters
+      const selectedRatings = Array.from(ratingFilters)
+        .filter(el => el.checked)
+        .map(el => parseFloat(el.value));
+      if (selectedRatings.length > 0) {
+        const minRating = Math.min(...selectedRatings);
+        filtered = filtered.filter(product => product.rating >= minRating);
+      }
+      // Sort filter
+      sortProducts(filtered, sortSelect.value);
+      return filtered;
+    }
+    
+    // Sorting functionality
+    function sortProducts(array, sortType) {
+      switch(sortType) {
+        case "price-low":
+          array.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+          break;
+        case "price-high":
+          array.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+          break;
+        case "rating":
+          array.sort((a, b) => b.rating - a.rating);
+          break;
+        case "newest":
+          array.reverse(); // Adjust if you have a date field
+          break;
+        default:
+          break; // featured – leave in original order
+      }
+    }
+    
+    // Event listeners for filtering/searching
+    searchBtn.addEventListener("click", () => {
+      renderProducts(filterProducts());
+    });
+    searchInput.addEventListener("keyup", (e) => {
+      if(e.key === "Enter") { renderProducts(filterProducts()); }
+    });
+    categoryFilter.addEventListener("change", () => { renderProducts(filterProducts()); });
+    applyPriceFilter.addEventListener("click", () => { renderProducts(filterProducts()); });
+    inStockFilter.addEventListener("change", () => { renderProducts(filterProducts()); });
+    brandFilters.forEach(filter => { filter.addEventListener("change", () => { renderProducts(filterProducts()); }); });
+    ratingFilters.forEach(filter => { filter.addEventListener("change", () => { renderProducts(filterProducts()); }); });
+    sortSelect.addEventListener("change", () => { 
+      let filtered = filterProducts();
+      renderProducts(filtered);
+    });
+    
+    // View toggle functionality
+    gridViewBtn.addEventListener("click", function() {
+      productsContainer.classList.remove("list-view");
+      gridViewBtn.classList.add("active");
+      listViewBtn.classList.remove("active");
+    });
+    listViewBtn.addEventListener("click", function() {
+      productsContainer.classList.add("list-view");
+      listViewBtn.classList.add("active");
+      gridViewBtn.classList.remove("active");
+    });
+    
+    // Pagination (demo only)
+    document.querySelectorAll(".page-button").forEach(button => {
+      button.addEventListener("click", function() {
+        document.querySelectorAll(".page-button").forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+    
+    // Fetch products from Firestore and update UI
+    async function fetchProducts() {
+      try {
+        const listingsSnapshot = await getDocs(collection(db, "listings"));
+        products = listingsSnapshot.docs.map(docSnap => {
+          return { id: docSnap.id, ...docSnap.data() };
+        });
+        renderProducts(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+    
+    // Auth state listener to manage user data and cart/wishlist
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        // Optionally, fetch the user's cart and wishlist from Firestore
+        // and update the UI accordingly.
+        // For brevity, we assume empty cart/wishlist if not implemented.
+      } else {
+        userCart = {};
+        userWishlist = [];
+      }
+      // Fetch products after setting auth state so that add-to-cart and wishlist 
+      // functions know if a user is logged in.
+      await fetchProducts();
+    });
+  </script>
+</body>
+</html>
