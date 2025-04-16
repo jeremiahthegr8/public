@@ -51,7 +51,6 @@ const listViewBtn = document.getElementById('listViewBtn');
 const productsContainer = document.querySelector('.products-container');
 
 // ========= 1. HEADER COUNTERS =========
-// Instead of iterating through the cart/wishlist subcollections, we now fetch the aggregated counters
 async function updateUserCounters() {
   if (!currentUser) return;
   const userDocSnap = await getDoc(doc(db, 'users', currentUser.uid));
@@ -62,12 +61,10 @@ async function updateUserCounters() {
 }
 
 function updateHeaderIcons(cartCount, wishlistCount) {
-  // Update all elements with class 'cartcount'
   const cartCountElems = document.querySelectorAll('.cartcount');
   cartCountElems.forEach((elem) => {
     elem.textContent = cartCount;
   });
-  // Update all elements with class 'whishlistcount'
   const wishlistCountElems = document.querySelectorAll('.whishlistcount');
   wishlistCountElems.forEach((elem) => {
     elem.textContent = wishlistCount;
@@ -75,13 +72,11 @@ function updateHeaderIcons(cartCount, wishlistCount) {
 }
 
 // ========= 2. ACCOUNT LINK LOGIC =========
-// Update the account containers based on login status.
 function updateAccountLink() {
   const containerMain = document.getElementById('account-container-main');
   const containerSticky = document.getElementById('account-container-sticky');
 
   if (currentUser) {
-    // User is logged in: show profile link and logout button.
     if (containerMain) {
       containerMain.innerHTML = `
           <a href="../account/account.html" id="account-link">
@@ -105,7 +100,6 @@ function updateAccountLink() {
         `;
     }
   } else {
-    // User is not logged in: show "Sign In" link with login icon.
     if (containerMain) {
       containerMain.innerHTML = `
           <a href="../SignUp/SignUp.html" id="account-link">
@@ -123,11 +117,9 @@ function updateAccountLink() {
         `;
     }
   }
-  // Attach logout handlers if needed.
   attachLogoutHandler();
 }
 
-// Attach click handlers to logout buttons.
 function attachLogoutHandler() {
   const logoutBtn = document.getElementById('logout-button');
   const logoutBtnSticky = document.getElementById('logout-button-sticky');
@@ -150,7 +142,6 @@ function attachLogoutHandler() {
   }
 }
 
-// Listen for auth state changes.
 auth.onAuthStateChanged((user) => {
   currentUser = user;
   updateUserCounters();
@@ -158,7 +149,6 @@ auth.onAuthStateChanged((user) => {
 });
 
 // ========= 4. DROPDOWN & MOBILE MENUS =========
-// For Cart dropdown.
 const cartToggle = document.getElementById('cart-toggle');
 const cartDropdown = document.querySelector('.cart-dropdown');
 
@@ -168,13 +158,11 @@ cartToggle.addEventListener('click', (e) => {
     cartDropdown.style.display === 'block' ? 'none' : 'block';
 });
 document.addEventListener('click', (e) => {
-  // Close cart dropdown if click outside.
   if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
     cartDropdown.style.display = 'none';
   }
 });
 
-// Render star rating
 function renderStars(rating) {
   const fullStars = Math.floor(rating);
   const halfStar = rating % 1 >= 0.5;
@@ -191,7 +179,13 @@ function renderStars(rating) {
   return starsHTML;
 }
 
-// Render products using the current UI
+async function checkIfInWishlist(productId) {
+  if (!currentUser) return false;
+  const wishlistDocRef = doc(db, 'users', currentUser.uid, 'wishlist', productId);
+  const docSnap = await getDoc(wishlistDocRef);
+  return docSnap.exists();
+}
+
 function renderProducts(productsToRender) {
   productsGrid.innerHTML = '';
   if (productsToRender.length === 0) {
@@ -199,7 +193,9 @@ function renderProducts(productsToRender) {
     productCountElement.textContent = '0';
     return;
   }
-  productsToRender.forEach((product) => {
+
+  productsToRender.forEach(async (product) => {
+    const isInWishlist = await checkIfInWishlist(product.id);
     const productCard = document.createElement('div');
     productCard.className = 'product-card';
     productCard.innerHTML = `
@@ -209,9 +205,7 @@ function renderProducts(productsToRender) {
           <div class="product-info">
             <h3 class="product-title">${product.name}</h3>
             <div class="product-category">${product.category}</div>
-                        <p class="product-description">${
-                          product.description
-                        }</p>
+            <p class="product-description">${product.description}</p>
             <div class="product-rating">
               <span class="star-rating">${renderStars(product.rating)}</span>
               <span>${product.rating} (${
@@ -221,17 +215,16 @@ function renderProducts(productsToRender) {
             <div class="product-price">$${parseFloat(product.price).toFixed(
               2
             )}</div>
-            <!-- Product Actions: Cart controls on the left, Wishlist toggle on the right -->
           <div class="product-actions" style="margin-top: var(--spacing-md); display: flex; align-items: center; justify-content: space-between;">
             <div class="cart-action-area">
-              <!-- This area will be dynamically updated to show either Add to Cart or cart controls -->
+              <!-- Cart controls will be added here -->
             </div>
-            <button class="wishlist-btn btn btn-outline">
-              <i class="wishlist-icon far fa-heart"></i>
+            <button class="wishlist-btn btn btn-light" style="border: none; background: none; cursor: pointer;">
+              <i class="wishlist-icon ${isInWishlist ? 'fas fa-heart' : 'far fa-heart'}" style="color: ${isInWishlist ? 'blue' : 'inherit'}"></i>
             </button>
           </div>
         `;
-    // When clicking on the card (but not on the buttons), redirect to product details page.
+
     productCard.addEventListener('click', function (e) {
       if (
         e.target.closest('.add-to-cart') ||
@@ -242,39 +235,47 @@ function renderProducts(productsToRender) {
         e.target.closest('.cart-increment') ||
         e.target.closest('.cart-decrement') ||
         e.target.closest('.cart-quantity') ||
-        // wishlist button
         e.target.closest('.wishlist-btn') ||
         e.target.closest('.wishlist-icon')
       )
         return;
-      // Redirect to the product details page (implement the details page later)
       window.location.href = `../product/product.html?id=${product.id}`;
     });
 
-    // Load product state (cart and wishlist) to update the UI.
-    updateProductActions(product);
+    // Initialize cart controls
+    updateProductActions(product, productCard);
 
-    // Wishlist toggle event listener.
-    const wishlistBtn = document.querySelector('.wishlist-btn');
-    if (wishlistBtn && currentUser) {
-      wishlistBtn.addEventListener('click', async () => {
-        // Check if the product is already in the wishlist
-        const wishlistDocRef = doc(
-          db,
-          'users',
-          currentUser.uid,
-          'wishlist',
-          product.id
-        );
-        const docSnap = await getDoc(wishlistDocRef);
-        const wasAdded = !docSnap.exists();
-        await toggleWishlist(db, currentUser, product);
-        // Update aggregated wishlist counter: increment if added, decrement if removed
-        await updateDoc(doc(db, 'users', currentUser.uid), {
-          wishlistCount: increment(wasAdded ? 1 : -1),
-        });
-        await updateUserCounters();
-        updateWishlistIcon(product);
+    // Wishlist button event listener
+    const wishlistBtn = productCard.querySelector('.wishlist-btn');
+    if (wishlistBtn) {
+      wishlistBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!currentUser) {
+          console.warn('User must be logged in to use wishlist');
+          return;
+        }
+
+        const wishlistIcon = wishlistBtn.querySelector('.wishlist-icon');
+        const isCurrentlyInWishlist = wishlistIcon.classList.contains('fas');
+        
+        // Optimistic UI update
+        wishlistIcon.classList.toggle('fas', !isCurrentlyInWishlist);
+        wishlistIcon.classList.toggle('far', isCurrentlyInWishlist);
+        wishlistIcon.style.color = !isCurrentlyInWishlist ? 'blue' : 'inherit';
+
+        try {
+          await toggleWishlist(db, currentUser, product);
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            wishlistCount: increment(isCurrentlyInWishlist ? -1 : 1),
+          });
+          await updateUserCounters();
+        } catch (error) {
+          // Revert UI if operation fails
+          wishlistIcon.classList.toggle('fas', isCurrentlyInWishlist);
+          wishlistIcon.classList.toggle('far', !isCurrentlyInWishlist);
+          wishlistIcon.style.color = isCurrentlyInWishlist ? 'blue' : 'inherit';
+          console.error('Error updating wishlist:', error);
+        }
       });
     }
 
@@ -282,11 +283,13 @@ function renderProducts(productsToRender) {
   });
   productCountElement.textContent = productsToRender.length;
 }
+async function updateProductActions(product, productCard) {
+  const cartActionArea = productCard.querySelector('.cart-action-area');
+  if (!cartActionArea) return;
 
-// This function checks whether the product is in the cart and displays the appropriate controls.
-async function updateProductActions(product) {
   let inCart = false;
   let quantity = 0;
+
   if (currentUser) {
     const cartDocRef = doc(db, 'users', currentUser.uid, 'cart', product.id);
     const docSnap = await getDoc(cartDocRef);
@@ -296,121 +299,141 @@ async function updateProductActions(product) {
     }
   }
 
-  const cartActionArea = document.querySelector('.cart-action-area');
   if (inCart) {
     cartActionArea.innerHTML = `
         <div class="cart-controls">
-          <button class="cart-decrement btn btn-secondary" style="margin-right:5px;">-</button>
+          <button class="cart-decrement btn btn-secondary" style="margin-right:5px;" disabled>-</button>
           <span class="cart-quantity" style="margin:0 8px;">${quantity}</span>
-          <button class="cart-increment btn btn-secondary" style="margin-left:5px;">+</button>
-          <button class="cart-remove btn btn-danger" style="margin-left:10px;"><i class="fa fa-trash"></i></button>
+          <button class="cart-increment btn btn-secondary" style="margin-left:5px;" disabled>+</button>
+          <button class="cart-remove btn btn-danger" style="margin-left:10px;" disabled><i class="fa fa-trash"></i></button>
         </div>
       `;
+
     const decrementBtn = cartActionArea.querySelector('.cart-decrement');
     const incrementBtn = cartActionArea.querySelector('.cart-increment');
     const removeBtn = cartActionArea.querySelector('.cart-remove');
 
-    decrementBtn.addEventListener('click', async () => {
+    decrementBtn.disabled = false;
+    incrementBtn.disabled = false;
+    removeBtn.disabled = false;
+
+    decrementBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      decrementBtn.disabled = true;
+
       const newQty = quantity - 1;
-      if (newQty > 0) {
-        await updateCartItemQuantity(db, currentUser, product, newQty);
-        await updateDoc(doc(db, 'users', currentUser.uid), {
-          cartCount: increment(-1),
+      try {
+        if (newQty > 0) {
+          await updateCartItemQuantity(db, currentUser, product, newQty);
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            cartCount: increment(-1),
+          });
+        } else {
+          await removeFromCart(db, currentUser, product);
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            cartCount: increment(-quantity),
+          });
+        }
+        await updateProductActions(product, productCard);
+        await updateUserCounters();
+      } catch (error) {
+        console.error('Error decrementing quantity:', error);
+      } finally {
+        decrementBtn.disabled = false;
+      }
+    });
+
+    incrementBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      incrementBtn.disabled = true;
+
+      try {
+        await updateDoc(doc(db, 'users', currentUser.uid, 'cart', product.id), {
+          quantity: increment(1),
         });
-      } else {
-        // Remove the product if quantity reaches 0
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          cartCount: increment(1),
+        });
+        await updateProductActions(product, productCard);
+        await updateUserCounters();
+      } catch (error) {
+        console.error('Error incrementing quantity:', error);
+      } finally {
+        incrementBtn.disabled = false;
+      }
+    });
+
+    removeBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      removeBtn.disabled = true;
+
+      try {
         await removeFromCart(db, currentUser, product);
         await updateDoc(doc(db, 'users', currentUser.uid), {
           cartCount: increment(-quantity),
         });
-      }
-      updateProductActions(product);
-      updateUserCounters();
-    });
-
-    // For the increment button:
-    incrementBtn.addEventListener('click', async () => {
-      // Disable the button and change its color to indicate it's processing.
-      incrementBtn.disabled = true;
-      incrementBtn.style.backgroundColor = 'gray';
-
-      const cartDocRef = doc(db, 'users', currentUser.uid, 'cart', product.id);
-      try {
-        // Atomically increment the quantity.
-        await updateDoc(cartDocRef, { quantity: increment(1) });
-        await updateDoc(doc(db, 'users', currentUser.uid), {
-          cartCount: increment(1),
-        });
+        await updateProductActions(product, productCard);
+        await updateUserCounters();
       } catch (error) {
-        console.error('Error incrementing quantity:', error);
+        console.error('Error removing item from cart:', error);
       } finally {
-        // Re-enable the button and reset its color.
-        incrementBtn.disabled = false;
-        incrementBtn.style.backgroundColor = '';
-        // Refresh UI after update.
-        updateProductActions(product);
-        updateUserCounters();
+        removeBtn.disabled = false;
       }
     });
   } else {
-    cartActionArea.innerHTML = `<button class="add-to-cart-btn btn btn-primary">Add to Cart</button>`;
+    cartActionArea.innerHTML = `<button class="add-to-cart-btn" disabled>Add to Cart</button>`;
     const addToCartBtn = cartActionArea.querySelector('.add-to-cart-btn');
-    addToCartBtn.addEventListener('click', async () => {
-      await addToCart(db, currentUser, product);
-      await updateDoc(doc(db, 'users', currentUser.uid), {
-        cartCount: increment(1),
-      });
-      updateProductActions(product);
-      updateUserCounters();
-      const cartNotification = document.getElementById('cart-notification');
+    addToCartBtn.disabled = false;
+
+    addToCartBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      addToCartBtn.disabled = true;
+
+      try {
+        await addToCart(db, currentUser, product);
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          cartCount: increment(1),
+        });
+        await updateProductActions(product, productCard);
+        await updateUserCounters();
+
+        const cartNotification = document.getElementById('cart-notification');
+        cartNotification.style.display = 'block';
+        setTimeout(() => {
+          cartNotification.style.display = 'none';
+        }, 3000);
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+      } finally {
+        addToCartBtn.disabled = false;
+      }
+    });
+  }
+}
+  // ========= 10. BACK TO TOP BUTTON & CART NOTIFICATION =========
+  const backToTopButton = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    backToTopButton.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+  backToTopButton.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  const cartNotification = document.getElementById('cart-notification');
+  document.querySelectorAll('.add-to-cart').forEach((button) => {
+    button.addEventListener('click', () => {
       cartNotification.style.display = 'block';
       setTimeout(() => {
         cartNotification.style.display = 'none';
       }, 3000);
     });
-  }
-  updateWishlistIcon(product);
-}
+  });
 
-// This function updates the wishlist icon based on the current state.
-async function updateWishlistIcon(product) {
-  const wishlistIcon = document.querySelector('.wishlist-icon');
-  let inWishlist = false;
-  if (currentUser) {
-    const wishlistDocRef = doc(
-      db,
-      'users',
-      currentUser.uid,
-      'wishlist',
-      product.id
-    );
-    const docSnap = await getDoc(wishlistDocRef);
-    if (docSnap.exists()) {
-      inWishlist = true;
-    }
-  }
-  if (wishlistIcon) {
-    if (inWishlist) {
-      wishlistIcon.classList.remove('far');
-      wishlistIcon.classList.add('fas');
-      wishlistIcon.style.color = 'red';
-    } else {
-      wishlistIcon.classList.remove('fas');
-      wishlistIcon.classList.add('far');
-      wishlistIcon.style.color = 'grey';
-    }
-  }
-}
-
-// Filter products based on multiple criteria
 function filterProducts() {
-  let filtered = [...products];
-  // Replace the brand filters logic with:
+  let filteblue = [...products];
   const mainCategory = document.getElementById('mainCategory');
   const subCategory = document.getElementById('subCategory');
   const attributesContainer = document.getElementById('attributesContainer');
 
-  // Category change handler
   mainCategory.addEventListener('change', () => {
     const category = mainCategory.value;
     subCategory.disabled = !category;
@@ -429,7 +452,6 @@ function filterProducts() {
     renderProducts(filterProducts());
   });
 
-  // Subcategory change handler
   subCategory.addEventListener('change', () => {
     attributesContainer.innerHTML = '';
     const subcat = subCategory.value;
@@ -456,89 +478,44 @@ function filterProducts() {
     renderProducts(filterProducts());
   });
 
-  // Update filterProducts function
-  function filterProducts() {
-    let filtered = [...products];
-
-    // Category/Subcategory filter
-    const mainCat = mainCategory.value;
-    const subCat = subCategory.value;
-
-    if (mainCat) {
-      filtered = filtered.filter((p) => p.category === mainCat);
-      if (subCat) {
-        filtered = filtered.filter((p) => p.subcategory === subCat);
-
-        // Attribute filtering
-        const attributeInputs = document.querySelectorAll('.attribute-input');
-        attributeInputs.forEach((input) => {
-          const attr = input.dataset.attribute;
-          const value = input.value.trim().toLowerCase();
-
-          if (value) {
-            filtered = filtered.filter((p) =>
-              p.attributes[attr]?.toLowerCase().includes(value)
-            );
-          }
-        });
-      }
-    }
-
-    // Existing other filters (price, rating, etc)
-    // ... keep existing price and rating filtering logic ...
-
-    return filtered;
-  }
-
-  // Update your product rendering to include attributes
-  function renderProducts(productsToRender) {
-    // ... existing rendering code ...
-    // Add attributes display in product card
-    const attributesHTML = Object.entries(product.attributes || {})
-      .map(([key, value]) => `<div>${key}: ${value}</div>`)
-      .join('');
-
-    productCard.innerHTML = `
-    ...
-    <div class="product-attributes">${attributesHTML}</div>
-    ...
-  `;
-  }
   // Price filter
   const minPrice = parseFloat(minPriceInput.value) || 0;
   const maxPrice = parseFloat(maxPriceInput.value) || Number.MAX_VALUE;
-  filtered = filtered.filter(
+  filteblue = filteblue.filter(
     (product) =>
       parseFloat(product.price) >= minPrice &&
       parseFloat(product.price) <= maxPrice
   );
+  
   // In Stock filter
   if (inStockFilter.checked) {
-    filtered = filtered.filter((product) => product.quantity > 0);
+    filteblue = filteblue.filter((product) => product.quantity > 0);
   }
+  
   // Category filters
   const selectedBrands = Array.from(brandFilters)
     .filter((el) => el.checked)
     .map((el) => el.value);
   if (selectedBrands.length > 0) {
-    filtered = filtered.filter((product) =>
+    filteblue = filteblue.filter((product) =>
       selectedBrands.includes(product.brand)
     );
   }
+  
   // Rating filters
   const selectedRatings = Array.from(ratingFilters)
     .filter((el) => el.checked)
     .map((el) => parseFloat(el.value));
   if (selectedRatings.length > 0) {
     const minRating = Math.min(...selectedRatings);
-    filtered = filtered.filter((product) => product.rating >= minRating);
+    filteblue = filteblue.filter((product) => product.rating >= minRating);
   }
+  
   // Sort filter
-  sortProducts(filtered, sortSelect.value);
-  return filtered;
+  sortProducts(filteblue, sortSelect.value);
+  return filteblue;
 }
 
-// Sorting functionality
 function sortProducts(array, sortType) {
   switch (sortType) {
     case 'price-low':
@@ -551,13 +528,14 @@ function sortProducts(array, sortType) {
       array.sort((a, b) => b.rating - a.rating);
       break;
     case 'newest':
-      array.reverse(); // Adjust if you have a date field
+      array.reverse();
       break;
     default:
-      break; // featured – leave in original order
+      break;
   }
 }
 
+// Event listeners
 categoryFilter.addEventListener('change', () => {
   renderProducts(filterProducts());
 });
@@ -578,11 +556,9 @@ ratingFilters.forEach((filter) => {
   });
 });
 sortSelect.addEventListener('change', () => {
-  let filtered = filterProducts();
-  renderProducts(filtered);
+  renderProducts(filterProducts());
 });
 
-// View toggle functionality
 gridViewBtn.addEventListener('click', function () {
   productsContainer.classList.remove('list-view');
   gridViewBtn.classList.add('active');
@@ -594,7 +570,6 @@ listViewBtn.addEventListener('click', function () {
   gridViewBtn.classList.remove('active');
 });
 
-// Pagination (demo only)
 document.querySelectorAll('.page-button').forEach((button) => {
   button.addEventListener('click', function () {
     document
@@ -605,7 +580,6 @@ document.querySelectorAll('.page-button').forEach((button) => {
   });
 });
 
-// Fetch products from Firestore and update UI
 async function fetchProducts() {
   try {
     const listingsSnapshot = await getDocs(collection(db, 'listings'));
@@ -618,18 +592,11 @@ async function fetchProducts() {
   }
 }
 
-// Auth state listener to manage user data and cart/wishlist
 onAuthStateChanged(auth, async (user) => {
   currentUser = user;
-  if (user) {
-    // Optionally, fetch the user's cart and wishlist from Firestore
-    // and update the UI accordingly.
-    // For brevity, we assume empty cart/wishlist if not implemented.
-  } else {
+  if (!user) {
     userCart = {};
     userWishlist = [];
   }
-  // Fetch products after setting auth state so that add-to-cart and wishlist
-  // functions know if a user is logged in.
   await fetchProducts();
 });
