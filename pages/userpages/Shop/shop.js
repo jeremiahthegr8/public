@@ -204,7 +204,11 @@ function renderProducts(productsToRender) {
           }" alt="${product.name}" class="product-image" />
           <div class="product-info">
             <h3 class="product-title">${product.name}</h3>
+            <div class="categoriezcon">
             <div class="product-category">${product.category}</div>
+            <div class="catarrow">></div>
+            <div class="product-subcategory">${product.subcategory}</div>
+            </div>
             <p class="product-description">${product.description}</p>
             <div class="product-rating">
               <span class="star-rating">${renderStars(product.rating)}</span>
@@ -220,7 +224,9 @@ function renderProducts(productsToRender) {
               <!-- Cart controls will be added here -->
             </div>
             <button class="wishlist-btn btn btn-light" style="border: none; background: none; cursor: pointer;">
-              <i class="wishlist-icon ${isInWishlist ? 'fas fa-heart' : 'far fa-heart'}" style="color: ${isInWishlist ? 'blue' : 'inherit'}"></i>
+              <i class="wishlist-icon ${
+                isInWishlist ? 'fas fa-heart' : 'far fa-heart'
+              }" style="color: ${isInWishlist ? 'blue' : 'inherit'}"></i>
             </button>
           </div>
         `;
@@ -536,9 +542,6 @@ function sortProducts(array, sortType) {
 }
 
 // Event listeners
-categoryFilter.addEventListener('change', () => {
-  renderProducts(filterProducts());
-});
 applyPriceFilter.addEventListener('click', () => {
   renderProducts(filterProducts());
 });
