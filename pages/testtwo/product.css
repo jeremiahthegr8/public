@@ -1,33 +1,44 @@
-:root { 
-  --primary-color: #4361ee;
-  --primary-light: #6b86f3;
-  --primary-dark: #3651d1;
-  --secondary-color: #333;
-  --bg-color: #f5f7ff;
-  --card-bg: #fff;
-  --bg-white: #ffffff;
-  --border-color: #e0e4f5;
-  --text-dark: #2d3346;
-  --text-muted: #6c757d;
-  --font-family: 'Poppins', 'Arial', sans-serif;
-  --shadow-sm: 0 2px 5px rgba(67, 97, 238, 0.08);
-  --shadow-md: 0 4px 8px rgba(67, 97, 238, 0.12);
-  --shadow-lg: 0 10px 15px rgba(67, 97, 238, 0.15);
+        :root {  
+            --primary-color: #4361ee; 
+            --primary-light: #6b86f3; 
+            --primary-dark: #3651d1; 
+            --secondary-color: #333; 
+            --bg-color: #f5f7ff; 
+            --card-bg: #fff; 
+            --bg-white: #ffffff; 
+            --border-color: #e0e4f5; 
+            --text-dark: #2d3346; 
+            --text-muted: #6c757d; 
+            --font-family: 'Poppins', 'Arial', sans-serif; 
+            --shadow-sm: 0 2px 5px rgba(67, 97, 238, 0.08); 
+            --shadow-md: 0 4px 8px rgba(67, 97, 238, 0.12); 
+            --shadow-lg: 0 10px 15px rgba(67, 97, 238, 0.15); 
+            
+            /* Spacing */ 
+            --spacing-xs: 0.25rem; 
+            --spacing-sm: 0.5rem; 
+            --spacing-md: 1rem; 
+            --spacing-lg: 1.5rem; 
+            --spacing-xl: 2rem; 
+            
+            /* Border Radius */ 
+            --radius-sm: 0.25rem; 
+            --radius-md: 0.5rem; 
+            --radius-lg: 0.75rem; 
+            --radius-xl: 1rem; 
+        }
 
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  /* Border Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-}
-
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+        }
 
 /* Back to Top */
 .back-to-top {
@@ -329,14 +340,7 @@
   gap: 0.5rem;
   font-size: 14px;
 }
-/* Global Styles */
-body {
-  margin: 0;
-  font-family: var(--font-family);
-  background-color: var(--bg-color);
-  color: var(--text-dark);
-  line-height: 1.6;
-}
+
 
 a {
   text-decoration: none;
