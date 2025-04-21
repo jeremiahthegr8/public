@@ -22,14 +22,12 @@ import { toggleWishlist } from '../../components/wishlist.js';
 // Global variables
 let currentProduct = null;
 let currentUser = null;
-let relatedProducts = [];
 let inCart = false;
 let cartQuantity = 0;
 let isInWishlist = false;
 
 // DOM elements
 const productContainer = document.getElementById('product-container');
-const relatedProductsContainer = document.getElementById('related-products');
 const loadingIndicator = document.getElementById('loading-indicator');
 const errorContainer = document.getElementById('error-container');
 
@@ -61,11 +59,7 @@ function init() {
         await checkWishlistStatus();
       }
 
-      // Fetch related products
-      await fetchRelatedProducts();
-
       renderProductDetails();
-      renderRelatedProducts();
       setupEventListeners();
 
       showLoading(false);
@@ -144,28 +138,6 @@ async function checkWishlistStatus() {
   }
 }
 
-// Fetch related products based on category
-async function fetchRelatedProducts() {
-  if (!currentProduct) return;
-
-  try {
-    const relatedQuery = query(
-      collection(db, 'listings'),
-      where('category', '==', currentProduct.category),
-      where('subcategory', '==', currentProduct.subcategory)
-    );
-
-    const relatedSnapshot = await getDocs(relatedQuery);
-
-    relatedProducts = relatedSnapshot.docs
-      .map((doc) => ({ id: doc.id, ...doc.data() }))
-      .filter((product) => product.id !== currentProduct.id)
-      .slice(0, 4); // Limit to 4 related products
-  } catch (error) {
-    console.error('Error fetching related products:', error);
-  }
-}
-
 // Render product details
 function renderProductDetails() {
   if (!currentProduct) return;
@@ -174,65 +146,107 @@ function renderProductDetails() {
   productContainer.innerHTML = `
     <div class="product-details">
       <div class="product-gallery">
-        <div class="main-image">
-          <img src="${
-            currentProduct.mainImageUrl || '/api/placeholder/500/500'
-          }" alt="${currentProduct.name}" id="main-product-image">
-        </div>
         <div class="thumbnail-gallery" id="thumbnail-gallery">
           <div class="thumbnail active">
             <img src="${
-              currentProduct.mainImageUrl || '/api/placeholder/100/100'
+              currentProduct.mainImageUrl ||
+              '../../assets/images/new/placeholder-image.jpg'
             }" alt="${currentProduct.name}" data-main-img="${
-    currentProduct.mainImageUrl || '/api/placeholder/500/500'
+    currentProduct.mainImageUrl ||
+    '../../assets/images/new/placeholder-image.jpg'
   }">
           </div>
           ${(currentProduct.additionalImageUrls || [])
             .map(
               (img, index) => `
-            <div class="thumbnail">
+          <div class="thumbnail">
               <img src="${
-                img || `/api/placeholder/100/100?text=Image${index + 2}`
+                img ||
+                `../../assets/images/new/placeholder-image.jpg?text=Image${
+                  index + 2
+                }`
               }" alt="${currentProduct.name} - Image ${
                 index + 2
               }" data-main-img="${
-                img || `/api/placeholder/500/500?text=Image${index + 2}`
+                img ||
+                `../../assets/images/new/placeholder-image.jpg?text=Image${
+                  index + 2
+                }`
               }">
             </div>
           `
             )
             .join('')}
         </div>
+         <div class="main-image">
+          <img src="${
+            currentProduct.mainImageUrl ||
+            '../../assets/images/new/placeholder-image.jpg'
+          }" alt="${currentProduct.name}" id="main-product-image">
+        </div>
       </div>
       
       <div class="product-info">
-       <h1 class="product-title">${currentProduct.name}</h1>
-
-          <div class="gone">
+        <div class="gone">
             <div class="gtwo">
-                <div class="product-pricing">
-                    <span class="current-price">
-                        $${parseFloat(currentProduct.price).toFixed(2)}
-                    </span>
+                 <div class="product-categoryz">
+            <span class="category-tagz">
+                ${currentProduct.category}
+            </span>
+             <span class="subcategory-tagz">
+                ${currentProduct.subcategory}
+             </span>
+        </div>
+        <div class="namerate">
+            <h1 class="product-title">${currentProduct.name}</h1>
+            <div class="product-pricing">
+                <span class="current-price">
+                    $${parseFloat(currentProduct.price).toFixed(2)}
+                </span>
+                ${
+                  currentProduct.salePrice
+                    ? `<span class="original-price">$${parseFloat(
+                        currentProduct.salePrice
+                      ).toFixed(2)}</span>
+                <span class="discount-badge">SALE</span>`
+                    : ''
+                }   
+            </div>
+            <div class="numsold">
+                Number Sold: <span class="sold">${
+                  currentProduct.salesCount
+                }</span>
+            </div>
+            <div class="product-availability">
+                <span class="${
+                  currentProduct.quantity > 0 ? 'in-stock' : 'out-of-stock'
+                }">
                     ${
-                      currentProduct.salePrice
-                        ? `<span class="original-price">$${parseFloat(
-                            currentProduct.salePrice
-                          ).toFixed(2)}</span>
-                    <span class="discount-badge">SALE</span>`
-                        : ''
-                    }   
-                </div>
+                      currentProduct.quantity > 0
+                        ? 'In Stock:'
+                        : 'Out of Stock:'
+                    }
+                </span>
+                ${
+                  currentProduct.quantity > 0
+                    ? `<span class="stock-count">${currentProduct.quantity} available</span>`
+                    : ''
+                }
+            </div> 
+        </div>
             </div>
                 <div class="product-meta">
-                    <div class="product-rating">
-                        ${renderStars(currentProduct.rating)}
-                        <span class="rating-count">(${
-                          currentProduct.ratingCount || 0
-                        } reviews)</span>
-                    </div>
-                    
+                  <div class="product-rating">
+                ${renderStars(currentProduct.rating)}
+                    <span class="rating-count">(${
+                      currentProduct.ratingCount || 0
+                    } reviews)
+                    </span>
+            </div>
                     <div class="product-category-tags">
+                    <span class="tagtitle">
+                    Tags:
+                    </span>
                         <span class="category-tag">${
                           currentProduct.category
                         }</span>
@@ -243,21 +257,12 @@ function renderProductDetails() {
                           .map((tag) => `<span class="tag">${tag}</span>`)
                           .join('')}
                     </div>
+                    <div class="description">
+                        <h3>Description</h3>
+                        <p>${currentProduct.description}</p>
+                    </div>
                 </div>
-        </div>
-        <div class="product-availability">
-          <span class="${
-            currentProduct.quantity > 0 ? 'in-stock' : 'out-of-stock'
-          }">
-            ${currentProduct.quantity > 0 ? 'In Stock' : 'Out of Stock'}
-          </span>
-          ${
-            currentProduct.quantity > 0
-              ? `<span class="stock-count">${currentProduct.quantity} available</span>`
-              : ''
-          }
-        </div>
-        
+        </div>        
         <div class="product-actions">
           <div class="quantity-selector" id="quantity-selector">
             ${renderQuantitySelector()}
@@ -338,42 +343,6 @@ function renderProductAttributes() {
   );
 }
 
-// Render related products
-function renderRelatedProducts() {
-  if (relatedProducts.length === 0) {
-    relatedProductsContainer.innerHTML = '<p>No related products found.</p>';
-    return;
-  }
-
-  relatedProductsContainer.innerHTML = `
-    <h2>Related Products</h2>
-    <div class="related-products-grid">
-      ${relatedProducts
-        .map(
-          (product) => `
-        <div class="related-product-card" data-product-id="${product.id}">
-          <div class="related-product-image">
-            <img src="${
-              product.mainImageUrl || '/api/placeholder/200/200'
-            }" alt="${product.name}">
-          </div>
-          <div class="related-product-info">
-            <h3>${product.name}</h3>
-            <div class="related-product-rating">
-              ${renderStars(product.rating)}
-            </div>
-            <div class="related-product-price">
-              $${parseFloat(product.price).toFixed(2)}
-            </div>
-          </div>
-        </div>
-      `
-        )
-        .join('')}
-    </div>
-  `;
-}
-
 // Set up event listeners
 function setupEventListeners() {
   // Gallery thumbnails
@@ -392,17 +361,6 @@ function setupEventListeners() {
           thumb.classList.remove('active');
         });
       e.target.parentElement.classList.add('active');
-    });
-  });
-
-  // Related products click
-  const relatedProductCards = document.querySelectorAll(
-    '.related-product-card'
-  );
-  relatedProductCards.forEach((card) => {
-    card.addEventListener('click', () => {
-      const productId = card.dataset.productId;
-      window.location.href = `../product/product.html?id=${productId}`;
     });
   });
 
@@ -771,7 +729,6 @@ function showError(message) {
   }
 
   productContainer.style.display = 'none';
-  relatedProductsContainer.style.display = 'none';
 }
 
 // Show toast notification
