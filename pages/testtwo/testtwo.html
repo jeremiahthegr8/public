@@ -1,336 +1,1149 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discover Products</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link href="./shop.css" rel="stylesheet" />
-    <link href="../../../assets/styles/animation.css" rel="stylesheet" />
-    <link href="../../../assets/styles/header.css" rel="stylesheet" />
-    <script type="module" src="./shop.js" defer></script>
-  </head>
-  <body>
-    <header class="header">
-      <div class="header-container">
-        <div class="logo">
-          <a href="../../../index.html">E-Shop</a>
-        </div>
-        <div class="search-bar">
-          <input
-            type="text"
-            placeholder="Search products..."
-            id="searchInput"
-          />
-          <button id="searchBtn"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="user-menu">
-          <a href="../account/account.html" class="sixty-nine account-link"
-            ><i class="fas fa-user"></i> Profile</a
-          >
-          <div class="seventy-one">
-            <a href="../wishlist/wishlist.html" class="sixty-nine"
-              ><i class="fas fa-heart"></i> Wishlist</a
-            >
-            <a href="../mycart/mycart.html" class="sixty-nine"
-              ><i class="fas fa-shopping-cart"></i> Cart</a
-            >
-          </div>
-          <a href="../SignUp/SignUp.html" class="seventy signup-link"
-            >Sign In</a
-          >
-          <a href="#" class="seventy logout-btn" style="display: none"
-            >Logout</a
-          >
-        </div>
-      </div>
-    </header>
-
-    <div class="container">
-      <div class="flex">
-        <!-- Sidebar for Filters -->
-        <div class="sidebar">
-          <h2>Filters</h2>
-          <div>
-            <h3>Category</h3>
-            <ul>
-              <li>
-                <input
-                  id="electronics"
-                  name="category"
-                  type="checkbox"
-                  value="electronics"
-                />
-                <label for="electronics"> Electronics </label>
-              </li>
-              <li>
-                <input
-                  id="fashion"
-                  name="category"
-                  type="checkbox"
-                  value="fashion"
-                />
-                <label for="fashion"> Fashion </label>
-              </li>
-              <li>
-                <input id="home" name="category" type="checkbox" value="home" />
-                <label for="home"> Home </label>
-              </li>
-              <li>
-                <input
-                  id="beauty"
-                  name="category"
-                  type="checkbox"
-                  value="beauty"
-                />
-                <label for="beauty"> Beauty </label>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Price Range</h3>
-            <input max="1000" min="0" type="range" value="500" />
-          </div>
-          <div>
-            <h3>Rating</h3>
-            <ul>
-              <li>
-                <input
-                  id="4stars"
-                  name="rating"
-                  type="checkbox"
-                  value="4stars"
-                />
-                <label for="4stars"> 4 stars &amp; up </label>
-              </li>
-              <li>
-                <input
-                  id="3stars"
-                  name="rating"
-                  type="checkbox"
-                  value="3stars"
-                />
-                <label for="3stars"> 3 stars &amp; up </label>
-              </li>
-              <li>
-                <input
-                  id="2stars"
-                  name="rating"
-                  type="checkbox"
-                  value="2stars"
-                />
-                <label for="2stars"> 2 stars &amp; up </label>
-              </li>
-              <li>
-                <input id="1star" name="rating" type="checkbox" value="1star" />
-                <label for="1star"> 1 star &amp; up </label>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Brand</h3>
-            <ul>
-              <li>
-                <input
-                  id="brand1"
-                  name="brand"
-                  type="checkbox"
-                  value="brand1"
-                />
-                <label for="brand1"> Brand 1 </label>
-              </li>
-              <li>
-                <input
-                  id="brand2"
-                  name="brand"
-                  type="checkbox"
-                  value="brand2"
-                />
-                <label for="brand2"> Brand 2 </label>
-              </li>
-              <li>
-                <input
-                  id="brand3"
-                  name="brand"
-                  type="checkbox"
-                  value="brand3"
-                />
-                <label for="brand3"> Brand 3 </label>
-              </li>
-              <li>
-                <input
-                  id="brand4"
-                  name="brand"
-                  type="checkbox"
-                  value="brand4"
-                />
-                <label for="brand4"> Brand 4 </label>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Availability</h3>
-            <ul>
-              <li>
-                <input
-                  id="inStock"
-                  name="availability"
-                  type="checkbox"
-                  value="inStock"
-                />
-                <label for="inStock"> In Stock </label>
-              </li>
-              <li>
-                <input
-                  id="outOfStock"
-                  name="availability"
-                  type="checkbox"
-                  value="outOfStock"
-                />
-                <label for="outOfStock"> Out of Stock </label>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- Main Content -->
-        <div class="main-content">
-          <div class="grid">
-            <!-- Product Item -->
-            <div class="product-item">
-              <img
-                alt="Image of a high-quality electronic gadget with sleek design"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/2wac3n1m5fll7TH1Jcns9MTYa2Lae9Z-a1U7i0P8O2o.jpg"
-                width="300"
-              />
-              <h3>Product Title 1</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$199.99</p>
-              <p class="stock">In Stock: 20</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star-half-alt"> </i>
-                <span class="count"> (120) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
-            </div>
-            <!-- Repeat for each product item -->
-            <div class="product-item">
-              <img
-                alt="Image of a stylish fashion item with vibrant colors"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/SztJzzYyR_rceHfgQQ-PmqofkureoAwntULngu845Yo.jpg"
-                width="300"
-              />
-              <h3>Product Title 2</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$49.99</p>
-              <p class="stock">In Stock: 50</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star-half-alt"> </i>
-                <span class="count"> (80) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
-            </div>
-            <div class="product-item">
-              <img
-                alt="Image of a modern home appliance with advanced features"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/_AwgBFGUwtKbnGcE-EfoNHCAe0Rcs9DZDEABg1aNItM.jpg"
-                width="300"
-              />
-              <h3>Product Title 3</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$299.99</p>
-              <p class="stock">In Stock: 10</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <span class="count"> (200) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
-            </div>
-            <div class="product-item">
-              <img
-                alt="Image of a beauty product with elegant packaging"
-                height="300"
-                src="https://storage.googleapis.com/a1aa/image/I21wQ5aQmdzpjW4dTJcffffzKMkUXjn2OegVXe_L8TY.jpg"
-                width="300"
-              />
-              <h3>Product Title 4</h3>
-              <p>
-                Short description of the product goes here. It highlights the
-                key features and benefits.
-              </p>
-              <p class="price">$19.99</p>
-              <p class="stock">In Stock: 100</p>
-              <div class="rating">
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star"> </i>
-                <i class="fas fa-star-half-alt"> </i>
-                <i class="fas fa-star"> </i>
-                <span class="count"> (50) </span>
-              </div>
-              <div class="buttons">
-                <a href="#" class="add-to-cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
-                <a href="#" class="add-to-wishlist"
-                  ><i class="fas fa-heart"></i
-                ></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Product - Marketplace</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .form-section {
+      margin-bottom: 30px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+    }
+    .section-title span {
+      background-color: #3498db;
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+      font-size: 14px;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+    }
+    .form-group {
+      flex: 1 0 250px;
+      margin: 0 10px 20px;
+    }
+    .form-group.full-width {
+      flex: 0 0 calc(100% - 20px);
+    }
+    .form-group.half-width {
+      flex: 0 0 calc(50% - 20px);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .file-input-container {
+      position: relative;
+    }
+    .file-input-button {
+      display: inline-block;
+      background-color: #f8f9fa;
+      border: 1px dashed #ddd;
+      border-radius: 4px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+    }
+    .file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .image-preview {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .preview-item {
+      width: 80px;
+      height: 80px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      padding: 3px;
+      position: relative;
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 3px;
+    }
+    .remove-img {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      line-height: 18px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .dynamic-rows {
+      margin-bottom: 20px;
+    }
+    .dynamic-row {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .dynamic-row input {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-add {
+      background-color: #e0f7fa;
+      color: #00838f;
+    }
+    .btn-remove {
+      background-color: #ffebee;
+      color: #c62828;
+      width: 40px;
+    }
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+    .btn-secondary {
+      background-color: #f5f5f5;
+      color: #333;
+      border: 1px solid #ddd;
+      padding: 12px 24px;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    .required:after {
+      content: " *";
+      color: red;
+    }
+    .specs-container {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .stock-options {
+      margin-top: 15px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .variant-row {
+      display: flex;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .variant-row > div {
+      margin-right: 10px;
+    }
+    .price-section {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 30px;
+    }
+    .subcategories {
+      margin-top: 15px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      background-color: #e1f5fe;
+      color: #0288d1;
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: #555;
+      color: #fff;
+      text-align: left;
+      border-radius: 4px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+      font-weight: normal;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    .tooltip i {
+      color: #777;
+      font-style: normal;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tab.active {
+      border-bottom: 2px solid #3498db;
+      color: #3498db;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Add New Product</h1>
+    
+    <div class="tabs">
+      <div class="tab active">Basic Information</div>
+      <div class="tab">Images & Media</div>
+      <div class="tab">Pricing & Inventory</div>
+      <div class="tab">Specifications</div>
+      <div class="tab">Shipping & Return</div>
     </div>
-  </body>
+    
+    <form id="productForm">
+      <!-- BASIC INFORMATION -->
+      <div class="form-section">
+        <div class="section-title"><span>1</span>Basic Information</div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="productTitle" class="required">Product Title</label>
+            <input type="text" id="productTitle" placeholder="Enter product title (max 200 characters)" maxlength="200" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="mainCategory" class="required">Main Category</label>
+            <select id="mainCategory" required>
+              <option value="">Select main category</option>
+              <option value="electronics">Electronics</option>
+              <option value="fashion">Fashion & Clothing</option>
+              <option value="home">Home & Kitchen</option>
+              <option value="sports">Sports & Outdoors</option>
+              <option value="beauty">Beauty & Personal Care</option>
+              <option value="toys">Toys & Games</option>
+              <option value="books">Books & Media</option>
+              <option value="automotive">Automotive</option>
+              <option value="garden">Garden & Tools</option>
+              <option value="health">Health & Wellness</option>
+            </select>
+          </div>
+          
+          <div class="form-group" id="subcategoryContainer">
+            <label for="subCategory" class="required">Sub Category</label>
+            <select id="subCategory" disabled>
+              <option value="">Select main category first</option>
+            </select>
+          </div>
+          
+          <div class="form-group hidden" id="detailedCategoryContainer">
+            <label for="detailedCategory">Detailed Category</label>
+            <select id="detailedCategory" disabled>
+              <option value="">Select sub category first</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="productDescription" class="required">Product Description</label>
+            <textarea id="productDescription" placeholder="Describe your product in detail..." required></textarea>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="brand">Brand</label>
+            <input type="text" id="brand" placeholder="Enter brand name">
+          </div>
+          
+          <div class="form-group">
+            <label for="model">Model Number</label>
+            <input type="text" id="model" placeholder="Enter model number">
+          </div>
+          
+          <div class="form-group">
+            <label for="condition" class="required">Condition</label>
+            <select id="condition" required>
+              <option value="">Select condition</option>
+              <option value="new">New</option>
+              <option value="like-new">Like New</option>
+              <option value="used-excellent">Used - Excellent</option>
+              <option value="used-good">Used - Good</option>
+              <option value="used-fair">Used - Fair</option>
+              <option value="refurbished">Refurbished</option>
+              <option value="for-parts">For Parts or Not Working</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- IMAGES & MEDIA -->
+      <div class="form-section">
+        <div class="section-title"><span>2</span>Images & Media</div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label class="required">Product Images 
+              <div class="tooltip">
+                <i>?</i>
+                <span class="tooltiptext">Upload up to 12 high-quality images. First image will be the main product image. Recommended size: 1000x1000px, Max size: 5MB per image.</span>
+              </div>
+            </label>
+            <div class="file-input-container">
+              <div class="file-input-button">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <p>Drag and drop images here or click to browse files</p>
+                <small>Supported formats: JPG, PNG, WEBP (Max 12 images)</small>
+              </div>
+              <input type="file" class="file-input" accept="image/*" multiple>
+            </div>
+            
+            <div class="image-preview">
+              <div class="preview-item">
+                <img src="/api/placeholder/80/80" alt="Preview">
+                <span class="remove-img">×</span>
+              </div>
+              <div class="preview-item">
+                <img src="/api/placeholder/80/80" alt="Preview">
+                <span class="remove-img">×</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Product Video (Optional)</label>
+            <div class="file-input-container">
+              <div class="file-input-button">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                  <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <p>Upload a video showcasing your product</p>
+                <small>Supported formats: MP4, MOV (Max 100MB)</small>
+              </div>
+              <input type="file" class="file-input" accept="video/*">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- PRICING & INVENTORY -->
+      <div class="form-section">
+        <div class="section-title"><span>3</span>Pricing & Inventory</div>
+        
+        <div class="price-section">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regularPrice" class="required">Regular Price ($)</label>
+              <input type="number" id="regularPrice" min="0" step="0.01" placeholder="0.00" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="salePrice">Sale Price ($)</label>
+              <input type="number" id="salePrice" min="0" step="0.01" placeholder="0.00">
+            </div>
+            
+            <div class="form-group">
+              <label for="costPrice">Cost Price ($) 
+                <div class="tooltip">
+                  <i>?</i>
+                  <span class="tooltiptext">This is only visible to you and helps track profit margins.</span>
+                </div>
+              </label>
+              <input type="number" id="costPrice" min="0" step="0.01" placeholder="0.00">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tax">Tax Class</label>
+              <select id="tax">
+                <option value="standard">Standard Rate</option>
+                <option value="reduced">Reduced Rate</option>
+                <option value="zero">Zero Rate</option>
+                <option value="exempt">Tax Exempt</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="saleStart">Sale Start Date</label>
+              <input type="date" id="saleStart">
+            </div>
+            
+            <div class="form-group">
+              <label for="saleEnd">Sale End Date</label>
+              <input type="date" id="saleEnd">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sku">SKU (Stock Keeping Unit)</label>
+            <input type="text" id="sku" placeholder="Enter a unique SKU">
+          </div>
+          
+          <div class="form-group">
+            <label for="barcode">Barcode (UPC/EAN/ISBN)</label>
+            <input type="text" id="barcode" placeholder="Enter product barcode if available">
+          </div>
+          
+          <div class="form-group">
+            <label for="inventory" class="required">Inventory Tracking</label>
+            <select id="inventory" required>
+              <option value="track">Track inventory</option>
+              <option value="dont-track">Don't track inventory</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="quantity" class="required">Quantity Available</label>
+            <input type="number" id="quantity" min="0" value="1" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="lowStock">Low Stock Alert</label>
+            <input type="number" id="lowStock" min="0" placeholder="Get notified when stock reaches this level">
+          </div>
+          
+          <div class="form-group">
+            <label for="backorder">Allow Backorders</label>
+            <select id="backorder">
+              <option value="no">Do not allow</option>
+              <option value="notify">Allow but notify customers</option>
+              <option value="allow">Allow without notification</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label>
+              <input type="checkbox" id="hasVariants"> This product has multiple options, like different sizes or colors
+            </label>
+          </div>
+        </div>
+        
+        <div class="stock-options hidden" id="variantsContainer">
+          <h4>Product Variants</h4>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Option Name (e.g. Size, Color)</label>
+              <input type="text" placeholder="Option name">
+            </div>
+            <div class="form-group">
+              <label>Option Values (comma separated)</label>
+              <input type="text" placeholder="S, M, L, XL">
+            </div>
+            <div class="form-group" style="flex: 0 0 60px; align-self: flex-end;">
+              <button type="button" class="btn btn-remove">×</button>
+            </div>
+          </div>
+          
+          <button type="button" class="btn btn-add">Add Another Option</button>
+          
+          <div class="variant-combinations" style="margin-top: 20px;">
+            <h4>Variant Combinations</h4>
+            
+            <div class="variant-row">
+              <div style="width: 100px;"><strong>Color</strong></div>
+              <div style="width: 100px;"><strong>Size</strong></div>
+              <div style="width: 120px;"><strong>Price Adjust</strong></div>
+              <div style="width: 120px;"><strong>Stock</strong></div>
+              <div style="width: 120px;"><strong>SKU</strong></div>
+            </div>
+            
+            <div class="variant-row">
+              <div style="width: 100px;">Red</div>
+              <div style="width: 100px;">Small</div>
+              <div style="width: 120px;"><input type="number" placeholder="+0.00" style="width: 100px;"></div>
+              <div style="width: 120px;"><input type="number" placeholder="0" style="width: 100px;"></div>
+              <div style="width: 120px;"><input type="text" placeholder="SKU" style="width: 100px;"></div>
+            </div>
+            
+            <div class="variant-row">
+              <div style="width: 100px;">Red</div>
+              <div style="width: 100px;">Medium</div>
+              <div style="width: 120px;"><input type="number" placeholder="+0.00" style="width: 100px;"></div>
+              <div style="width: 120px;"><input type="number" placeholder="0" style="width: 100px;"></div>
+              <div style="width: 120px;"><input type="text" placeholder="SKU" style="width: 100px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- PRODUCT SPECIFICATIONS -->
+      <div class="form-section">
+        <div class="section-title"><span>4</span>Product Specifications</div>
+        
+        <div class="specs-container" id="specificationContainer">
+          <!-- Dynamic specifications based on category -->
+          <p id="categoryPrompt">Select a category to view specific specifications</p>
+          
+          <!-- Electronics specs (example) -->
+          <div class="category-specs hidden" id="specs-electronics">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="screenSize">Screen Size</label>
+                <input type="text" id="screenSize" placeholder="e.g. 15.6 inches">
+              </div>
+              
+              <div class="form-group">
+                <label for="processor">Processor</label>
+                <input type="text" id="processor" placeholder="e.g. Intel Core i7-10700K">
+              </div>
+              
+              <div class="form-group">
+                <label for="ram">RAM</label>
+                <input type="text" id="ram" placeholder="e.g. 16GB DDR4">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="storage">Storage</label>
+                <input type="text" id="storage" placeholder="e.g. 512GB SSD">
+              </div>
+              
+              <div class="form-group">
+                <label for="graphicsCard">Graphics Card</label>
+                <input type="text" id="graphicsCard" placeholder="e.g. NVIDIA GeForce RTX 3060">
+              </div>
+              
+              <div class="form-group">
+                <label for="operatingSystem">Operating System</label>
+                <input type="text" id="operatingSystem" placeholder="e.g. Windows 11 Home">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="connectivity">Connectivity</label>
+                <input type="text" id="connectivity" placeholder="e.g. Wi-Fi 6, Bluetooth 5.2">
+              </div>
+              
+              <div class="form-group">
+                <label for="ports">Ports</label>
+                <input type="text" id="ports" placeholder="e.g. 2x USB-C, 3x USB-A, HDMI">
+              </div>
+              
+              <div class="form-group">
+                <label for="battery">Battery Life</label>
+                <input type="text" id="battery" placeholder="e.g. Up to 10 hours">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Custom specifications -->
+          <div>
+            <h4>Additional Specifications</h4>
+            <div class="dynamic-rows" id="customSpecRows">
+              <div class="dynamic-row">
+                <input type="text" placeholder="Specification name (e.g. Material)">
+                <input type="text" placeholder="Specification value (e.g. Aluminum)">
+                <button type="button" class="btn btn-remove">×</button>
+              </div>
+              <div class="dynamic-row">
+                <input type="text" placeholder="Specification name">
+                <input type="text" placeholder="Specification value">
+                <button type="button" class="btn btn-remove">×</button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-add" id="addCustomSpec">Add Another Specification</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- DIMENSIONS & WEIGHT -->
+      <div class="form-section">
+        <div class="section-title"><span>5</span>Dimensions & Weight</div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="weight">Product Weight</label>
+            <div style="display: flex;">
+              <input type="number" id="weight" step="0.01" min="0" placeholder="0.00" style="flex: 1;">
+              <select style="width: 80px; margin-left: 10px;">
+                <option value="kg">kg</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+                <option value="g">g</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="length">Length</label>
+            <div style="display: flex;">
+              <input type="number" id="length" step="0.1" min="0" placeholder="0.0" style="flex: 1;">
+              <select style="width: 80px; margin-left: 10px;">
+                <option value="cm">cm</option>
+                <option value="in">in</option>
+                <option value="mm">mm</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="width">Width</label>
+            <div style="display: flex;">
+              <input type="number" id="width" step="0.1" min="0" placeholder="0.0" style="flex: 1;">
+              <select style="width: 80px; margin-left: 10px;">
+                <option value="cm">cm</option>
+                <option value="in">in</option>
+                <option value="mm">mm</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="height">Height</label>
+            <div style="display: flex;">
+              <input type="number" id="height" step="0.1" min="0" placeholder="0.0" style="flex: 1;">
+              <select style="width: 80px; margin-left: 10px;">
+                <option value="cm">cm</option>
+                <option value="in">in</option>
+                <option value="mm">mm</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SHIPPING & RETURNS -->
+      <div class="form-section">
+        <div class="section-title"><span>6</span>Shipping & Returns</div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="shippingClass">Shipping Class</label>
+            <select id="shippingClass">
+              <option value="standard">Standard Shipping</option>
+              <option value="expedited">Expedited Shipping</option>
+              <option value="overnight">Overnight Shipping</option>
+              <option value="international">International Shipping</option>
+              <option value="free">Free Shipping</option>
+              <option value="custom">Custom Shipping</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="freeShipping"> This product qualifies for free shipping
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="processingTime">Processing Time</label>
+            <select id="processingTime">
+              <option value="1-2">1-2 Business Days</option>
+              <option value="3-5">3-5 Business Days</option>
+              <option value="1-2-weeks">1-2 Weeks</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="handlingFee">Handling Fee ($)</label>
+            <input type="number" id="handlingFee" min="0" step="0.01" placeholder="0.00">
+          </div>
+          
+          <div class="form-group">
+            <label for="returnPolicy">Return Policy</label>
+            <select id="returnPolicy">
+              <option value="30-days">30 Days Return</option>
+              <option value="14-days">14 Days Return</option>
+              <option value="7-days">7 Days Return</option>
+              <option value="no-returns">No Returns</option>
+              <option value="custom">Custom Policy</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="shippingNotes">Shipping Notes (Optional)</label>
+            <textarea id="shippingNotes" placeholder="Any additional information about shipping or delivery..."></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SEO & VISIBILITY -->
+      <div class="form-section">
+        <div class="section-title"><span>7</span>SEO & Visibility</div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="metaTitle">Meta Title (For SEO)</label>
+            <input type="text" id="metaTitle" placeholder="Enter meta title (max 60 characters)" maxlength="60">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="metaDescription">Meta Description</label>
+            <textarea id="metaDescription" placeholder="Enter meta description (max 160 characters)" max<textarea id="metaDescription" placeholder="Enter meta description (max 160 characters)" maxlength="160"></textarea>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="tags">Product Tags</label>
+            <input type="text" id="tags" placeholder="Enter tags separated by commas (e.g. wireless, gaming, bluetooth)">
+            <div style="margin-top: 10px;">
+              <span class="badge">wireless</span>
+              <span class="badge">bluetooth</span>
+              <span class="badge">headphones</span>
+              <span class="badge">audio</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="visibility">Visibility</label>
+            <select id="visibility">
+              <option value="public">Public</option>
+              <option value="hidden">Hidden</option>
+              <option value="password">Password Protected</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="featured">
+              <input type="checkbox" id="featured"> Feature this product (highlight on homepage)
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ADDITIONAL OPTIONS -->
+      <div class="form-section">
+        <div class="section-title"><span>8</span>Additional Options</div>
+        
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label>
+              <input type="checkbox" id="preOrder"> Allow Pre-Orders
+            </label>
+            <div id="preOrderOptions" class="hidden" style="margin-top: 10px; padding: 10px; border: 1px solid #eee; border-radius: 4px;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="releaseDate">Release Date</label>
+                  <input type="date" id="releaseDate">
+                </div>
+                <div class="form-group">
+                  <label for="preOrderMessage">Pre-Order Message</label>
+                  <input type="text" id="preOrderMessage" placeholder="e.g. Pre-order now! Ships on release date">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableReviews" checked> Enable Customer Reviews
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableQA" checked> Enable Q&A Section
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableWishlist" checked> Allow Adding to Wishlist
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="relatedProducts">Related Products</label>
+            <input type="text" id="relatedProducts" placeholder="Search products to add as related...">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="accessories">Accessories & Cross-Sells</label>
+            <input type="text" id="accessories" placeholder="Search products to add as accessories...">
+          </div>
+        </div>
+      </div>
+      
+      <!-- FORM ACTIONS -->
+      <div class="actions">
+        <button type="button" class="btn btn-secondary">Save as Draft</button>
+        <button type="submit" class="btn btn-primary">Publish Product</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Show/hide variant options
+    document.getElementById('hasVariants').addEventListener('change', function() {
+      document.getElementById('variantsContainer').classList.toggle('hidden', !this.checked);
+    });
+    
+    // Show/hide pre-order options
+    document.getElementById('preOrder').addEventListener('change', function() {
+      document.getElementById('preOrderOptions').classList.toggle('hidden', !this.checked);
+    });
+    
+    // Handle category changes
+    document.getElementById('mainCategory').addEventListener('change', function() {
+      const value = this.value;
+      const subCategorySelect = document.getElementById('subCategory');
+      const detailedCategoryContainer = document.getElementById('detailedCategoryContainer');
+      const specsCategoryPrompt = document.getElementById('categoryPrompt');
+      
+      // Reset sub-category
+      subCategorySelect.innerHTML = '<option value="">Select sub category</option>';
+      subCategorySelect.disabled = false;
+      
+      if (value === 'electronics') {
+        // Add electronics sub-categories
+        const options = [
+          'Laptops & Computers',
+          'Smartphones & Accessories',
+          'TV & Home Theater',
+          'Audio & Headphones',
+          'Camera & Photo',
+          'Wearable Technology',
+          'Computer Components',
+          'Gaming Accessories',
+          'Networking',
+          'Office Electronics'
+        ];
+        
+        options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.toLowerCase().replace(/\s+/g, '-');
+          option.textContent = opt;
+          subCategorySelect.appendChild(option);
+        });
+        
+        // Show electronics specific specs
+        document.querySelectorAll('.category-specs').forEach(el => el.classList.add('hidden'));
+        document.getElementById('specs-electronics').classList.remove('hidden');
+        specsCategoryPrompt.classList.add('hidden');
+      } 
+      else if (value === 'fashion') {
+        // Add fashion sub-categories
+        const options = [
+          'Women\'s Clothing',
+          'Men\'s Clothing',
+          'Kids\' Clothing',
+          'Shoes',
+          'Accessories',
+          'Jewelry',
+          'Watches',
+          'Bags & Luggage',
+          'Activewear',
+          'Seasonal Wear'
+        ];
+        
+        options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '');
+          option.textContent = opt;
+          subCategorySelect.appendChild(option);
+        });
+        
+        // Hide all specific specs
+        document.querySelectorAll('.category-specs').forEach(el => el.classList.add('hidden'));
+        specsCategoryPrompt.classList.remove('hidden');
+      }
+      else if (value === 'home') {
+        // Add home sub-categories
+        const options = [
+          'Kitchen & Dining',
+          'Furniture',
+          'Bedding & Bath',
+          'Home Decor',
+          'Storage & Organization',
+          'Lighting',
+          'Appliances',
+          'Cleaning Supplies',
+          'Garden & Outdoor',
+          'Home Improvement'
+        ];
+        
+        options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.toLowerCase().replace(/\s+/g, '-');
+          option.textContent = opt;
+          subCategorySelect.appendChild(option);
+        });
+        
+        // Hide all specific specs
+        document.querySelectorAll('.category-specs').forEach(el => el.classList.add('hidden'));
+        specsCategoryPrompt.classList.remove('hidden');
+      }
+      else if (value === 'sports') {
+        // Add sports sub-categories
+        const options = [
+          'Exercise & Fitness',
+          'Outdoor Recreation',
+          'Team Sports',
+          'Water Sports',
+          'Winter Sports',
+          'Athletic Clothing',
+          'Sports Electronics',
+          'Sports Nutrition',
+          'Sports Memorabilia',
+          'Fan Shop'
+        ];
+        
+        options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.toLowerCase().replace(/\s+/g, '-');
+          option.textContent = opt;
+          subCategorySelect.appendChild(option);
+        });
+        
+        // Hide all specific specs
+        document.querySelectorAll('.category-specs').forEach(el => el.classList.add('hidden'));
+        specsCategoryPrompt.classList.remove('hidden');
+      }
+      else {
+        subCategorySelect.disabled = true;
+        document.querySelectorAll('.category-specs').forEach(el => el.classList.add('hidden'));
+        specsCategoryPrompt.classList.remove('hidden');
+      }
+      
+      // Reset and hide detailed category
+      document.getElementById('detailedCategory').innerHTML = '<option value="">Select sub category first</option>';
+      document.getElementById('detailedCategory').disabled = true;
+      detailedCategoryContainer.classList.add('hidden');
+    });
+    
+    // Handle sub-category changes
+    document.getElementById('subCategory').addEventListener('change', function() {
+      const value = this.value;
+      const mainCategory = document.getElementById('mainCategory').value;
+      const detailedCategorySelect = document.getElementById('detailedCategory');
+      const detailedCategoryContainer = document.getElementById('detailedCategoryContainer');
+      
+      // Reset detailed category
+      detailedCategorySelect.innerHTML = '<option value="">Select detailed category</option>';
+      
+      if (mainCategory === 'electronics' && value === 'laptops-computers') {
+        // Show detailed category
+        detailedCategoryContainer.classList.remove('hidden');
+        detailedCategorySelect.disabled = false;
+        
+        // Add detailed categories
+        const options = [
+          'Gaming Laptops',
+          'Business Laptops',
+          'Chromebooks',
+          'Desktop Computers',
+          'All-in-One Computers',
+          'Mini PCs',
+          'Servers'
+        ];
+        
+        options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.toLowerCase().replace(/\s+/g, '-');
+          option.textContent = opt;
+          detailedCategorySelect.appendChild(option);
+        });
+      } 
+      else if (mainCategory === 'electronics' && value === 'smartphones-accessories') {
+        // Show detailed category
+        detailedCategoryContainer.classList.remove('hidden');
+        detailedCategorySelect.disabled = false;
+        
+        // Add detailed categories
+        const options = [
+          'Smartphones',
+          'Phone Cases',
+          'Screen Protectors',
+          'Chargers & Power Banks',
+          'Cables & Adapters',
+          'Memory Cards',
+          'Selfie Sticks & Tripods'
+        ];
+        
+        options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.toLowerCase().replace(/\s+/g, '-');
+          option.textContent = opt;
+          detailedCategorySelect.appendChild(option);
+        });
+      }
+      else {
+        // Hide detailed category
+        detailedCategoryContainer.classList.add('hidden');
+        detailedCategorySelect.disabled = true;
+      }
+    });
+    
+    // Add more custom specifications
+    document.getElementById('addCustomSpec').addEventListener('click', function() {
+      const container = document.getElementById('customSpecRows');
+      const newRow = document.createElement('div');
+      newRow.className = 'dynamic-row';
+      newRow.innerHTML = `
+        <input type="text" placeholder="Specification name">
+        <input type="text" placeholder="Specification value">
+        <button type="button" class="btn btn-remove">×</button>
+      `;
+      container.appendChild(newRow);
+      
+      // Add event listener to remove button
+      newRow.querySelector('.btn-remove').addEventListener('click', function() {
+        container.removeChild(newRow);
+      });
+    });
+    
+    // Handle remove buttons for existing spec rows
+    document.querySelectorAll('#customSpecRows .btn-remove').forEach(button => {
+      button.addEventListener('click', function() {
+        const row = this.parentNode;
+        row.parentNode.removeChild(row);
+      });
+    });
+    
+    // Tab navigation
+    document.querySelectorAll('.tab').forEach((tab, index) => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        this.classList.add('active');
+        
+        // Scroll to corresponding section
+        const sections = document.querySelectorAll('.form-section');
+        if (sections[index]) {
+          sections[index].scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+    
+    // Form submission
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Product has been published successfully!');
+    });
+  </script>
+</body>
 </html>

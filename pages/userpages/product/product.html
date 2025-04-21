@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Premium Wireless Noise-Cancelling Headphones - TechGear</title>
     <link rel="stylesheet" href="./product.css" />
+    <script type="module" src="./product.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -96,24 +97,7 @@
           <div class="actionscon">
             <div class="attribute-group">
               <div class="attribute-name">Color:</div>
-              <div class="color-options">
-                <div
-                  class="color-option active"
-                  style="background-color: #000"
-                ></div>
-                <div
-                  class="color-option"
-                  style="background-color: #fff; border: 1px solid #ddd"
-                ></div>
-                <div
-                  class="color-option"
-                  style="background-color: #3498db"
-                ></div>
-                <div
-                  class="color-option"
-                  style="background-color: #e74c3c"
-                ></div>
-              </div>
+              <div class="attribute-value">Black</div>
             </div>
 
             <div class="action-buttons">
@@ -282,7 +266,7 @@
         </div>
       </section>
     </main>
-    <script>
+    <script type="module" >
       const thumbnails = document.querySelectorAll('.thumbnail');
       const mainImage = document.querySelector('.main-image');
 
@@ -293,6 +277,105 @@
           thumbnail.classList.add('active');
         });
       });
+
+import { auth, db } from "../../../database/config.js";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+} from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+// Fetch product details
+async function fetchProductDetails(productId) {
+  try {
+    const productDocRef = doc(db, "listings", productId);
+    const productSnap = await getDoc(productDocRef);
+    if (productSnap.exists()) {
+      const productData = productSnap.data();
+      console.log("Product Details:", productData);
+      renderProductDetails(productData);
+    } else {
+      console.error("Product not found.");
+    }
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+  }
+}
+
+// Render product details on the page
+function renderProductDetails(product) {
+  document.querySelector(".product-info h1").textContent = product.name;
+  document.querySelector(".current-price").textContent = `$${product.price}`;
+  document.querySelector(".old-price").textContent = `$${product.salePrice}`;
+  document.querySelector(".stock-count").textContent = `(${product.quantity} available)`;
+  document.querySelector(".description").textContent = product.description;
+  document.querySelector(".main-image").src = product.mainImageUrl;
+}
+
+// Fetch and display orders
+async function fetchOrders(userId) {
+  try {
+    const ordersRef = collection(db, "orders");
+    const ordersQuery = query(ordersRef, where("userId", "==", userId), orderBy("createdAt", "desc"));
+    const ordersSnapshot = await getDocs(ordersQuery);
+    ordersSnapshot.forEach((doc) => {
+      console.log("Order:", doc.data());
+    });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+  }
+}
+
+// Fetch and display ratings
+async function fetchRatings(productId) {
+  try {
+    const ratingsRef = collection(db, "ratings");
+    const ratingsQuery = query(ratingsRef, where("listingId", "==", productId), orderBy("createdAt", "desc"));
+    const ratingsSnapshot = await getDocs(ratingsQuery);
+    ratingsSnapshot.forEach((doc) => {
+      console.log("Rating:", doc.data());
+    });
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+  }
+}
+
+// Fetch and display seller notifications
+async function fetchSellerNotifications(sellerId) {
+  try {
+    const notificationsRef = collection(db, "sellerNotifications");
+    const notificationsQuery = query(notificationsRef, where("sellerId", "==", sellerId), orderBy("createdAt", "desc"));
+    const notificationsSnapshot = await getDocs(notificationsQuery);
+    notificationsSnapshot.forEach((doc) => {
+      console.log("Notification:", doc.data());
+    });
+  } catch (error) {
+    console.error("Error fetching seller notifications:", error);
+  }
+}
+
+// Initialize the page
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get("id");
+  const userId = auth.currentUser?.uid;
+
+  if (productId) {
+    await fetchProductDetails(productId);
+    await fetchRatings(productId);
+  }
+
+  if (userId) {
+    await fetchOrders(userId);
+  }
+
+  const sellerId = "cdGnTQ0F0E1DPiKiN8UB"; // Example seller ID
+  await fetchSellerNotifications(sellerId);
+});
     </script>
   </body>
 </html>

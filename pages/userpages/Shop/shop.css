@@ -1115,3 +1115,21 @@ main {
     padding: 10px;
   }
 }
+
+/* Back to Top */
+.back-to-top {
+  display: none;
+  position: fixed;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  background-color: var(--primary-color);
+  color: var(--bg-white);
+  padding: var(--spacing-sm);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.back-to-top i {
+  font-size: 18px;
+}

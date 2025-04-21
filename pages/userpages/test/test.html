@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoundWave Pro X5 Wireless Headphones</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script
@@ -19,12 +22,9 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="./styles.css" />
-    <title>Elegance - Premium Shopping Experience</title>
-  </head>
-  <body>
-    <!-- Original Header Section -->
-    <header>
+</head>
+<body>
+  <header>
       <div class="header-top">
         <div class="container">
           <div class="top-bar">
@@ -108,234 +108,434 @@
       </div>
     </header>
 
-    <!-- Sentinel element (acts as a trigger for the sticky header) -->
-    <div class="header-sentinel"></div>
 
-    <!-- Sticky Header Clone -->
-    <header class="sticky-header">
-      <div class="container">
-        <div class="header-wrapper">
-          <div class="logo">
-            <a href="../../../index.html">
-              <h1>Elegance</h1>
-            </a>
+  <main class="container">
+    <div class="product-container">
+      <div class="product-images">
+        <div class="main-image">
+          <img src="/api/placeholder/800/800" alt="SoundWave Pro X5 Wireless Headphones - Main View">
+        </div>
+        <div class="thumbnail-container">
+          <div class="thumbnail active">
+            <img src="/api/placeholder/200/200" alt="SoundWave Pro X5 - Front View">
           </div>
-          <div class="search-bar">
-            <form action="#" method="get">
-              <input
-                type="text"
-                placeholder="Search for products..."
-                id="search-input"
-              />
-              <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
+          <div class="thumbnail">
+            <img src="/api/placeholder/200/200?text=Side" alt="SoundWave Pro X5 - Side View">
           </div>
-          <div class="header-actions">
-            <div class="action-item">
-              <a href="../wishlist/wishlist.html" id="wishlist-toggle">
-                <i class="fas fa-heart"></i>
-                <span class="whishlistcount">0</span>
-              </a>
-            </div>
-            <div class="action-item">
-              <a href="../mycart/mycart.html" id="cart-toggle">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cartcount">0</span>
-              </a>
-              <div class="dropdown-menu cart-dropdown">
-                <div class="cart-items" id="cart-items">
-                  <p class="empty-cart">Your cart is empty</p>
-                </div>
-                <div class="cart-footer">
-                  <div class="cart-total">
-                    <span>Total:</span>
-                    <span id="cart-total">$0.00</span>
-                  </div>
-                  <div class="cart-actions">
-                    <a href="../mycart/mycart.html" class="btn btn-outline">View Cart</a>
-                    <a href="../Checkout/Checkout.html" class="btn btn-primary">Checkout</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="action-item" id="account-container-sticky">
-              <a href="../account/account.html" id="account-toggle">
-                <i class="fas fa-user"></i>
-              </a>
-            </div>
+          <div class="thumbnail">
+            <img src="/api/placeholder/200/200?text=Folded" alt="SoundWave Pro X5 - Folded">
+          </div>
+          <div class="thumbnail">
+            <img src="/api/placeholder/200/200?text=Case" alt="SoundWave Pro X5 - With Case">
           </div>
         </div>
       </div>
-    </header>
 
-    <main class="container">
-      <div class="main-content">
-        <aside class="sidebar">
-          <h3 class="sidebar-title">Filter By</h3>
-          <div class="price-range">
-            <label for="minPrice">Price:</label>
-            <input
-              type="number"
-              class="price-input"
-              id="minPrice"
-              placeholder="Min"
-            />
-            <span>to</span>
-            <input
-              type="number"
-              class="price-input"
-              id="maxPrice"
-              placeholder="Max"
-            />
-            <button class="filter-select" id="applyPriceFilter">Apply</button>
-          </div>
-          <div class="filter-group">
-            <h4 class="sidebar-title">Category</h4>
-            <select class="filter-select" id="mainCategory">
-              <option value="">All Categories</option>
-              <option value="electronics">Electronics</option>
-              <option value="clothing">Clothing</option>
-              <option value="home">Home & Kitchen</option>
-              <option value="beauty">Beauty</option>
-              <option value="sports">Sports</option>
-            </select>
-
-            <select class="filter-select mt-1" id="subCategory" disabled>
-              <option value="">All Subcategories</option>
-            </select>
-          </div>
-
-          <!-- Dynamic Attributes Filter -->
-          <div class="filter-group" id="attributesFilter">
-            <h4 class="sidebar-title">Attributes</h4>
-            <div id="attributesContainer"></div>
-          </div>
-          <div class="filter-group">
-            <h4 class="sidebar-title">Customer Rating</h4>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" class="rating-filter" value="4" />
-                <span class="star-rating">★★★★★</span> & up
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="rating-filter" value="3" />
-                <span class="star-rating">★★★★</span> & up
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="rating-filter" value="2" />
-                <span class="star-rating">★★★</span> & up
-              </label>
+      <div class="product-info">
+        <div class="product-header">
+          <h1 class="product-title">SoundWave Pro X5 Wireless Headphones</h1>
+          <div class="product-meta">
+            <div class="rating">
+              <div class="rating-stars">★★★★★</div>
+              <span>4.8 (342 reviews)</span>
             </div>
-          </div>
-          <div class="filter-group">
-            <h4 class="sidebar-title">Brand</h4>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  class="category-filter"
-                  value="techmaster"
-                />
-                TechMaster
-              </label>
-              <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  class="category-filter"
-                  value="fashionista"
-                />
-                Fashionista
-              </label>
-              <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  class="category-filter"
-                  value="homeessentials"
-                />
-                HomeEssentials
-              </label>
-              <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  class="category-filter"
-                  value="bookhaven"
-                />
-                BookHaven
-              </label>
-            </div>
-          </div>
-          <div class="filter-group">
-            <h4 class="sidebar-title">Availability</h4>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="inStockFilter" /> In Stock
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" id="discountFilter" /> Deals &amp; Discounts
-              </label>
-            </div>
-          </div>
-          <div class="filter-group">
-            <h4 class="sidebar-title">Shipping</h4>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="freeShippingFilter" /> Free Shipping
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" id="sameDayFilter" /> Same Day Delivery
-              </label>
-            </div>
-          </div>
-        </aside>
-
-        <div class="products-container">
-          <div class="sort-container">
-            <div class="results-count">
-              Showing <span id="productCount">0</span> results
-            </div>
-            <div class="sort-options">
-              <select class="sort-select" id="sortSelect">
-                <option value="featured">Featured</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest Arrivals</option>
-              </select>
-              <div class="view-options">
-                <button class="view-button active" id="gridViewBtn">
-                  <i class="fas fa-th"></i>
-                </button>
-                <button class="view-button" id="listViewBtn">
-                  <i class="fas fa-list"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="products-grid" id="productsGrid">
-            <!-- Products will be populated here dynamically -->
-          </div>
-          <div class="pagination" id="pagination">
-            <button class="page-button active">1</button>
-            <button class="page-button">2</button>
-            <button class="page-button">3</button>
-            <button class="page-button">→</button>
+            <span>|</span>
+            <span>1,245 units sold</span>
+            <span>|</span>
+            <span>Posted: April 10, 2025</span>
           </div>
         </div>
-      </div>
-    </main>
 
-    <!-- Add to Cart Notification -->
-    <div class="notification" id="cart-notification">
-      <div class="notification-content">
-        <i class="fas fa-check-circle"></i>
-        <p>Product added to cart successfully!</p>
+        <div class="product-pricing">
+          <span class="current-price">$249.99</span>
+          <span class="original-price">$299.99</span>
+          <span class="discount-badge">17% OFF</span>
+        </div>
+
+        <div class="product-description">
+          <p>Experience unparalleled sound quality with the SoundWave Pro X5 Wireless Headphones. Featuring advanced active noise cancellation technology, these premium headphones deliver crystal-clear audio with deep bass and crisp highs. The ergonomic design ensures comfort during extended listening sessions, while the long-lasting battery provides up to 40 hours of playback time.</p>
+          <p>With premium materials and intuitive touch controls, the SoundWave Pro X5 is designed for audiophiles and casual listeners alike who demand the best in wireless audio performance.</p>
+        </div>
+
+        <div class="tag-list">
+          <span class="tag">Wireless</span>
+          <span class="tag">Noise Cancellation</span>
+          <span class="tag">Bluetooth 5.2</span>
+          <span class="tag">40h Battery</span>
+          <span class="tag">Premium Audio</span>
+        </div>
+
+        <div class="product-actions">
+          <div class="quantity-selector">
+            <button class="quantity-btn">-</button>
+            <input type="text" class="quantity-input" value="1" readonly>
+            <button class="quantity-btn">+</button>
+          </div>
+          <button class="add-to-cart-btn">Add to Cart</button>
+          <button class="wishlist-btn">❤</button>
+        </div>
       </div>
     </div>
 
-    <!-- Back to Top Button -->
-    <button id="back-to-top" class="back-to-top">
-      <i class="fas fa-arrow-up"></i>
-    </button>
-    <script type="module" src="./script.js"></script>
-  </body>
+    <div class="additional-details">
+      <div class="details-tabs">
+        <button class="tab-btn active" data-tab="specifications">Specifications</button>
+        <button class="tab-btn" data-tab="features">Features</button>
+        <button class="tab-btn" data-tab="shipping">Shipping & Returns</button>
+      </div>
+
+      <div id="specifications" class="tab-content active">
+        <table class="spec-table">
+          <tr>
+            <th>Brand</th>
+            <td>SoundWave</td>
+          </tr>
+          <tr>
+            <th>Model</th>
+            <td>Pro X5</td>
+          </tr>
+          <tr>
+            <th>Type</th>
+            <td>Over-ear, Closed Back</td>
+          </tr>
+          <tr>
+            <th>Connectivity</th>
+            <td>Bluetooth 5.2, 3.5mm jack</td>
+          </tr>
+          <tr>
+            <th>Battery Life</th>
+            <td>Up to 40 hours (ANC on), 60 hours (ANC off)</td>
+          </tr>
+          <tr>
+            <th>Charging Time</th>
+            <td>2 hours (full charge)</td>
+          </tr>
+          <tr>
+            <th>Driver Size</th>
+            <td>40mm Dynamic</td>
+          </tr>
+          <tr>
+            <th>Frequency Response</th>
+            <td>20Hz - 20kHz</td>
+          </tr>
+          <tr>
+            <th>Impedance</th>
+            <td>32 Ohms</td>
+          </tr>
+          <tr>
+            <th>Weight</th>
+            <td>310g</td>
+          </tr>
+          <tr>
+            <th>Color Options</th>
+            <td>Midnight Black, Platinum Silver, Navy Blue</td>
+          </tr>
+          <tr>
+            <th>Warranty</th>
+            <td>2-year limited warranty</td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="features" class="tab-content">
+        <ul>
+          <li><strong>Advanced Active Noise Cancellation:</strong> Blocks out up to 95% of ambient noise for immersive listening.</li>
+          <li><strong>Transparency Mode:</strong> Lets you hear your surroundings without removing your headphones.</li>
+          <li><strong>Premium Sound Quality:</strong> 40mm drivers with enhanced bass response and crisp highs.</li>
+          <li><strong>Long Battery Life:</strong> Up to 40 hours with ANC on, 60 hours with ANC off.</li>
+          <li><strong>Fast Charging:</strong> 10-minute charge provides 5 hours of playback.</li>
+          <li><strong>Multi-device Connection:</strong> Connect to two devices simultaneously.</li>
+          <li><strong>Voice Assistant Support:</strong> Compatible with Siri, Google Assistant, and Alexa.</li>
+          <li><strong>Touch Controls:</strong> Intuitive touch controls for volume, tracks, and calls.</li>
+          <li><strong>Automatic Pause:</strong> Music automatically pauses when you remove the headphones.</li>
+          <li><strong>Custom EQ:</strong> Personalize your sound experience with the SoundWave app.</li>
+          <li><strong>Premium Materials:</strong> Memory foam ear cushions and durable metal headband.</li>
+          <li><strong>Foldable Design:</strong> Compact storage and included travel case.</li>
+        </ul>
+      </div>
+
+      <div id="shipping" class="tab-content">
+        <h3>Shipping Information</h3>
+        <p>Free standard shipping on all orders over $100. Orders are typically processed within 24 hours and delivered within 3-5 business days.</p>
+        <p>Express shipping options available at checkout:</p>
+        <ul>
+          <li>2-Day Shipping: $12.99</li>
+          <li>Next-Day Shipping: $19.99</li>
+        </ul>
+        
+        <h3>International Shipping</h3>
+        <p>We ship to over 50 countries worldwide. International shipping rates and delivery times vary by location.</p>
+        
+        <h3>Return Policy</h3>
+        <p>We offer a 30-day satisfaction guarantee. If you're not completely satisfied with your purchase, you can return it for a full refund or exchange within 30 days of delivery.</p>
+        <p>Items must be in original condition with all packaging and accessories. Return shipping costs may apply except for defective items.</p>
+      </div>
+    </div>
+
+    <section class="customer-reviews">
+      <div class="reviews-summary">
+        <div>
+          <div class="reviews-header">
+            <h2>Customer Reviews</h2>
+            <button class="view-all-reviews">View All 342 Reviews</button>
+          </div>
+          <div class="average-rating">
+            <div class="rating-number">4.8</div>
+            <div class="rating-stars">★★★★★</div>
+            <div class="rating-count">Based on 342 reviews</div>
+          </div>
+        </div>
+
+        <div class="rating-distribution">
+          <div class="rating-bar">
+            <div class="rating-level">5 ★</div>
+            <div class="progress-container">
+              <div class="progress" style="width: 86%"></div>
+            </div>
+            <div class="progress-percent">86%</div>
+          </div>
+          <div class="rating-bar">
+            <div class="rating-level">4 ★</div>
+            <div class="progress-container">
+              <div class="progress" style="width: 9%"></div>
+            </div>
+            <div class="progress-percent">9%</div>
+          </div>
+          <div class="rating-bar">
+            <div class="rating-level">3 ★</div>
+            <div class="progress-container">
+              <div class="progress" style="width: 3%"></div>
+            </div>
+            <div class="progress-percent">3%</div>
+          </div>
+          <div class="rating-bar">
+            <div class="rating-level">2 ★</div>
+            <div class="progress-container">
+              <div class="progress" style="width: 1%"></div>
+            </div>
+            <div class="progress-percent">1%</div>
+          </div>
+          <div class="rating-bar">
+            <div class="rating-level">1 ★</div>
+            <div class="progress-container">
+              <div class="progress" style="width: 1%"></div>
+            </div>
+            <div class="progress-percent">1%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-list">
+        <div class="review-item">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">JD</div>
+              <div>
+                <div class="reviewer-name">John Doe</div>
+                <div class="rating-stars">★★★★★</div>
+              </div>
+            </div>
+            <div class="review-date">April 15, 2025</div>
+          </div>
+          <div class="review-content">
+            <p>
+              These headphones are absolutely amazing! The noise cancellation is better than any other headphones I've tried before, and I've tried many. The sound quality is crystal clear with deep bass and crisp highs. Battery life is also impressive - I've been using them for a week now on a single charge with daily use of about 3-4 hours.
+            </p>
+          </div>
+        </div>
+
+        <div class="review-item">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">SM</div>
+              <div>
+                <div class="reviewer-name">Sarah Mitchell</div>
+                <div class="rating-stars">★★★★★</div>
+              </div>
+            </div>
+            <div class="review-date">April 12, 2025</div>
+          </div>
+          <div class="review-content">
+            <p>
+              I've been using these headphones for about two weeks now and I'm thoroughly impressed. The comfort level is outstanding - I can wear them for hours without any discomfort. The sound quality is exceptional and the active noise cancellation works wonders during my daily commute. I also appreciate the multipoint connection feature that lets me connect to both my laptop and phone simultaneously.
+            </p>
+          </div>
+        </div>
+
+        <div class="review-item">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">RJ</div>
+              <div>
+                <div class="reviewer-name">Robert Johnson</div>
+                <div class="rating-stars">★★★★☆</div>
+              </div>
+            </div>
+            <div class="review-date">April 8, 2025</div>
+          </div>
+          <div class="review-content">
+            <p>
+              Overall very good headphones with excellent sound quality and noise cancellation. The build quality feels premium and they look stylish. My only minor complaint is that the touch controls can be a bit sensitive sometimes, causing accidental triggers. The SoundWave app is also great for customizing the EQ settings to your preference. Would recommend to anyone looking for high-qualitywireless headphones!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="related-products">
+      <h2>You May Also Like</h2>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/api/placeholder/300/300?text=Earbuds" alt="SoundWave TWS Pro Earbuds">
+          </div>
+          <div class="product-card-content">
+            <div class="product-card-title">SoundWave TWS Pro Earbuds</div>
+            <div class="rating-stars" style="font-size: 0.8rem;">★★★★★</div>
+            <div class="product-card-price">$129.99</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/api/placeholder/300/300?text=Speaker" alt="SoundWave Portable Speaker">
+          </div>
+          <div class="product-card-content">
+            <div class="product-card-title">SoundWave Portable Bluetooth Speaker</div>
+            <div class="rating-stars" style="font-size: 0.8rem;">★★★★☆</div>
+            <div class="product-card-price">$79.99</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/api/placeholder/300/300?text=Headset" alt="SoundWave Gaming Headset">
+          </div>
+          <div class="product-card-content">
+            <div class="product-card-title">SoundWave Pro Gaming Headset</div>
+            <div class="rating-stars" style="font-size: 0.8rem;">★★★★★</div>
+            <div class="product-card-price">$199.99</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/api/placeholder/300/300?text=SoundBar" alt="SoundWave Home Theater Soundbar">
+          </div>
+          <div class="product-card-content">
+            <div class="product-card-title">SoundWave Pro Home Theater Soundbar</div>
+            <div class="rating-stars" style="font-size: 0.8rem;">★★★★☆</div>
+            <div class="product-card-price">$349.99</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="#">Headphones</a></li>
+          <li><a href="#">Earbuds</a></li>
+          <li><a href="#">Speakers</a></li>
+          <li><a href="#">Accessories</a></li>
+          <li><a href="#">Special Offers</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Return Policy</a></li>
+          <li><a href="#">Warranty Information</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>About Us</h3>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Reviews</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Store Locations</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Follow Us</h3>
+        <ul>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">YouTube</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2025 TechGear. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Tab functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all tabs
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        button.classList.add('active');
+        document.getElementById(button.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Thumbnail functionality
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.querySelector('.main-image img');
+
+    thumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', () => {
+        // Remove active class from all thumbnails
+        thumbnails.forEach(thumb => thumb.classList.remove('active'));
+        
+        // Add active class to clicked thumbnail
+        thumbnail.classList.add('active');
+        
+        // Update main image source
+        mainImage.src = thumbnail.querySelector('img').src.replace('200/200', '800/800');
+      });
+    });
+
+    // Quantity selector functionality
+    const minusBtn = document.querySelector('.quantity-btn:first-child');
+    const plusBtn = document.querySelector('.quantity-btn:last-child');
+    const quantityInput = document.querySelector('.quantity-input');
+
+    minusBtn.addEventListener('click', () => {
+      const currentValue = parseInt(quantityInput.value);
+      if (currentValue > 1) {
+        quantityInput.value = currentValue - 1;
+      }
+    });
+
+    plusBtn.addEventListener('click', () => {
+      const currentValue = parseInt(quantityInput.value);
+      quantityInput.value = currentValue + 1;
+    });
+
+    // Wishlist button functionality
+    const wishlistBtn = document.querySelector('.wishlist-btn');
+    wishlistBtn.addEventListener('click', () => {
+      wishlistBtn.innerHTML = wishlistBtn.innerHTML === '❤' ? '❤️' : '❤';
+    });
+  </script>
+</body>
 </html>
