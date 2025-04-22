@@ -1,381 +1,275 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Premium Wireless Noise-Cancelling Headphones - TechGear</title>
-    <link rel="stylesheet" href="./product.css" />
-    <script type="module" src="./product.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+    <title>Product Details | Your Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../../../assets/styles/animation.css" />
-    <link rel="stylesheet" href="../../../assets/styles/header.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="product.css" />
   </head>
-
   <body>
-    <header class="header">
-      <div class="header-container">
-        <div class="logo">
-          <a href="../../../index.html">E-Shop</a>
-        </div>
-        <div class="search-bar">
-          <input
-            type="text"
-            placeholder="Search products..."
-            id="searchInput"
-          />
-          <button id="searchBtn"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="user-menu">
-          <a href="../account/account.html" class="sixty-nine account-link"
-            ><i class="fas fa-user"></i> Profile</a
-          >
-          <div class="seventy-one">
-            <a href="../wishlist/wishlist.html" class="sixty-nine"
-              ><i class="fas fa-heart"></i> Wishlist</a
-            >
-            <a href="../mycart/mycart.html" class="sixty-nine"
-              ><i class="fas fa-shopping-cart"></i> Cart</a
-            >
+    <!-- Original Header Section -->
+    <header>
+      <div class="header-top">
+        <div class="container">
+          <div class="top-bar">
+            <div class="contact-info">
+              <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+              <span><i class="fas fa-envelope"></i> support@elegance.com</span>
+            </div>
+            <div class="top-nav">
+              <ul>
+                <li>
+                  <a href="#"
+                    ><i class="fas fa-map-marker-alt"></i> Store Locator</a
+                  >
+                </li>
+                <li>
+                  <a href="#"><i class="fas fa-truck"></i> Track Order</a>
+                </li>
+                <li class="currency-selector">
+                  <select id="currency-select">
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
+                    <option value="gbp">GBP</option>
+                  </select>
+                </li>
+              </ul>
+            </div>
           </div>
-          <a href="../SignUp/SignUp.html" class="seventy signup-link"
-            >Sign In</a
-          >
-          <a href="#" class="seventy logout-btn" style="display: none"
-            >Logout</a
-          >
+        </div>
+      </div>
+      <div class="main-header">
+        <div class="container">
+          <div class="header-wrapper">
+            <div class="logo">
+              <a href="../../../index.html">
+                <h1>Elegance</h1>
+              </a>
+            </div>
+            <div class="search-bar">
+              <form action="#" method="get">
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  id="search-input"
+                />
+                <button type="submit"><i class="fas fa-search"></i></button>
+              </form>
+            </div>
+            <div class="header-actions">
+              <div class="action-item">
+                <a href="../wishlist/wishlist.html" id="wishlist-toggle">
+                  <i class="fas fa-heart"></i>
+                  <span>Wishlist</span>
+                  <span class="whishlistcount">0</span>
+                </a>
+              </div>
+              <div class="action-item">
+                <a href="../mycart/mycart.html" id="cart-toggle">
+                  <i class="fas fa-shopping-cart"></i>
+                  <span>Cart</span>
+                  <span class="cartcount">0</span>
+                </a>
+                <div class="dropdown-menu cart-dropdown">
+                  <div class="cart-items" id="cart-items">
+                    <p class="empty-cart">Your cart is empty</p>
+                  </div>
+                  <div class="cart-footer">
+                    <div class="cart-total">
+                      <span>Total:</span>
+                      <span id="cart-total">$0.00</span>
+                    </div>
+                    <div class="cart-actions">
+                      <a href="../mycart/mycart.html" class="btn btn-outline"
+                        >View Cart</a
+                      >
+                      <a
+                        href="../Checkout/Checkout.html"
+                        class="btn btn-primary"
+                        >Checkout</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="action-item" id="account-container-main">
+                <a href="../account/account.html" id="account-toggle">
+                  <i class="fas fa-user"></i>
+                  <span id="account-text">Account</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>
 
-    <main class="container">
-      <div class="breadcrumb">
-        <a href="#">Home</a> > <a href="#">Electronics</a> >
-        <a href="#">Audio</a> > <a href="#">Headphones</a> > Premium Wireless
-        Noise-Cancelling Headphones
-      </div>
-
-      <section class="product-section">
-        <div class="imagescon">
-          <div class="product-images">
-            <div class="thumbnail-container">
-              <img
-                src="../../../assets/images/nike-air-max-nike-free-air-force-shoe-nike-91a57ad774c86d907884aad806d0cfeb.png"
-                alt="Product thumbnail 1"
-                class="thumbnail active"
-              />
-              <img
-                src="../../../assets/images/fc-barcelona-t-shirt-la-liga-kit-jersey-barcelona-58d3331a7966b2bdc03313e2958e521f.png"
-                alt="Product thumbnail 2"
-                class="thumbnail"
-              />
-              <img
-                src="../../../assets/images/hoodie-t-shirt-supreme-bluza-t-shirt-9e02e46feebfa8030fb0fcfc449a7102.png"
-                alt="Product thumbnail 3"
-                class="thumbnail"
-              />
-              <img
-                src="../../../assets/images/air-jordan-shoe-nike-sneakers-adidas-yeezy-jordan-9d493e6896549a636419ee58d67ba6c0.png"
-                alt="Product thumbnail 4"
-                class="thumbnail"
-              />
-            </div>
-            <div class="main-image-container">
-              <img
-                src="../../../assets/images/5bbc4e5d80edd-28a1b35d0007a0d0ca41e63620536c93.png"
-                alt="Premium Wireless Noise-Cancelling Headphones"
-                class="main-image"
-              />
-            </div>
-          </div>
-          <div class="actionscon">
-            <div class="attribute-group">
-              <div class="attribute-name">Color:</div>
-              <div class="attribute-value">Black</div>
-            </div>
-
-            <div class="action-buttons">
-              <button class="add-to-cart">
-                <span>Add to Cart</span>
-              </button>
-              <button class="buy-now">Go to Cart</button>
-              <button class="wishlist-button">♡</button>
-            </div>
-          </div>
+    <!-- Main Content -->
+    <main class="product-page">
+      <div class="container">
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="loading-container">
+          <div class="spinner"></div>
+          <p>Loading product details...</p>
         </div>
 
-        <div class="product-info">
-          <h1>Premium Wireless Noise-Cancelling Headphones</h1>
+        <!-- Error container -->
+        <div id="error-container" class="error-container" style="display: none">
+          <!-- Error message will be added here via JS -->
+        </div>
 
-          <div class="product-price">
-            <span class="current-price">$249.99</span>
-            <span class="old-price">$299.99</span>
-            <span class="discount">-17%</span>
-          </div>
+        <!-- Product container -->
+        <div id="product-container" class="product-container">
+          <!-- Product details will be added here via JS -->
+        </div>
 
-          <div class="availability">
-            <span class="stock-status">In Stock</span>
-            <span class="stock-count">(23 available)</span>
-          </div>
-
-          <div class="product-meta">
-            <div class="product-rating">
-              <div class="stars">★★★★★</div>
-              <span class="reviews-count">4.8 (342 reviews)</span>
+        <div id="ratinganddetailstab">
+          <div class="additional-details">
+            <div class="details-tabs">
+              <button class="tab-btn active" data-tab="specifications">
+                Specifications
+              </button>
+              <button class="tab-btn" data-tab="features">Features</button>
+              <button class="tab-btn" data-tab="shipping">
+                Shipping & Returns
+              </button>
+              <button class="tab-btn" data-tab="reviews">Reviews</button>
             </div>
-            <div class="product-sku">SKU: TG-WH-8500</div>
-          </div>
 
-          <div class="product-attributes">
-            <p class="description">
-              This is a detailed description of the product. It highlights the
-              key features, benefits, and specifications of the product.
-            </p>
+            <div id="specifications" class="tab-content active">
+              <table id="spec-table" class="spec-table"></table>
+            </div>
 
-            <div class="attributes">
-              <h3>Attributes</h3>
+            <div id="features" class="tab-content">
               <ul>
-                <li><strong>Color:</strong> Black</li>
-                <li><strong>Size:</strong> Medium</li>
-                <li><strong>Material:</strong> Cotton</li>
+                <li>
+                  <strong>Advanced Active Noise Cancellation:</strong> Blocks
+                  out up to 95% of ambient noise for immersive listening.
+                </li>
+                <li>
+                  <strong>Transparency Mode:</strong> Lets you hear your
+                  surroundings without removing your headphones.
+                </li>
+                <li>
+                  <strong>Premium Sound Quality:</strong> 40mm drivers with
+                  enhanced bass response and crisp highs.
+                </li>
+                <li>
+                  <strong>Long Battery Life:</strong> Up to 40 hours with ANC
+                  on, 60 hours with ANC off.
+                </li>
+                <li>
+                  <strong>Fast Charging:</strong> 10-minute charge provides 5
+                  hours of playback.
+                </li>
+                <li>
+                  <strong>Multi-device Connection:</strong> Connect to two
+                  devices simultaneously.
+                </li>
+                <li>
+                  <strong>Voice Assistant Support:</strong> Compatible with
+                  Siri, Google Assistant, and Alexa.
+                </li>
+                <li>
+                  <strong>Touch Controls:</strong> Intuitive touch controls for
+                  volume, tracks, and calls.
+                </li>
+                <li>
+                  <strong>Automatic Pause:</strong> Music automatically pauses
+                  when you remove the headphones.
+                </li>
+                <li>
+                  <strong>Custom EQ:</strong> Personalize your sound experience
+                  with the SoundWave app.
+                </li>
+                <li>
+                  <strong>Premium Materials:</strong> Memory foam ear cushions
+                  and durable metal headband.
+                </li>
+                <li>
+                  <strong>Foldable Design:</strong> Compact storage and included
+                  travel case.
+                </li>
               </ul>
             </div>
 
-            <!-- Tags -->
-            <div class="tags">
-              <h3>Tags</h3>
-              <div class="tag-list">
-                <span>Electronics</span>
-                <span>Gadgets</span>
-                <span>Accessories</span>
-              </div>
-            </div>
-
-            <div class="product-highlights">
-              <div class="feature">✓ Free shipping & returns</div>
-              <div class="feature">✓ 30-day money-back guarantee</div>
-              <div class="feature">✓ 24-month warranty</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="customer-reviews">
-        <div class="reviews-summary">
-          <div class="reviews-header">
-            <h2>Customer Reviews</h2>
-            <button class="view-all-reviews">View All 342 Reviews</button>
-          </div>
-          <div class="average-rating">
-            <div class="rating-number">4.8</div>
-            <div class="rating-stars">★★★★★</div>
-            <div class="rating-count">Based on 342 reviews</div>
-          </div>
-
-          <div class="rating-distribution">
-            <div class="rating-bar">
-              <div class="rating-level">5 ★</div>
-              <div class="progress-container">
-                <div class="progress" style="width: 86%"></div>
-              </div>
-              <div class="progress-percent">86%</div>
-            </div>
-            <div class="rating-bar">
-              <div class="rating-level">4 ★</div>
-              <div class="progress-container">
-                <div class="progress" style="width: 9%"></div>
-              </div>
-              <div class="progress-percent">9%</div>
-            </div>
-            <div class="rating-bar">
-              <div class="rating-level">3 ★</div>
-              <div class="progress-container">
-                <div class="progress" style="width: 3%"></div>
-              </div>
-              <div class="progress-percent">3%</div>
-            </div>
-            <div class="rating-bar">
-              <div class="rating-level">2 ★</div>
-              <div class="progress-container">
-                <div class="progress" style="width: 1%"></div>
-              </div>
-              <div class="progress-percent">1%</div>
-            </div>
-            <div class="rating-bar">
-              <div class="rating-level">1 ★</div>
-              <div class="progress-container">
-                <div class="progress" style="width: 1%"></div>
-              </div>
-              <div class="progress-percent">1%</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="review-list">
-          <div class="review-item">
-            <div class="review-header">
-              <div class="reviewer-info">
-                <div class="reviewer-avatar">JD</div>
-                <div>
-                  <div class="reviewer-name">John Doe</div>
-                  <div class="rating-stars">★★★★★</div>
-                </div>
-              </div>
-              <div class="review-date">January 15, 2025</div>
-            </div>
-            <div class="review-content">
+            <div id="shipping" class="tab-content">
+              <h3>Shipping Information</h3>
               <p>
-                These headphones are absolutely amazing! The noise cancellation
-                is better than any other headphones I've tried before, and I've
-                tried many. The sound quality is crystal clear with deep bass
-                and crisp highs. Battery life is also impressive - I've been
-                using them for a week now on a single charge with daily use of
-                about 3-4 hours.
+                Free standard shipping on all orders over $100. Orders are
+                typically processed within 24 hours and delivered within 3-5
+                business days.
+              </p>
+              <p>Express shipping options available at checkout:</p>
+              <ul>
+                <li>2-Day Shipping: $12.99</li>
+                <li>Next-Day Shipping: $19.99</li>
+              </ul>
+
+              <h3>International Shipping</h3>
+              <p>
+                We ship to over 50 countries worldwide. International shipping
+                rates and delivery times vary by location.
+              </p>
+
+              <h3>Return Policy</h3>
+              <p>
+                We offer a 30-day satisfaction guarantee. If you're not
+                completely satisfied with your purchase, you can return it for a
+                full refund or exchange within 30 days of delivery.
+              </p>
+              <p>
+                Items must be in original condition with all packaging and
+                accessories. Return shipping costs may apply except for
+                defective items.
               </p>
             </div>
+
+            <div id="reviews" class="tab-content">
+              <div id="review-list" class="review-list"></div>
+            </div>
           </div>
 
-          <div class="review-item">
-            <div class="review-header">
-              <div class="reviewer-info">
-                <div class="reviewer-avatar">JD</div>
-                <div>
-                  <div class="reviewer-name">John Doe</div>
-                  <div class="rating-stars">★★★★★</div>
-                </div>
-              </div>
-              <div class="review-date">January 15, 2025</div>
-            </div>
-            <div class="review-content">
-              <p>
-                These headphones are absolutely amazing! The noise cancellation
-                is better than any other headphones I've tried before, and I've
-                tried many. The sound quality is crystal clear with deep bass
-                and crisp highs. Battery life is also impressive - I've been
-                using them for a week now on a single charge with daily use of
-                about 3-4 hours.
-              </p>
-            </div>
-          </div>
+          <section class="customer-reviews">
+            <div id="reviews-summary" class="reviews-summary"></div>
+          </section>
         </div>
-      </section>
+      </div>
     </main>
-    <script type="module" >
-      const thumbnails = document.querySelectorAll('.thumbnail');
-      const mainImage = document.querySelector('.main-image');
 
-      thumbnails.forEach((thumbnail) => {
-        thumbnail.addEventListener('click', () => {
-          mainImage.src = thumbnail.src;
-          thumbnails.forEach((t) => t.classList.remove('active'));
-          thumbnail.classList.add('active');
-        });
-      });
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
 
-import { auth, db } from "../../../database/config.js";
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  orderBy,
-} from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="toast-message"></div>
+      <button class="toast-close">&times;</button>
+    </div>
 
-// Fetch product details
-async function fetchProductDetails(productId) {
-  try {
-    const productDocRef = doc(db, "listings", productId);
-    const productSnap = await getDoc(productDocRef);
-    if (productSnap.exists()) {
-      const productData = productSnap.data();
-      console.log("Product Details:", productData);
-      renderProductDetails(productData);
-    } else {
-      console.error("Product not found.");
-    }
-  } catch (error) {
-    console.error("Error fetching product details:", error);
-  }
-}
+    <!-- Product Added to Cart Notification -->
+    <div id="cart-notification" class="notification">
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span>Product added to cart!</span>
+      </div>
+      <div class="notification-actions">
+        <a href="../cart/cart.html" class="btn btn-sm">View Cart</a>
+        <button class="btn btn-sm btn-close">Continue Shopping</button>
+      </div>
+    </div>
 
-// Render product details on the page
-function renderProductDetails(product) {
-  document.querySelector(".product-info h1").textContent = product.name;
-  document.querySelector(".current-price").textContent = `$${product.price}`;
-  document.querySelector(".old-price").textContent = `$${product.salePrice}`;
-  document.querySelector(".stock-count").textContent = `(${product.quantity} available)`;
-  document.querySelector(".description").textContent = product.description;
-  document.querySelector(".main-image").src = product.mainImageUrl;
-}
-
-// Fetch and display orders
-async function fetchOrders(userId) {
-  try {
-    const ordersRef = collection(db, "orders");
-    const ordersQuery = query(ordersRef, where("userId", "==", userId), orderBy("createdAt", "desc"));
-    const ordersSnapshot = await getDocs(ordersQuery);
-    ordersSnapshot.forEach((doc) => {
-      console.log("Order:", doc.data());
-    });
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-  }
-}
-
-// Fetch and display ratings
-async function fetchRatings(productId) {
-  try {
-    const ratingsRef = collection(db, "ratings");
-    const ratingsQuery = query(ratingsRef, where("listingId", "==", productId), orderBy("createdAt", "desc"));
-    const ratingsSnapshot = await getDocs(ratingsQuery);
-    ratingsSnapshot.forEach((doc) => {
-      console.log("Rating:", doc.data());
-    });
-  } catch (error) {
-    console.error("Error fetching ratings:", error);
-  }
-}
-
-// Fetch and display seller notifications
-async function fetchSellerNotifications(sellerId) {
-  try {
-    const notificationsRef = collection(db, "sellerNotifications");
-    const notificationsQuery = query(notificationsRef, where("sellerId", "==", sellerId), orderBy("createdAt", "desc"));
-    const notificationsSnapshot = await getDocs(notificationsQuery);
-    notificationsSnapshot.forEach((doc) => {
-      console.log("Notification:", doc.data());
-    });
-  } catch (error) {
-    console.error("Error fetching seller notifications:", error);
-  }
-}
-
-// Initialize the page
-document.addEventListener("DOMContentLoaded", async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get("id");
-  const userId = auth.currentUser?.uid;
-
-  if (productId) {
-    await fetchProductDetails(productId);
-    await fetchRatings(productId);
-  }
-
-  if (userId) {
-    await fetchOrders(userId);
-  }
-
-  const sellerId = "cdGnTQ0F0E1DPiKiN8UB"; // Example seller ID
-  await fetchSellerNotifications(sellerId);
-});
-    </script>
-  </body>
+    <!-- Scripts -->
+    <script type="module" src="product.js"></script>
 </html>

@@ -30,6 +30,18 @@ let isInWishlist = false;
 const productContainer = document.getElementById('product-container');
 const loadingIndicator = document.getElementById('loading-indicator');
 const errorContainer = document.getElementById('error-container');
+const Attributes = document.getElementById('specifications');
+
+
+// Initialize the page on load
+document.addEventListener('DOMContentLoaded', init);
+
+// Tab functionality
+const tabButtons = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+const AttributesContainer = document.getElementById('spec-table');
+
+
 
 // Initialize the page
 function init() {
@@ -86,6 +98,7 @@ async function fetchProductDetails(productId) {
 
     // Update document title
     document.title = `${currentProduct.name} | Your Store Name`;
+    fetchProductReviews(productId);
   } catch (error) {
     console.error('Error fetching product details:', error);
     throw error;
@@ -141,6 +154,7 @@ async function checkWishlistStatus() {
 // Render product details
 function renderProductDetails() {
   if (!currentProduct) return;
+  renderProductAttributes();
 
   // Render main product container
   productContainer.innerHTML = `
@@ -212,11 +226,8 @@ function renderProductDetails() {
                     : ''
                 }   
             </div>
-            <div class="numsold">
-                Number Sold: <span class="sold">${
-                  currentProduct.salesCount
-                }</span>
-            </div>
+            
+          
             <div class="product-availability">
                 <span class="${
                   currentProduct.quantity > 0 ? 'in-stock' : 'out-of-stock'
@@ -232,7 +243,17 @@ function renderProductDetails() {
                     ? `<span class="stock-count">${currentProduct.quantity} available</span>`
                     : ''
                 }
-            </div> 
+            </div>
+            <div class="numsold">
+                Number Sold: <span class="sold">${
+                  currentProduct.salesCount
+                }</span>
+            </div>
+              <div class="numreturned">
+                Number Returned: <span class="returnedcount">${
+                  currentProduct.returnsCount
+                }</span>
+            </div>
         </div>
             </div>
                 <div class="product-meta">
@@ -277,19 +298,11 @@ function renderProductDetails() {
             </button>
           </div>
         </div>
-        
-        <div class="product-attributes">
-          <h3>Specifications</h3>
-          <table class="specs-table">
-            <tbody>
-              ${renderProductAttributes()}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   `;
 }
+
 
 // Render quantity selector based on cart status
 function renderQuantitySelector() {
@@ -319,30 +332,154 @@ function renderQuantitySelector() {
   }
 }
 
-// Render product attributes from the attributes map
-function renderProductAttributes() {
-  const attributes = currentProduct.attributes || {};
+async function fetchProductReviews(productId) {
+  try {
+    const ratingsCollection = collection(db, 'listings', productId, 'ratings');
+    const ratingsSnapshot = await getDocs(ratingsCollection);
+    const allRatings = ratingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-  return (
-    Object.entries(attributes)
-      .map(
-        ([key, value]) => `
-      <tr>
-        <th>${key}</th>
-        <td>${value}</td>
-      </tr>
-    `
-      )
-      .join('') +
-    `
-      <tr>
-        <th>Model</th>
-        <td>${currentProduct.Model || 'N/A'}</td>
-      </tr>
-    `
-  );
+    const ratingCounts = [0, 0, 0, 0, 0]; // Index 0 for 1-star, 4 for 5-star
+    allRatings.forEach(rating => {
+      if (rating.rating >= 1 && rating.rating <= 5) {
+        ratingCounts[rating.rating - 1]++;
+      }
+    });
+
+    const totalRatings = allRatings.length;
+    const averageRating = totalRatings
+      ? (allRatings.reduce((sum, rating) => sum + rating.rating, 0) / totalRatings).toFixed(1)
+      : 0;
+
+    renderAverageRating(averageRating, totalRatings, ratingCounts);
+    renderIndividualReviews(allRatings);
+  } catch (error) {
+    console.error('Error fetching product reviews:', error);
+    showError('Failed to load product reviews. Please try again later.');
+  }
 }
 
+function renderAverageRating(averageRating, totalRatings, ratingCounts) {
+  const ratingDistribution = ratingCounts.map((count, index) => {
+    const percentage = totalRatings ? ((count / totalRatings) * 100).toFixed(1) : 0;
+    return `
+      <div class="rating-bar">
+        <div class="rating-level">${1 + index} ★</div>
+        <div class="progress-container">
+          <div class="progress" style="width: ${percentage}%"></div>
+        </div>
+        <div class="progress-percent">${percentage}%</div>
+      </div>
+    `;
+  }).join('');
+
+  const reviewsContainer = document.getElementById('reviews-summary');
+  reviewsContainer.innerHTML = `
+    <div>
+      <div class="reviews-header">
+        <h2>Customer Reviews</h2>
+        <button class="view-all-reviews">View All ${totalRatings} Reviews</button>
+      </div>
+      <div class="average-rating">
+        <div class="rating-number">${averageRating}</div>
+        <div class="rating-stars">${renderStars(averageRating)}</div>
+        <div class="rating-count">Based on ${totalRatings} reviews</div>
+      </div>
+    </div>
+    <div id="rating-distributionz" class="rating-distribution">
+      ${ratingDistribution}
+    </div>
+  `;
+}
+
+async function renderIndividualReviews(allRatings) {
+  const reviewsContainer = document.getElementById('review-list');
+  reviewsContainer.innerHTML = ''; // Clear existing reviews
+
+  for (const review of allRatings) {
+    try {
+      // Fetch user details from Firestore
+      const userDoc = await getDoc(doc(db, 'users', review.userId));
+      const FullName = userDoc.exists() ? userDoc.data().FullName : 'Anonymous';
+
+      // Check if "helpful" count exists
+      const helpfulCount = review.helpful || 0;
+
+      // Render each review
+      const reviewHTML = `
+        <div class="review-item">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">A</div>
+              <div>
+                <div class="reviewer-name">${FullName}</div>
+                <div class="rating-stars">${renderStars(review.rating)}</div>
+              </div>
+            </div>
+            <div class="review-date">${new Date(review.createdAt.seconds * 1000).toLocaleDateString()}</div>
+          </div>
+          <div class="review-content">
+            <p>${review.review}</p>
+          </div>
+          <div class="review-actions">
+            <button class="like-button" data-review-id="${review.id}">
+              👍 Helpful (<span class="helpful-count">${helpfulCount}</span>)
+            </button>
+          </div>
+        </div>
+      `;
+
+      reviewsContainer.innerHTML += reviewHTML;
+    } catch (error) {
+      console.error('Error fetching user details for review:', error);
+    }
+  }
+
+  // Attach event listeners to like buttons
+  const likeButtons = document.querySelectorAll('.like-button');
+  likeButtons.forEach((button) => {
+    button.addEventListener('click', async (e) => {
+      const reviewId = e.target.dataset.reviewId;
+      try {
+        const reviewRef = doc(db, 'listings', currentProduct.id, 'ratings', reviewId);
+        await updateDoc(reviewRef, {
+          helpful: increment(1),
+        });
+
+        // Update UI
+        const helpfulCountElem = e.target.querySelector('.helpful-count');
+        helpfulCountElem.textContent = parseInt(helpfulCountElem.textContent) + 1;
+
+        console.log(`Review ${reviewId} marked as helpful.`);
+      } catch (error) {
+        console.error('Error updating helpful count:', error);
+      }
+    });
+  });
+}
+
+// Render product attributes
+async function renderProductAttributes() {
+  if (!currentProduct) {
+    console.log('Product not found');
+  } else if (!AttributesContainer) {
+    console.log('AttributesContainer not found');
+  } else {
+      const attributes = currentProduct.attributes || {};
+      const attributesHTML = Object.entries(attributes)
+        .map(([key, value]) => {
+          return `
+          <tr>
+                  <th>${key}</th>
+                  <td>${value}</td>
+                </tr>
+          `;
+        })
+        .join('');
+      AttributesContainer.innerHTML = attributesHTML;
+  }
+}
+
+  
 // Set up event listeners
 function setupEventListeners() {
   // Gallery thumbnails
@@ -781,5 +918,14 @@ document.querySelectorAll('.add-to-cart').forEach((button) => {
   });
 });
 
-// Initialize the page on load
-document.addEventListener('DOMContentLoaded', init);
+tabButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    // Remove active class from all tabs
+    tabButtons.forEach((btn) => btn.classList.remove('active'));
+    tabContents.forEach((content) => content.classList.remove('active'));
+
+    // Add active class to clicked tab
+    button.classList.add('active');
+    document.getElementById(button.dataset.tab).classList.add('active');
+  });
+});

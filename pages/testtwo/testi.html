@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Details | Your Store</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="product.css" />
   </head>
   <body>
@@ -108,11 +114,9 @@
       </div>
     </header>
 
-
     <!-- Main Content -->
     <main class="product-page">
       <div class="container">
-
         <!-- Loading indicator -->
         <div id="loading-indicator" class="loading-container">
           <div class="spinner"></div>
@@ -127,6 +131,125 @@
         <!-- Product container -->
         <div id="product-container" class="product-container">
           <!-- Product details will be added here via JS -->
+        </div>
+
+        <div id="ratinganddetailstab">
+          <div class="additional-details">
+            <div class="details-tabs">
+              <button class="tab-btn active" data-tab="specifications">
+                Specifications
+              </button>
+              <button class="tab-btn" data-tab="features">Features</button>
+              <button class="tab-btn" data-tab="shipping">
+                Shipping & Returns
+              </button>
+              <button class="tab-btn" data-tab="reviews">Reviews</button>
+            </div>
+
+            <div id="specifications" class="tab-content active">
+              <table  id="spec-table" class="spec-table">
+                
+              </table>
+            </div>
+
+            <div id="features" class="tab-content">
+              <ul>
+                <li>
+                  <strong>Advanced Active Noise Cancellation:</strong> Blocks
+                  out up to 95% of ambient noise for immersive listening.
+                </li>
+                <li>
+                  <strong>Transparency Mode:</strong> Lets you hear your
+                  surroundings without removing your headphones.
+                </li>
+                <li>
+                  <strong>Premium Sound Quality:</strong> 40mm drivers with
+                  enhanced bass response and crisp highs.
+                </li>
+                <li>
+                  <strong>Long Battery Life:</strong> Up to 40 hours with ANC
+                  on, 60 hours with ANC off.
+                </li>
+                <li>
+                  <strong>Fast Charging:</strong> 10-minute charge provides 5
+                  hours of playback.
+                </li>
+                <li>
+                  <strong>Multi-device Connection:</strong> Connect to two
+                  devices simultaneously.
+                </li>
+                <li>
+                  <strong>Voice Assistant Support:</strong> Compatible with
+                  Siri, Google Assistant, and Alexa.
+                </li>
+                <li>
+                  <strong>Touch Controls:</strong> Intuitive touch controls for
+                  volume, tracks, and calls.
+                </li>
+                <li>
+                  <strong>Automatic Pause:</strong> Music automatically pauses
+                  when you remove the headphones.
+                </li>
+                <li>
+                  <strong>Custom EQ:</strong> Personalize your sound experience
+                  with the SoundWave app.
+                </li>
+                <li>
+                  <strong>Premium Materials:</strong> Memory foam ear cushions
+                  and durable metal headband.
+                </li>
+                <li>
+                  <strong>Foldable Design:</strong> Compact storage and included
+                  travel case.
+                </li>
+              </ul>
+            </div>
+
+            <div id="shipping" class="tab-content">
+              <h3>Shipping Information</h3>
+              <p>
+                Free standard shipping on all orders over $100. Orders are
+                typically processed within 24 hours and delivered within 3-5
+                business days.
+              </p>
+              <p>Express shipping options available at checkout:</p>
+              <ul>
+                <li>2-Day Shipping: $12.99</li>
+                <li>Next-Day Shipping: $19.99</li>
+              </ul>
+
+              <h3>International Shipping</h3>
+              <p>
+                We ship to over 50 countries worldwide. International shipping
+                rates and delivery times vary by location.
+              </p>
+
+              <h3>Return Policy</h3>
+              <p>
+                We offer a 30-day satisfaction guarantee. If you're not
+                completely satisfied with your purchase, you can return it for a
+                full refund or exchange within 30 days of delivery.
+              </p>
+              <p>
+                Items must be in original condition with all packaging and
+                accessories. Return shipping costs may apply except for
+                defective items.
+              </p>
+            </div>
+
+            <div id="reviews" class="tab-content">
+              <div id="review-list" class="review-list">
+                
+              </div>
+            </div>
+          </div>
+
+          <section class="customer-reviews">
+            <div id="reviews-summary" class="reviews-summary">
+              
+              
+            </div>
+          </section>
         </div>
       </div>
     </main>
@@ -158,3 +281,4 @@
     <script type="module" src="product.js"></script>
   </body>
 </html>
+ 

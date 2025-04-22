@@ -245,7 +245,7 @@ function renderProducts(productsToRender) {
         e.target.closest('.wishlist-icon')
       )
         return;
-      window.location.href = `../../testtwo/testi.html?id=${product.id}`;
+      window.location.href = `../product/product.html?id=${product.id}`;
     });
 
     // Initialize cart controls
