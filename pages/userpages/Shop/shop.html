@@ -63,7 +63,7 @@
                   placeholder="Search for products..."
                   id="search-input"
                 />
-                <button type="submit"><i class="fas fa-search"></i></button>
+                <button id="searchBtn" type="submit"><i class="fas fa-search"></i></button>
               </form>
             </div>
             <div class="header-actions">
@@ -173,7 +173,7 @@
         <aside class="sidebar">
           <h3 class="sidebar-title">Filter By</h3>
           <div class="price-range">
-            <label for="minPrice">Price:</label>
+            <label for="minPrice sidebar-title">Price:</label>
             <input
               type="number"
               class="price-input"
@@ -202,13 +202,24 @@
 
             <select class="filter-select mt-1" id="subCategory" disabled>
               <option value="">All Subcategories</option>
+              <option value="smartphones">Smartphones</option>
+              <option value="laptops">Laptops</option>
+              <option value="tablets">Tablets</option>
+              <option value="clothing">Clothing</option>
+              <option value="footwear">Footwear</option>
+              <option value="home-appliances">Home Appliances</option>
+              <option value="kitchenware">Kitchenware</option>
+              <option value="furniture">Furniture</option>
+              <option value="beauty-products">Beauty Products</option>
             </select>
           </div>
 
           <!-- Dynamic Attributes Filter -->
           <div class="filter-group" id="attributesFilter">
             <h4 class="sidebar-title">Attributes</h4>
-            <div id="attributesContainer"></div>
+            <div id="attributesContainer">
+
+            </div>
           </div>
           <div class="filter-group">
             <h4 class="sidebar-title">Customer Rating</h4>
@@ -315,10 +326,6 @@
             <!-- Products will be populated here dynamically -->
           </div>
           <div class="pagination" id="pagination">
-            <button class="page-button active">1</button>
-            <button class="page-button">2</button>
-            <button class="page-button">3</button>
-            <button class="page-button">→</button>
           </div>
         </div>
       </div>

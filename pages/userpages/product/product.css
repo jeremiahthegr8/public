@@ -451,7 +451,7 @@ h6 {
 .product-info {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
   gap: var(--spacing-md);
   padding: 1rem;
   overflow: hidden;

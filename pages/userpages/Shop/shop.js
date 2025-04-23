@@ -36,7 +36,7 @@ const cartCountElement = document.querySelector('.cart-count');
 const toast = document.getElementById('toast');
 const productCountElement = document.getElementById('productCount');
 
-const searchInput = document.getElementById('searchInput');
+const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('searchBtn');
 const categoryFilter = document.getElementById('categoryFilter');
 const minPriceInput = document.getElementById('minPrice');
@@ -435,92 +435,99 @@ async function updateProductActions(product, productCard) {
   });
 
 function filterProducts() {
-  let filteblue = [...products];
-  const mainCategory = document.getElementById('mainCategory');
-  const subCategory = document.getElementById('subCategory');
-  const attributesContainer = document.getElementById('attributesContainer');
+  let filteredProducts = [...products];
 
-  mainCategory.addEventListener('change', () => {
-    const category = mainCategory.value;
-    subCategory.disabled = !category;
-    subCategory.innerHTML = '<option value="">All Subcategories</option>';
-    attributesContainer.innerHTML = '';
+  // Category and Subcategory Filters
+  const mainCategory = document.getElementById('mainCategory').value;
+  const subCategory = document.getElementById('subCategory').value;
 
-    if (category && categoriesData[category]) {
-      categoriesData[category].forEach((sub) => {
-        const option = document.createElement('option');
-        option.value = sub;
-        option.textContent = sub;
-        subCategory.appendChild(option);
-      });
-    }
+  if (mainCategory) {
+    filteredProducts = filteredProducts.filter(
+      (product) => product.category.toLowerCase() === mainCategory.toLowerCase()
+    );
+  }
 
-    renderProducts(filterProducts());
-  });
+  if (subCategory) {
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.subcategory &&
+        product.subcategory.toLowerCase() === subCategory.toLowerCase()
+    );
+  }
 
-  subCategory.addEventListener('change', () => {
-    attributesContainer.innerHTML = '';
-    const subcat = subCategory.value;
-
-    if (subcat && subcategoryAttributes[subcat]) {
-      const attributes = subcategoryAttributes[subcat];
-      attributes.forEach((attr) => {
-        const group = document.createElement('div');
-        group.className = 'attribute-group';
-        group.innerHTML = `
-        <div class="attribute-title">${attr}</div>
-        <div class="nested-attributes">
-          <input type="text" 
-                 class="attribute-input" 
-                 placeholder="Enter ${attr}"
-                 data-attribute="${attr}"
-                 data-subcategory="${subcat}">
-        </div>
-      `;
-        attributesContainer.appendChild(group);
-      });
-    }
-
-    renderProducts(filterProducts());
-  });
-
-  // Price filter
+  // Price Filter
   const minPrice = parseFloat(minPriceInput.value) || 0;
   const maxPrice = parseFloat(maxPriceInput.value) || Number.MAX_VALUE;
-  filteblue = filteblue.filter(
+  filteredProducts = filteredProducts.filter(
     (product) =>
       parseFloat(product.price) >= minPrice &&
       parseFloat(product.price) <= maxPrice
   );
-  
-  // In Stock filter
+
+  // In Stock Filter
   if (inStockFilter.checked) {
-    filteblue = filteblue.filter((product) => product.quantity > 0);
-  }
-  
-  // Category filters
-  const selectedBrands = Array.from(brandFilters)
-    .filter((el) => el.checked)
-    .map((el) => el.value);
-  if (selectedBrands.length > 0) {
-    filteblue = filteblue.filter((product) =>
-      selectedBrands.includes(product.brand)
+    filteredProducts = filteredProducts.filter(
+      (product) => parseInt(product.quantity) > 0
     );
   }
-  
-  // Rating filters
+
+  // Brand Filter
+  const selectedBrands = Array.from(brandFilters)
+    .filter((el) => el.checked)
+    .map((el) => el.value.toLowerCase());
+  if (selectedBrands.length > 0) {
+    filteredProducts = filteredProducts.filter((product) =>
+      selectedBrands.includes(product.brand.toLowerCase())
+    );
+  }
+
+  // Rating Filter
   const selectedRatings = Array.from(ratingFilters)
     .filter((el) => el.checked)
     .map((el) => parseFloat(el.value));
   if (selectedRatings.length > 0) {
     const minRating = Math.min(...selectedRatings);
-    filteblue = filteblue.filter((product) => product.rating >= minRating);
+    filteredProducts = filteredProducts.filter(
+      (product) => product.rating >= minRating
+    );
   }
-  
-  // Sort filter
-  sortProducts(filteblue, sortSelect.value);
-  return filteblue;
+
+  // Sort Products
+  sortProducts(filteredProducts, sortSelect.value);
+
+  return filteredProducts;
 }
+
+// Event listeners for dynamic category and subcategory updates
+mainCategory.addEventListener('change', () => {
+  const category = mainCategory.value;
+  subCategory.disabled = !category;
+  subCategory.innerHTML = '<option value="">All Subcategories</option>';
+
+  if (category) {
+    const subcategories = products
+      .filter(
+        (product) =>
+          product.category &&
+          product.category.toLowerCase() === category.toLowerCase()
+      )
+      .map((product) => product.subcategory)
+      .filter((value, index, self) => value && self.indexOf(value) === index);
+
+    subcategories.forEach((sub) => {
+      const option = document.createElement('option');
+      option.value = sub;
+      option.textContent = sub;
+      subCategory.appendChild(option);
+    });
+  }
+
+  renderProducts(filterProducts());
+});
+
+subCategory.addEventListener('change', () => {
+  renderProducts(filterProducts());
+});
 
 function sortProducts(array, sortType) {
   switch (sortType) {
@@ -539,6 +546,36 @@ function sortProducts(array, sortType) {
     default:
       break;
   }
+}
+
+// Search functionality
+searchBtn.addEventListener('click', () => {
+  const searchTerm = searchInput.value.toLowerCase();
+  if (searchTerm) {
+    const filteredProducts = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm)
+    );
+    renderProducts(filteredProducts);
+  } else {
+    renderProducts(products);
+  }
+});
+if (searchInput) {
+  searchInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      const searchTerm = searchInput.value.toLowerCase();
+      if (searchTerm) {
+        const filteredProducts = products.filter((product) =>
+          product.name.toLowerCase().includes(searchTerm) ||
+          product.category.toLowerCase().includes(searchTerm) ||
+          product.subcategory.toLowerCase().includes(searchTerm)
+        );
+        renderProducts(filteredProducts);
+      } else {
+        renderProducts(products);
+      }
+    }
+  });
 }
 
 // Event listeners
@@ -573,23 +610,49 @@ listViewBtn.addEventListener('click', function () {
   gridViewBtn.classList.remove('active');
 });
 
-document.querySelectorAll('.page-button').forEach((button) => {
-  button.addEventListener('click', function () {
-    document
-      .querySelectorAll('.page-button')
-      .forEach((btn) => btn.classList.remove('active'));
-    this.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-});
+let currentPage = 1;
+const listingsPerPage = 18;
 
+function renderPagination(totalListings) {
+  const paginationContainer = document.getElementById('pagination');
+  paginationContainer.innerHTML = '';
+
+  const totalPages = Math.ceil(totalListings / listingsPerPage);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageButton = document.createElement('button');
+    pageButton.className = 'page-button';
+    pageButton.textContent = i;
+    if (i === currentPage) {
+      pageButton.classList.add('active');
+    }
+    pageButton.addEventListener('click', () => {
+      currentPage = i;
+      renderProducts(getPaginatedProducts());
+      renderPagination(totalListings);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    paginationContainer.appendChild(pageButton);
+  }
+}
+
+function getPaginatedProducts() {
+  const startIndex = (currentPage - 1) * listingsPerPage;
+  const endIndex = startIndex + listingsPerPage;
+  return products.slice(startIndex, endIndex);
+}
+
+// Removed the unused updatePaginationButtons function
+
+// Update the fetchProducts function to include pagination
 async function fetchProducts() {
   try {
     const listingsSnapshot = await getDocs(collection(db, 'listings'));
     products = listingsSnapshot.docs.map((docSnap) => {
       return { id: docSnap.id, ...docSnap.data() };
     });
-    renderProducts(products);
+    renderProducts(getPaginatedProducts());
+    renderPagination(products.length);
   } catch (error) {
     console.error('Error fetching products:', error);
   }
