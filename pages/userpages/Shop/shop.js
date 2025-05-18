@@ -186,6 +186,8 @@ async function checkIfInWishlist(productId) {
   return docSnap.exists();
 }
 
+
+
 function renderProducts(productsToRender) {
   productsGrid.innerHTML = '';
   if (productsToRender.length === 0) {
@@ -618,8 +620,28 @@ function renderPagination(totalListings) {
   paginationContainer.innerHTML = '';
 
   const totalPages = Math.ceil(totalListings / listingsPerPage);
+  const maxVisiblePages = 3;
 
-  for (let i = 1; i <= totalPages; i++) {
+  // Previous button
+  const prevButton = document.createElement('button');
+  prevButton.className = 'page-button prev-button';
+  prevButton.textContent = 'Prev';
+  prevButton.disabled = currentPage === 1;
+  prevButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderProducts(getPaginatedProducts());
+      renderPagination(totalListings);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+  paginationContainer.appendChild(prevButton);
+
+  // Page buttons
+  const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  for (let i = startPage; i <= endPage; i++) {
     const pageButton = document.createElement('button');
     pageButton.className = 'page-button';
     pageButton.textContent = i;
@@ -634,6 +656,37 @@ function renderPagination(totalListings) {
     });
     paginationContainer.appendChild(pageButton);
   }
+
+  // Ellipsis for pages before the visible range
+  if (startPage > 1) {
+    const ellipsis = document.createElement('span');
+    ellipsis.className = 'ellipsis';
+    ellipsis.textContent = '...';
+    paginationContainer.insertBefore(ellipsis, paginationContainer.children[1]);
+  }
+
+  // Ellipsis for pages after the visible range
+  if (endPage < totalPages) {
+    const ellipsis = document.createElement('span');
+    ellipsis.className = 'ellipsis';
+    ellipsis.textContent = '...';
+    paginationContainer.appendChild(ellipsis);
+  }
+
+  // Next button
+  const nextButton = document.createElement('button');
+  nextButton.className = 'page-button next-button';
+  nextButton.textContent = 'Next';
+  nextButton.disabled = currentPage === totalPages;
+  nextButton.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderProducts(getPaginatedProducts());
+      renderPagination(totalListings);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+  paginationContainer.appendChild(nextButton);
 }
 
 function getPaginatedProducts() {
@@ -642,17 +695,15 @@ function getPaginatedProducts() {
   return products.slice(startIndex, endIndex);
 }
 
-// Removed the unused updatePaginationButtons function
-
-// Update the fetchProducts function to include pagination
 async function fetchProducts() {
   try {
     const listingsSnapshot = await getDocs(collection(db, 'listings'));
     products = listingsSnapshot.docs.map((docSnap) => {
       return { id: docSnap.id, ...docSnap.data() };
     });
-    renderProducts(getPaginatedProducts());
-    renderPagination(products.length);
+    const filteredProducts = filterProducts(); // Apply filters if any
+    renderProducts(getPaginatedProducts(filteredProducts));
+    renderPagination(filteredProducts.length);
   } catch (error) {
     console.error('Error fetching products:', error);
   }
