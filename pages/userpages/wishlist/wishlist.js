@@ -45,7 +45,7 @@ function renderWishlistItem(product) {
   const viewItemBtn = itemDiv.querySelector('.view-item');
   viewItemBtn.addEventListener('click', () => {
     // Redirect to the product page. Adjust the URL as needed.
-    window.location.href = `../productpage/product.html?id=${product.id}`;
+    window.location.href = `../product/product.html?id=${product.id}`;
   });
 
   // Attach event listener for "Remove" button
